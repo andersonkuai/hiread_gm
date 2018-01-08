@@ -25,8 +25,8 @@
       <file leaf-file-name="main.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/common/config/main.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="14" column="8" lean-forward="true" selection-start-line="14" selection-start-column="8" selection-end-line="20" selection-end-column="10" />
+            <state relative-caret-position="361">
+              <caret line="22" column="43" lean-forward="true" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -311,7 +311,7 @@
       <workItem from="1515053150626" duration="1203000" />
       <workItem from="1515114640266" duration="15842000" />
       <workItem from="1515200977586" duration="3217000" />
-      <workItem from="1515383151067" duration="367000" />
+      <workItem from="1515383151067" duration="1558000" />
     </task>
     <task id="LOCAL-00001">
       <created>1511517307900</created>
@@ -331,7 +331,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="81081000" />
+    <option name="totallyTimeSpent" value="82272000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="27" y="56" width="1661" height="751" extended-state="1" />
@@ -583,8 +583,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/config/main.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="14" column="8" lean-forward="true" selection-start-line="14" selection-start-column="8" selection-end-line="20" selection-end-column="10" />
+        <state relative-caret-position="361">
+          <caret line="22" column="43" lean-forward="true" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
           <folding />
         </state>
       </provider>
