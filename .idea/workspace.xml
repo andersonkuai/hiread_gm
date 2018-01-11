@@ -15,8 +15,18 @@
       <file leaf-file-name="main.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/common/config/main.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="19" column="34" lean-forward="true" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
+            <state relative-caret-position="114">
+              <caret line="6" column="12" lean-forward="true" selection-start-line="4" selection-start-column="10" selection-end-line="6" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main-local.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/config/main-local.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="684">
+              <caret line="36" column="6" lean-forward="true" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -85,7 +95,6 @@
         <option value="$PROJECT_DIR$/backend/views/agent/form.php" />
         <option value="$PROJECT_DIR$/backend/controllers/AgentController.php" />
         <option value="$PROJECT_DIR$/member/views/layouts/member.php" />
-        <option value="$PROJECT_DIR$/common/config/main-local.php" />
         <option value="$PROJECT_DIR$/backend/config/main.php" />
         <option value="$PROJECT_DIR$/backend/web/index.php" />
         <option value="$PROJECT_DIR$/backend/config/params.php" />
@@ -109,6 +118,7 @@
         <option value="$PROJECT_DIR$/backend/runtime/logs/app.log" />
         <option value="$PROJECT_DIR$/backend/.gitignore" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/common/config/main-local.php" />
         <option value="$PROJECT_DIR$/common/config/main.php" />
       </list>
     </option>
@@ -318,7 +328,7 @@
       <workItem from="1515383151067" duration="1558000" />
       <workItem from="1515459736616" duration="2058000" />
       <workItem from="1515573100608" duration="5891000" />
-      <workItem from="1515634050375" duration="302000" />
+      <workItem from="1515634050375" duration="705000" />
     </task>
     <task id="LOCAL-00001">
       <created>1511517307900</created>
@@ -338,7 +348,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="90523000" />
+    <option name="totallyTimeSpent" value="90926000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -550,14 +560,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/config/main-local.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="21" lean-forward="false" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/config/params.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -660,10 +662,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/common/config/main-local.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="36" column="6" lean-forward="true" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/common/config/main.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="34" lean-forward="true" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
+        <state relative-caret-position="114">
+          <caret line="6" column="12" lean-forward="true" selection-start-line="4" selection-start-column="10" selection-end-line="6" selection-end-column="12" />
           <folding />
         </state>
       </provider>
