@@ -55,17 +55,26 @@ class BaseController extends Controller
         exit($rtn);
     }
     protected function searchForm(&$query, $allowKeys ){
-        $searchData = $whereData = [];
-
+//        $searchData = $whereData = [];
+        $whereData = '';
         foreach( $allowKeys as $key ){
-            $value = Yii::$app->getRequest()->get($key);
-            $searchData[$key] = $value;
+            $keys = explode(',',$key);
 
-            if( $value != "" && !is_null($value) ){
-                $whereData[$key] = $value;
+            if(!empty($keys[1])){
+                $value = Yii::$app->getRequest()->get($keys[1]);
+                $searchData[$keys[1]] = $value;
+                if( !empty($value)){
+                    $whereData .= "{$keys[0]}.{$keys[1]} = '{$value}'";
+                }
+            }else{
+                $value = Yii::$app->getRequest()->get($keys[0]);
+                $searchData[$keys[0]] = $value;
+                if( !empty($value)){
+                    $whereData .= "{$keys[0]} = '{$value}'";
+                }
             }
         }
-
+        return $whereData;
         if(!empty($whereData)) $query->andWhere($whereData);
         return $searchData;
     }

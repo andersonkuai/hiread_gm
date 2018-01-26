@@ -26,6 +26,16 @@
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=user/index"><i class="fa fa-circle-o"></i>用户列表</a></li>
         </ul>
     </li>
+    <li class="treeview">
+        <a href="#"><i class="fa fa-user"></i> <span>订单管理</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=order/index"><i class="fa fa-circle-o"></i>订单列表</a></li>
+        </ul>
+    </li>
 
 </ul>
 <!-- /.sidebar-menu -->

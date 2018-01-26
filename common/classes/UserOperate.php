@@ -8,7 +8,7 @@
 
 namespace common\classes;
 
-use common\enums\Balance;
+use common\enums\Order;
 use common\enums\Cashpool;
 use common\enums\RedPoint;
 use common\enums\StockPoint;
@@ -501,7 +501,7 @@ class UserOperate
         ];
         $data_3 = [
             'uid' => $uid,
-            'trade_type' => Balance::TRADE_TYPE_EXCHANGE_FROM_WHITE,
+            'trade_type' => Order::TRADE_TYPE_EXCHANGE_FROM_WHITE,
             'trade_num' => $dz_balance_num,
             'trade_time' => time(),
             'trade_prenum' => $user->balance,
@@ -509,7 +509,7 @@ class UserOperate
             'mark' => "白积分兑换美购券（倍率[{$rateStr}]）",
             'trade_no' => $trade_no,
             'other_uid' => $uid,
-            'other_type' => Balance::OTHER_TYPE_USER,
+            'other_type' => Order::OTHER_TYPE_USER,
             'other_name' => $user->nickname,
             'ymd' => date('Ymd'),
             'retype' => 1
@@ -603,7 +603,7 @@ class UserOperate
 
         $data_3 = [
             'uid' => $uid,
-            'trade_type' => Balance::TRADE_TYPE_EXCHANGE_FROM_RED,
+            'trade_type' => Order::TRADE_TYPE_EXCHANGE_FROM_RED,
             'trade_num' => $dz_balance_num,
             'trade_time' => time(),
             'trade_prenum' => $user->balance,
@@ -611,7 +611,7 @@ class UserOperate
             'mark' => "红积分兑换美购券",
             'trade_no' => $trade_no,
             'other_uid' => $uid,
-            'other_type' => Balance::OTHER_TYPE_USER,
+            'other_type' => Order::OTHER_TYPE_USER,
             'other_name' => $user->nickname,
             'ymd' => date('Ymd'),
             'retype' => 1
@@ -670,7 +670,7 @@ class UserOperate
         $trade_no = $userWithdraw->generateWithdrawSn();
         $data_1 = [
             'uid' => $uid,
-            'trade_type' => Balance::TRADE_TYPE_WITHDRAW,
+            'trade_type' => Order::TRADE_TYPE_WITHDRAW,
             'trade_num' => -$money,
             'trade_time' => time(),
             'trade_prenum' => $user->balance,
@@ -678,7 +678,7 @@ class UserOperate
             'mark' => "提现，手续费{$sxf}",
             'trade_no' => $trade_no,
             'other_uid' => $uid,
-            'other_type' => Balance::OTHER_TYPE_USER,
+            'other_type' => Order::OTHER_TYPE_USER,
             'other_name' => $user->nickname,
             'ymd' => date('Ymd'),
             'retype' => 0

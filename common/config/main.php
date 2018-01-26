@@ -19,6 +19,13 @@ return [
             'password' => 'WjCn0hAe8BDddB08',
             'charset' => 'utf8',
         ],
+        'hiread' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=hiread',
+            'username' => 'root',
+            'password' => 'WjCn0hAe8BDddB08',
+            'charset' => 'utf8',
+        ],
 
 
     ],

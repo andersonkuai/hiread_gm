@@ -16,6 +16,20 @@ return  DIRECTORY_SEPARATOR=='\\' ? [
             'password' => 'ylmg@1qazxsw2',
             'charset' => 'utf8',
         ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=management',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
+        'hiread' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=hiread',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
         'wnmall' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=192.168.1.19;dbname=wnmall',
