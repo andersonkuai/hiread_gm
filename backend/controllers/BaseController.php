@@ -20,13 +20,13 @@ class BaseController extends Controller
             return false;
         }
         $this->initData();
-
-        if ( $this->needAuth && !Yii::$app->user->can($this->caid) ) {
-            //throw new ForbiddenHttpException('你没有权限！');
-            $this->showMsg('你没有权限！');
-            return false;
+        if(Yii::$app->user->getId() != 1){
+            if ( $this->needAuth && !Yii::$app->user->can($this->caid) ) {
+                //throw new ForbiddenHttpException('你没有权限！');
+                $this->showMsg('你没有权限！');
+                return false;
+            }
         }
-
         return parent::beforeAction($action);
     }
     private function initData(){
@@ -56,25 +56,25 @@ class BaseController extends Controller
     }
     protected function searchForm(&$query, $allowKeys ){
 //        $searchData = $whereData = [];
-        $whereData = '';
+        $whereData = '1=1 ';
         foreach( $allowKeys as $key ){
-            $keys = explode(',',$key);
+            $keys = explode('.',$key);
 
             if(!empty($keys[1])){
                 $value = Yii::$app->getRequest()->get($keys[1]);
                 $searchData[$keys[1]] = $value;
                 if( !empty($value)){
-                    $whereData .= "{$keys[0]}.{$keys[1]} = '{$value}'";
+                    $whereData .= " and {$keys[0]}.{$keys[1]} = '{$value}'";
                 }
             }else{
                 $value = Yii::$app->getRequest()->get($keys[0]);
                 $searchData[$keys[0]] = $value;
                 if( !empty($value)){
-                    $whereData .= "{$keys[0]} = '{$value}'";
+                    $whereData .= " and {$keys[0]} = '{$value}'";
                 }
             }
         }
-        return $whereData;
+//        return $whereData;
         if(!empty($whereData)) $query->andWhere($whereData);
         return $searchData;
     }

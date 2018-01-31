@@ -8,11 +8,8 @@
 
 namespace backend\controllers;
 
-use common\enums\Order;
 use common\models\HiUserOrderMerge;
-use Yii;
 use yii\data\Pagination;
-use yii\db\Query;
 use yii\widgets\LinkPager;
 
 class OrderController extends BaseController
@@ -23,12 +20,9 @@ class OrderController extends BaseController
                 'hi_user_order_merge.PayTime','hi_user_order_merge.Time','hi_user_order_merge.PaymentInfo','hi_user_merge.UserName','hi_user_merge.Mobile'])
             ->innerJoin('hi_user_merge','hi_user_order_merge.Uid = hi_user_merge.Uid')
             ->andWhere(1);
-        $searchData = $this->searchForm($query, ['OrderId', 'Uid', 'PayType','Status','SendStatus','hi_user_merge.Mobile']);
+        $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','Status','SendStatus','hi_user_merge.Mobile','hi_user_merge.UserName']);
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 10]);
         $orders = $query->offset($pages->offset)->limit($pages->limit)->asArray()->all();
-//        echo '<pre>';
-//        print_r($searchData);
-//        exit;
         $renderData = [
             'orders' => $orders,
             'searchData' => $searchData,

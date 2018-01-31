@@ -23,6 +23,7 @@
               </span>
         </a>
         <ul class="treeview-menu">
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=hi-user/index"><i class="fa fa-circle-o"></i>注册用户信息</a></li>
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=user/index"><i class="fa fa-circle-o"></i>用户列表</a></li>
         </ul>
     </li>

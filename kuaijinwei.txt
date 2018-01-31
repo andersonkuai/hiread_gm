@@ -1,0 +1,16 @@
+47.96.157.179
+system_user: hireadSix
+system_pass: Ab4t62uHvCt0OQaI
+
+mysql:
+root
+WjCn0hAe8BDddB08
+
+sudo /usr/local/lnmp/nginx/sbin/nginx -t
+sudo /usr/local/lnmp/nginx/sbin/nginx -s reload
+
+git
+git6Six@dev.hiread.cn:/home/git/hiread_dev.git
+
+
+C1g5tgsArUcXS07B

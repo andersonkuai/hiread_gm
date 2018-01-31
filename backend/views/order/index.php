@@ -41,8 +41,6 @@
                                 <select class="form-control" name="PayType" id="">
                                     <option value="" >支付方式</option>
                                     <?php
-                                        echo '<pre>';
-                                        print_r(\common\enums\Order::pfvalues('PAY_TYPE'));
                                         foreach (\common\enums\Order::pfvalues('PAY_TYPE') as $key => $obj){
                                             $selected = isset($searchData['PayType']) && $searchData['PayType'] == $obj->getValue()
                                                 ? 'selected="selected"':'';
