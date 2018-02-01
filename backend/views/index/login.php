@@ -23,7 +23,8 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="/adminlte/index2.html"><b>后台管理系统</b></a>
+        <b>后台管理系统</b><br><h5><b>backstage management system</b></h5>
+<!--        <a href="/adminlte/index2.html"><b>后台管理系统</b></a>-->
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -31,20 +32,26 @@
 
         <form action="?r=index/login" method="post">
             <div class="form-group has-feedback">
-                <input type="text" name="username" class="form-control" placeholder="用户名">
+                <input type="text" name="username" class="form-control" placeholder="user name">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="密码">
+                <input type="password" name="password" class="form-control" placeholder="password">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <div class="row">
-                <div class="col-xs-8">
+                <div class="col-xs-4">
                     <div class="checkbox icheck">
                         <label>
                             <input name="remember" type="checkbox" value="1"> 记住我
                         </label>
                     </div>
+                </div>
+                <div class="col-xs-4">
+                    <select name="language" class="checkbox icheck">
+                        <option value="zh-CN" <?php if(!empty($_COOKIE['language'] && $_COOKIE['language'] == 'zh-CN')) echo 'selected'; ?>>中文（简体）</option>
+                        <option value="en-US" <?php if(!empty($_COOKIE['language'] && $_COOKIE['language'] == 'en-US')) echo 'selected'; ?>>English</option>
+                    </select>
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-4">

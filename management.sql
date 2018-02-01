@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地数据库
-Source Server Version : 50637
-Source Host           : 192.168.1.19:3306
+Source Server         : localhost
+Source Server Version : 50532
+Source Host           : 127.0.0.1:3306
 Source Database       : management
 
 Target Server Type    : MYSQL
-Target Server Version : 50637
+Target Server Version : 50532
 File Encoding         : 65001
 
-Date: 2018-01-08 09:07:49
+Date: 2018-02-01 17:23:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,12 +36,12 @@ CREATE TABLE `admin` (
   `city` varchar(255) DEFAULT '' COMMENT '市',
   `country` varchar(255) DEFAULT '' COMMENT '县',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('1', 'ylmg', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '开发者', '蒯金伟', '18888150030', '1515137458', '127.0.0.1', '10', 'cNa5v9qtKYiGoYynarKeefOgGDK5tMqx', '1510734770', '1502848084', '', '', '');
+INSERT INTO `admin` VALUES ('1', 'ylmg', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '开发者', '蒯金伟', '18888150030', '1517474294', '127.0.0.1', '10', 'cNa5v9qtKYiGoYynarKeefOgGDK5tMqx', '1510734770', '1502848084', '', '', '');
 INSERT INTO `admin` VALUES ('3', 'kuaijw', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '测试', '金伟', '18888150030', '1515137582', '127.0.0.1', '10', '', '1510796263', '1510122366', '江苏', '苏州市', '工业园区');
 INSERT INTO `admin` VALUES ('8', 'test007', '$2y$13$cUPNXBHSCofjDyBIGxHp.OId2GbPOWiu.CSpbvuAtJQXP8o2Q7KL6', '呵呵', '艾欧尼亚', '18888150030', '0', '', '0', 'obYAuaTbthjF1CRxa_AI_iwdNM_-RVHv', '1510795886', '1510795759', '北京', '顺义区', '光明街道');
 
@@ -58,7 +58,7 @@ CREATE TABLE `area_info` (
   `country_code` int(11) DEFAULT NULL,
   `country` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of area_info
@@ -72,9 +72,8 @@ CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`item_name`,`user_id`),
-  CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`item_name`,`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of auth_assignment
@@ -97,9 +96,8 @@ CREATE TABLE `auth_item` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`name`),
   KEY `rule_name` (`rule_name`),
-  KEY `idx-auth_item-type` (`type`),
-  CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `idx-auth_item-type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of auth_item
@@ -129,6 +127,8 @@ INSERT INTO `auth_item` VALUES ('user.delete', '2', 'user delete删除用户账�
 INSERT INTO `auth_item` VALUES ('user.edit', '2', 'user edit修改用户', null, null, '1515134519', '1515136575');
 INSERT INTO `auth_item` VALUES ('user.index', '2', 'User Index 用户列表', null, null, '1511145241', '1515135521');
 INSERT INTO `auth_item` VALUES ('user.status', '2', 'user status禁用/解禁用户账号', null, null, '1515135491', '1515136627');
+INSERT INTO `auth_item` VALUES ('order', '2', '订单管理', null, null, '1516872208', '1516872208');
+INSERT INTO `auth_item` VALUES ('order.index', '2', 'order index 订单列表', null, null, '1516872227', '1516872227');
 
 -- ----------------------------
 -- Table structure for auth_item_child
@@ -138,56 +138,57 @@ CREATE TABLE `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`),
-  CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `child` (`child`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of auth_item_child
 -- ----------------------------
-INSERT INTO `auth_item_child` VALUES ('role-admin', 'admin');
 INSERT INTO `auth_item_child` VALUES ('admin', 'admin.index');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.item-save');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.parent-child');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.perm');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.role');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-add');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-delete');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-edit');
+INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-status');
+INSERT INTO `auth_item_child` VALUES ('index', 'index.login');
+INSERT INTO `auth_item_child` VALUES ('index', 'index.logout');
+INSERT INTO `auth_item_child` VALUES ('index', 'index.rbac-init');
+INSERT INTO `auth_item_child` VALUES ('order', 'order.index');
+INSERT INTO `auth_item_child` VALUES ('role-admin', 'admin');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'admin.index');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.item-save');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.item-save');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.parent-child');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.parent-child');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.perm');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.perm');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.role');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.role');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.user');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-add');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.user-add');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-delete');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.user-delete');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-edit');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.user-edit');
-INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-status');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'auth.user-status');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'index');
-INSERT INTO `auth_item_child` VALUES ('index', 'index.login');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'index.login');
-INSERT INTO `auth_item_child` VALUES ('index', 'index.logout');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'index.logout');
-INSERT INTO `auth_item_child` VALUES ('index', 'index.rbac-init');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'index.rbac-init');
+INSERT INTO `auth_item_child` VALUES ('role-admin', 'order');
+INSERT INTO `auth_item_child` VALUES ('role-admin', 'order.index');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user');
-INSERT INTO `auth_item_child` VALUES ('role-user', 'user');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.activate');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.activate');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.add');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.add');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.delete');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.delete');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.edit');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.edit');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.index');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.index');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.status');
+INSERT INTO `auth_item_child` VALUES ('role-user', 'user');
+INSERT INTO `auth_item_child` VALUES ('user', 'user.activate');
+INSERT INTO `auth_item_child` VALUES ('user', 'user.add');
+INSERT INTO `auth_item_child` VALUES ('user', 'user.delete');
+INSERT INTO `auth_item_child` VALUES ('user', 'user.edit');
+INSERT INTO `auth_item_child` VALUES ('user', 'user.index');
 INSERT INTO `auth_item_child` VALUES ('user', 'user.status');
 
 -- ----------------------------
@@ -200,7 +201,7 @@ CREATE TABLE `auth_rule` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of auth_rule
@@ -214,7 +215,7 @@ CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of migration
@@ -232,7 +233,7 @@ CREATE TABLE `sys_info` (
   `cash_intotal` bigint(20) NOT NULL DEFAULT '0' COMMENT '累加收入资金，分',
   `cash_outtotal` bigint(20) NOT NULL DEFAULT '0' COMMENT '累计支出资金，分',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='系统相关信息';
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='系统相关信息';
 
 -- ----------------------------
 -- Records of sys_info
@@ -279,7 +280,7 @@ CREATE TABLE `user` (
   `upline_id` int(11) DEFAULT '0' COMMENT '上线id 0：云联美购',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3427 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=MyISAM AUTO_INCREMENT=3427 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of user

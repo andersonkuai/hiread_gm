@@ -17,6 +17,7 @@ class IndexController extends Controller
             return $this->goHome();
         }
         if( Yii::$app->getRequest()->getIsPost() ){
+            setcookie('language',trim(Yii::$app->getRequest()->post('language')));//设置语言
             $username = trim(Yii::$app->getRequest()->post('username'));
             $password = trim(Yii::$app->getRequest()->post('password'));
             $remember = intval(Yii::$app->getRequest()->post('remember'));

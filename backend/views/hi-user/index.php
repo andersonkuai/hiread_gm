@@ -3,13 +3,13 @@
         src="/97date/WdatePicker.js"></script>
 <section class="content-header">
     <h1>
-        <?= \Yii::t('app', 'This is a string to translate');?>
+        <?= \Yii::t('app', '注册用户信息');?>
         <small></small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> 主页</a></li>
-        <li><a href="#">用户管理</a></li>
-        <li class="active">注册用户列表</li>
+        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?= \Yii::t('app','home page')?></a></li>
+        <li><a href="#"><?= \Yii::t('app','user management')?></a></li>
+        <li class="active"><?= \Yii::t('app', 'registered user list');?></li>
     </ol>
 </section>
 
@@ -20,7 +20,7 @@
             <div class="box">
                 <div class="box-header">
                     <div class="btn-group btn-group-sm" role="group">
-                        <a class="btn btn-primary" href="?r=user/add"><i class="fa fa-plus"></i> 添加</a>
+<!--                        <a class="btn btn-primary" href="?r=user/add"><i class="fa fa-plus"></i> 添加</a>-->
                     </div>
                     <div class="box-tools">
                         <form action="" method="get" class="form-inline">

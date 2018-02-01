@@ -38,9 +38,6 @@ class HiUserController extends BaseController
                 'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
             ])
         ];
-        echo '<pre>';
-        print_r(\Yii::t('app', 'test'));
-        exit;
         return $this->display('index', $renderData);
     }
 

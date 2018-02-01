@@ -13,5 +13,5 @@ $config = yii\helpers\ArrayHelper::merge(
     require(__DIR__ . '/../config/main.php'),
     require(__DIR__ . '/../config/main-local.php')
 );
-
+$config['language'] = isset($_COOKIE['language']) ? $_COOKIE['language'] : 'zh-CN';
 (new yii\web\Application($config))->run();

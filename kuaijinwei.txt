@@ -14,3 +14,6 @@ git6Six@dev.hiread.cn:/home/git/hiread_dev.git
 
 
 C1g5tgsArUcXS07B
+
+alter table hi_user_g add column isMerge tinyint(1) DEFAULT '0' COMMENT '是否合并，1：是，0：否';
+ALTER TABLE `hi_user_g` ADD INDEX isMerge ( `isMerge` )

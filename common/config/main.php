@@ -32,27 +32,13 @@ return [
                 'app*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     //'basePath' => '@app/messages',
-                    //'sourceLanguage' => 'en-US',
+                    'sourceLanguage' => 'zh-CN',
                     'fileMap' => [
                         'app' => 'app.php',
-                        'app/error' => 'error.php',
                     ],
                 ],
             ],
         ],
-        'i18n' => [
-            'translations' => [
-                'app*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'sourceLanguage' => 'en-US',
-                    'fileMap' => [
-                        'app' => 'app.php'
-                    ],
-                ],
-            ],
-        ],
-
-
     ],
     'language' => 'zh-CN',
 ];

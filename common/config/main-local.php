@@ -37,19 +37,7 @@ return  DIRECTORY_SEPARATOR=='\\' ? [
             'password' => 'ylmg@1qazxsw2',
             'charset' => 'utf8',
         ],
-        'i18n' => [
-            'translations' => [
-                'app*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'fileMap' => [
-                        'app' => 'app.php'
-                    ],
-                ],
-            ],
-        ],
     ],
-    'language' => 'zh-CN',
-    'sourceLanguage' => 'en-US',
 ]:[
     'components' => [
         'mailer' => [

@@ -7,7 +7,7 @@ use member\helpers\Utility;
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?php echo Html::encode($this->title) ?></title>
+    <title><?=\Yii::t('app',Html::encode($this->title))?></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="/adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -81,9 +81,9 @@ desired effect
         <!-- Logo -->
         <a href="/" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>管</b></span>
+            <span class="logo-mini"><b><?=Yii::$app->params['hi-read']?></b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><?=Yii::$app->params['siteName']?></b></span>
+            <span class="logo-lg"><b><?=Yii::$app->params['hi-read']?></b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -190,32 +190,31 @@ desired effect
                                 <img src="/adminlte/dist/img/admin.jpg" class="img-circle" alt="User Image">
 
                                 <p>
-                                    愿你开心每一天！
+                                    <?=\Yii::t('app','愿你开心每一天！')?>
                                     <small><?= date('Y-m-d H:i:s');?></small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
-                                    </div>
-                                </div>
-                                <!-- /.row -->
-                            </li>
+<!--                            <li class="user-body">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-xs-4 text-center">-->
+<!--                                        <a href="#">Followers</a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-xs-4 text-center">-->
+<!--                                        <a href="#">Sales</a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-xs-4 text-center">-->
+<!--                                        <a href="#">Friends</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </li>-->
                             <!-- Menu Footer-->
                             <li class="user-footer">
 <!--                                <div class="pull-left">-->
 <!--                                    <a href="#" class="btn btn-default btn-flat">资料</a>-->
 <!--                                </div>-->
                                 <div class="pull-right">
-                                    <a href="/index.php?r=index/logout" class="btn btn-default btn-flat">退出</a>
+                                    <a href="/index.php?r=index/logout" class="btn btn-default btn-flat"><?=\Yii::t('app','退出')?></a>
                                 </div>
                             </li>
                         </ul>
@@ -242,7 +241,7 @@ desired effect
                 <div class="pull-left info">
                     <p><?php echo Yii::$app->user->identity['nickname']?></p>
                     <!-- Status -->
-                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                    <a href="#"><i class="fa fa-circle text-success"></i> <?=\Yii::t('app','在线')?></a>
                 </div>
             </div>
 
@@ -347,7 +346,7 @@ desired effect
     <div class="control-sidebar-bg"></div>
     <!--    loading层-->
     <div class="posi">
-        <img class="posi-img" src="<?php echo Utility::userAvatar('/component/loading.gif') ?>">
+<!--        <img class="posi-img" src="--><?php //echo Utility::userAvatar('/component/loading.gif') ?><!--">-->
     </div>
     <!--错误信息显示层-->
     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="ajaxResultModal">
