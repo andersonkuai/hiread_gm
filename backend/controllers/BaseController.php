@@ -63,13 +63,13 @@ class BaseController extends Controller
             if(!empty($keys[1])){
                 $value = Yii::$app->getRequest()->get($keys[1]);
                 $searchData[$keys[1]] = $value;
-                if( !empty($value)){
+                if( isset($value) && $value != ''){
                     $whereData .= " and {$keys[0]}.{$keys[1]} = '{$value}'";
                 }
             }else{
                 $value = Yii::$app->getRequest()->get($keys[0]);
                 $searchData[$keys[0]] = $value;
-                if( !empty($value)){
+                if( isset($value) && $value != ''){
                     $whereData .= " and {$keys[0]} = '{$value}'";
                 }
             }

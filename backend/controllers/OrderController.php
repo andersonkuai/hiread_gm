@@ -16,11 +16,26 @@ class OrderController extends BaseController
 {
     public function actionIndex(){
         $query = HiUserOrderMerge::find()->select(['hi_user_order_merge.id','hi_user_order_merge.OrderId','hi_user_order_merge.Uid','hi_user_order_merge.Trade','hi_user_order_merge.Price','hi_user_order_merge.RecvId',
-                'hi_user_order_merge.Message','hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus',
-                'hi_user_order_merge.PayTime','hi_user_order_merge.Time','hi_user_order_merge.PaymentInfo','hi_user_merge.UserName','hi_user_merge.Mobile'])
+                'hi_user_order_merge.Message','hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_order_merge.CourseId',
+                'hi_user_order_merge.PayTime','hi_user_order_merge.Time','hi_user_order_merge.PaymentInfo',
+                'hi_user_merge.UserName','hi_user_merge.Mobile',
+                'hi_conf_course.ProdName'
+            ])
             ->innerJoin('hi_user_merge','hi_user_order_merge.Uid = hi_user_merge.Uid')
+            ->leftJoin('hi_conf_course','hi_user_order_merge.CourseId = hi_conf_course.ID')
             ->andWhere(1);
-        $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','Status','SendStatus','hi_user_merge.Mobile','hi_user_merge.UserName']);
+        $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_merge.Mobile','hi_user_merge.UserName']);
+        //下单时间
+        if(!empty($_GET['Time1'])){
+            $searchData['Time1'] = $_GET['Time1'];
+            $activated_time = strtotime($_GET['Time1']);
+            $query = $query->andWhere("hi_user_order_merge.Time >= '{$activated_time}'");
+        }
+        if(!empty($_GET['Time2'])){
+            $searchData['Time2'] = $_GET['Time2'];
+            $activated_time = strtotime($_GET['Time2']);
+            $query = $query->andWhere("hi_user_order_merge.Time <= '{$activated_time}'");
+        }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 10]);
         $orders = $query->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $renderData = [

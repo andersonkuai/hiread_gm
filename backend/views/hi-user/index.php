@@ -7,9 +7,9 @@
         <small></small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?= \Yii::t('app','home page')?></a></li>
-        <li><a href="#"><?= \Yii::t('app','user management')?></a></li>
-        <li class="active"><?= \Yii::t('app', 'registered user list');?></li>
+        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?= \Yii::t('app','主页  ')?></a></li>
+        <li><a href="#"><?= \Yii::t('app','用户管理')?></a></li>
+        <li class="active"><?= \Yii::t('app', '注册用户信息');?></li>
     </ol>
 </section>
 
@@ -24,7 +24,7 @@
                     </div>
                     <div class="box-tools">
                         <form action="" method="get" class="form-inline">
-                            <input type="hidden" name="r" value="user/index">
+                            <input type="hidden" name="r" value="hi-user/index">
                             <div class="form-group form-group-sm">
                                 <input type="text" name="UserName" class="form-control" placeholder="注册账号"
                                        value="<?=!empty($searchData['UserName'])?$searchData['UserName']:''?>">
@@ -38,8 +38,11 @@
                                        value="<?=!empty($searchData['Mobile'])?$searchData['Mobile']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
-                                <input type="text" name="activated_time" class="form-control" placeholder="注册时间"
-                                       value="<?=!empty($searchData['activated_time'])?$searchData['activated_time']:''?>" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                                <input type="text" name="Time1" class="form-control" placeholder="注册时间"
+                                       value="<?=!empty($searchData['Time1'])?$searchData['Time1']:''?>" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                                --
+                                <input type="text" name="Time2" class="form-control" placeholder="注册时间"
+                                       value="<?=!empty($searchData['Time2'])?$searchData['Time2']:''?>" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm">查询</button>
                         </form>
@@ -50,7 +53,7 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
-                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>
+<!--                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>-->
                             <th>UID</th>
                             <th>注册账号</th>
                             <th>学员姓名</th>
@@ -69,16 +72,19 @@
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
                                 <td><?php echo $user['EnName']?></td>
-                                <td><?php echo $user['UserStatus']?></td>
+                                <td>
+                                    <?php echo \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]]?>
+                                </td>
                                 <td><?php echo $user['Mobile']?></td>
-                                <td><?php echo $user['Time']?></td>
-                                <td><?php echo $user['Birthday']?></td>
+                                <td><?php echo date('Y-m-d H:i:s',$user['Time'])?></td>
+                                <td><?php echo ceil((time()-$user['Birthday'])/(24*3600*365))?></td>
                                 <td><?php echo $user['City']?></td>
                                 <td><?php echo $user['ReadLevel']?></td>
                                 <td><?php echo $user['SurveyScore']?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a class="btn btn-default" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=user/activate&id=123');"><i class="fa fa-edit"></i> 激活</a>
+                                        <a href="?r=hi-user/info&id=<?php echo $user['Uid']?>">详情</a>
+<!--                                        <a class="btn btn-default" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=user/activate&id=123');"><i class="fa fa-edit"></i> 激活</a>-->
                                     </div>
                                 </td>
                             </tr>

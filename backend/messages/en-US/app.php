@@ -58,5 +58,15 @@ return [
     '删除' => 'delete',
     '返回' => 'go back',
     '提交' => 'submit',
+    '订单号' => 'order number',
+    '用户ID' => 'user id',
+    '手机号' => 'mobile',
+    '第三方交易号' => 'third trade number',
+    '订单价格' => 'order price',
+    '课程名称' => 'course name',
+    '用户详情' => 'user details',
+    '联系电话' => 'phone',
+    '权限' => 'authority',
+    '描述' => 'description',
 
 ];

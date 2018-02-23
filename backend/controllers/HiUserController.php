@@ -14,6 +14,10 @@ use yii\widgets\LinkPager;
 
 class HiUserController extends BaseController
 {
+    /**
+     * 注册用户信息列表
+     * @return string
+     */
     public function actionIndex(){
         $query = HiUserMerge::find()->andWhere(1);
         $searchData = $this->searchForm($query, ['UserName', 'ReadLevel', 'ylmguid','Mobile']);
@@ -39,6 +43,21 @@ class HiUserController extends BaseController
             ])
         ];
         return $this->display('index', $renderData);
+    }
+    /**
+     * 用户详情
+     */
+    public function actionInfo(){
+        $uid = \Yii::$app->getRequest()->get('id');
+        if(empty($uid)) header("Location:http:/index.php?r=hi-user/index");
+        //获取用户想信息
+        $user = HiUserMerge::findOne(['Uid' => $uid]);
+//        echo '<pre>';
+//        print_r($user);
+        $renderData = [
+            'user' => $user,
+        ];
+        return $this->display('info',$renderData);
     }
 
 }

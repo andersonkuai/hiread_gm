@@ -1,13 +1,13 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        权限列表
+        <?= \Yii::t('app', '权限列表');?>
         <small></small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> 主页</a></li>
-        <li><a href="#">权限管理</a></li>
-        <li class="active">权限列表</li>
+        <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?= \Yii::t('app', '主页');?></a></li>
+        <li><a href="#"><?= \Yii::t('app', '权限管理');?></a></li>
+        <li class="active"><?= \Yii::t('app', '权限列表');?></li>
     </ol>
 </section>
 
@@ -19,7 +19,7 @@
                 <div class="box-header">
                     <button type="button" class="btn btn-primary btn-sm"
                             data-toggle="modal" data-target="#exampleModal" data-whatever=''>
-                        <i class="fa fa-plus"></i> 添加</button>
+                        <i class="fa fa-plus"></i> <?= \Yii::t('app', '添加');?></button>
                     <div class="box-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
                             <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
@@ -35,10 +35,10 @@
                     <table class="table table-hover">
                         <tr>
                             <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>
-                            <th>权限</th>
-                            <th>描述</th>
-                            <th>添加</th>
-                            <th>操作</th>
+                            <th><?= \Yii::t('app', '权限');?></th>
+                            <th><?= \Yii::t('app', '描述');?></th>
+                            <th><?= \Yii::t('app', '添加');?></th>
+                            <th><?= \Yii::t('app', '操作');?></th>
                         </tr>
                         <?php foreach($perms as $row){?>
                             <?php
@@ -53,8 +53,8 @@
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button class="btn btn-default"
                                                 data-toggle="modal" data-target="#exampleModal" data-whatever='<?php echo json_encode($row)?>'>
-                                            <i class="fa fa-edit"></i> 编辑</button>
-                                        <a class="btn btn-default" href="?r=auth/parent-child&name=<?php echo $row['name'];?>"><i class="fa fa-code-fork"></i> 节点</a>
+                                            <i class="fa fa-edit"></i> <?= \Yii::t('app', '编辑');?></button>
+                                        <a class="btn btn-default" href="?r=auth/parent-child&name=<?php echo $row['name'];?>"><i class="fa fa-code-fork"></i> <?= \Yii::t('app', '子权限');?></a>
                                     </div>
                                 </td>
                             </tr>

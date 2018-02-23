@@ -208,4 +208,20 @@ abstract class Enum
         }
         return $values;
     }
+    //根据前缀过滤出想要的参数配置
+    public static function pfwvalues($prefix){
+        $values = array();
+        $cofig = array();
+        foreach (static::toArray() as $key => $value) {
+
+            if(strpos($key, $prefix) === 0){
+                $values[$key] = new static($value);
+            }
+        }
+        foreach ($values as $k=>$v){
+            $cofig[$v->getValue()] = $k;
+        }
+        return $cofig;
+    }
 }
+

@@ -13,17 +13,17 @@ use common\helpers\Enum;
 class Order extends Enum
 {
     //支付方式
-    const PAY_TYPE_WX = 1;
-    const PAY_TYPE_ALI = 2;
-    const PAY_TYPE_UNKNOWN = 0;
+    const PAY_TYPE_WX = '1';
+    const PAY_TYPE_ALI = '2';
+    const PAY_TYPE_UNKNOWN = '0';
     //订单状态
-    const STATUS_UNPAY = 0;
-    const STATUS_PAY = 1;
-    const STATUS_FAILED = 2;
+    const STATUS_UNPAY = '0';
+    const STATUS_PAY = '1';
+    const STATUS_FAILED = '2';
     //发货状态
-    const SEND_STATUS_NO = 0;
-    const SEND_STATUS_SEND = 1;
-    const SEND_STATUS_SIGN = 2;
+    const SEND_STATUS_NO = '0';
+    const SEND_STATUS_SEND = '1';
+    const SEND_STATUS_SIGN = '2';
 
 
     public static function labels(){

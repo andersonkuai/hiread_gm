@@ -49,8 +49,8 @@
                 </div>
                 <div class="col-xs-4">
                     <select name="language" class="checkbox icheck">
-                        <option value="zh-CN" <?php if(!empty($_COOKIE['language'] && $_COOKIE['language'] == 'zh-CN')) echo 'selected'; ?>>中文（简体）</option>
-                        <option value="en-US" <?php if(!empty($_COOKIE['language'] && $_COOKIE['language'] == 'en-US')) echo 'selected'; ?>>English</option>
+                        <option value="zh-CN" <?php if(!empty($_COOKIE['language']) && $_COOKIE['language'] == 'zh-CN') echo 'selected'; ?>>中文（简体）</option>
+                        <option value="en-US" <?php if(!empty($_COOKIE['language']) && $_COOKIE['language'] == 'en-US') echo 'selected'; ?>>English</option>
                     </select>
                 </div>
                 <!-- /.col -->

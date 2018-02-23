@@ -20,6 +20,10 @@ use Yii;
  * @property integer $PayTime
  * @property integer $Time
  * @property string $PaymentInfo
+ * @property integer $CourseId
+ * @property double $OriginalPrice
+ * @property double $DiscountPrice
+ * @property integer $Count
  * @property integer $isMerge
  */
 class HiUserOrderMerge extends \yii\db\ActiveRecord
@@ -47,8 +51,8 @@ class HiUserOrderMerge extends \yii\db\ActiveRecord
     {
         return [
             [['ID', 'OrderId', 'Uid', 'Time'], 'required'],
-            [['ID', 'Uid', 'RecvId', 'PayType', 'Status', 'SendStatus', 'PayTime', 'Time', 'isMerge'], 'integer'],
-            [['Price'], 'number'],
+            [['ID', 'Uid', 'RecvId', 'PayType', 'Status', 'SendStatus', 'PayTime', 'Time', 'CourseId', 'Count', 'isMerge'], 'integer'],
+            [['Price', 'OriginalPrice', 'DiscountPrice'], 'number'],
             [['Message', 'PaymentInfo'], 'string'],
             [['OrderId'], 'string', 'max' => 50],
             [['Trade'], 'string', 'max' => 255],
@@ -62,19 +66,23 @@ class HiUserOrderMerge extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'OrderId' => 'Order ID',
-            'Uid' => 'Uid',
-            'Trade' => 'Trade',
-            'Price' => 'Price',
-            'RecvId' => 'Recv ID',
-            'Message' => 'Message',
-            'PayType' => 'Pay Type',
-            'Status' => 'Status',
-            'SendStatus' => 'Send Status',
-            'PayTime' => 'Pay Time',
-            'Time' => 'Time',
-            'PaymentInfo' => 'Payment Info',
-            'isMerge' => 'Is Merge',
+            'OrderId' => '订单ID',
+            'Uid' => '用户ID',
+            'Trade' => '第三方交易单号',
+            'Price' => '订单价格',
+            'RecvId' => '收货地址ID',
+            'Message' => '买家留言',
+            'PayType' => '支付类型（0：未知1：微信2：支付宝）',
+            'Status' => '订单状态（0:未支付1：已支付2：支付失败）',
+            'SendStatus' => '发货状态(0:未发货1:已发货2:已签收）',
+            'PayTime' => '订单支付时间',
+            'Time' => '订单生成时间',
+            'PaymentInfo' => '支付相关信息',
+            'CourseId' => '课程ID',
+            'OriginalPrice' => '购买时原价',
+            'DiscountPrice' => '购买时折扣价',
+            'Count' => '购买数量',
+            'isMerge' => '是否合并，1：是，0：否',
         ];
     }
 }

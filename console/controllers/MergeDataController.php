@@ -16,13 +16,37 @@ class MergeDataController extends Controller
 {
     /**
      * 合并订单数据
+     * 基本信息
      */
     public function actionOrders(){
         //获取订单数据
         for ($i = 0; $i <= 9; $i++){
             $tableName = 'hi_user_order_'.$i;
             $connection = \Yii::$app->hiread;
-            $sql = "replace into hi_user_order_merge select * from {$tableName} where isMerge = 0";
+            $sql = "INSERT INTO hi_user_order_merge(`ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`) 
+                    select `ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo` 
+                    from {$tableName} where isMerge = 1 
+                    ON DUPLICATE KEY UPDATE 
+                    `ID`= values(ID),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
+                    `PayType` = VALUES(`PayType`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),`Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`);";
+            $result1 = $connection->createCommand($sql)->execute();
+            //变更记录
+            $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
+            $result2 = $connection->createCommand($sql)->execute();
+            echo 'replace:'.$result1.',update:'.$result2.'--';
+        }//end for
+    }
+    /**
+     * 合并订单数据
+     * 详情
+     */
+    public function actionOrdersDetail(){
+        //获取订单数据
+        for ($i = 0; $i <= 9; $i++){
+            $tableName = 'hi_user_order_detail_'.$i;
+            $connection = \Yii::$app->hiread;
+            $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select `Uid`,`Oid`,`CourseId`,`Price`,`DiscountPrice`,`Count` 
+                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
             $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
