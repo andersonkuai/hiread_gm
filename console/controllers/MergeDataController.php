@@ -25,7 +25,7 @@ class MergeDataController extends Controller
             $connection = \Yii::$app->hiread;
             $sql = "INSERT INTO hi_user_order_merge(`ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`) 
                     select `ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo` 
-                    from {$tableName} where isMerge = 1 
+                    from {$tableName} where isMerge = 0 
                     ON DUPLICATE KEY UPDATE 
                     `ID`= values(ID),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
                     `PayType` = VALUES(`PayType`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),`Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`);";
