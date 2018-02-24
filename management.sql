@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50532
-Source Host           : 127.0.0.1:3306
+Source Server         : 47.96.157.179
+Source Server Version : 50626
+Source Host           : localhost:3306
 Source Database       : management
 
 Target Server Type    : MYSQL
-Target Server Version : 50532
+Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2018-02-01 17:23:59
+Date: 2018-02-24 14:41:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,8 +41,8 @@ CREATE TABLE `admin` (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('1', 'ylmg', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '开发者', '蒯金伟', '18888150030', '1517474294', '127.0.0.1', '10', 'cNa5v9qtKYiGoYynarKeefOgGDK5tMqx', '1510734770', '1502848084', '', '', '');
-INSERT INTO `admin` VALUES ('3', 'kuaijw', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '测试', '金伟', '18888150030', '1515137582', '127.0.0.1', '10', '', '1510796263', '1510122366', '江苏', '苏州市', '工业园区');
+INSERT INTO `admin` VALUES ('1', 'ylmg', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '开发者', '蒯金伟', '18888150030', '1519450624', '101.81.54.216', '10', 'cNa5v9qtKYiGoYynarKeefOgGDK5tMqx', '1510734770', '1502848084', '', '', '');
+INSERT INTO `admin` VALUES ('3', 'kuaijw', '$2y$13$Dz/6PwRwHCQNf.EwjeWSVeXsqlg769xzi0CFuk0wGf4snHAQyqbqe', '测试', '金伟', '18888150030', '1519368226', '127.0.0.1', '10', '', '1510796263', '1510122366', '江苏', '苏州市', '工业园区');
 INSERT INTO `admin` VALUES ('8', 'test007', '$2y$13$cUPNXBHSCofjDyBIGxHp.OId2GbPOWiu.CSpbvuAtJQXP8o2Q7KL6', '呵呵', '艾欧尼亚', '18888150030', '0', '', '0', 'obYAuaTbthjF1CRxa_AI_iwdNM_-RVHv', '1510795886', '1510795759', '北京', '顺义区', '光明街道');
 
 -- ----------------------------
@@ -120,13 +120,9 @@ INSERT INTO `auth_item` VALUES ('index.logout', '2', 'Index Logout 退出登录'
 INSERT INTO `auth_item` VALUES ('index.rbac-init', '2', 'Index RbacInit 权限初始化', null, null, '1510709783', '1510709783');
 INSERT INTO `auth_item` VALUES ('role-admin', '1', '超级管理员', null, null, '1510709785', '1510709785');
 INSERT INTO `auth_item` VALUES ('role-user', '1', '普通用户', null, null, '1510795852', '1515136656');
-INSERT INTO `auth_item` VALUES ('user', '2', 'User(用户管理)', null, null, '1515132836', '1515132836');
-INSERT INTO `auth_item` VALUES ('user.activate', '2', 'user activate激活用户', null, null, '1515135379', '1515136541');
-INSERT INTO `auth_item` VALUES ('user.add', '2', 'user add添加用户', null, null, '1515133437', '1515136553');
-INSERT INTO `auth_item` VALUES ('user.delete', '2', 'user delete删除用户账号', null, null, '1515135574', '1515136564');
-INSERT INTO `auth_item` VALUES ('user.edit', '2', 'user edit修改用户', null, null, '1515134519', '1515136575');
-INSERT INTO `auth_item` VALUES ('user.index', '2', 'User Index 用户列表', null, null, '1511145241', '1515135521');
-INSERT INTO `auth_item` VALUES ('user.status', '2', 'user status禁用/解禁用户账号', null, null, '1515135491', '1515136627');
+INSERT INTO `auth_item` VALUES ('hi-user', '2', 'HiUser(用户管理)', null, null, '1515132836', '1519367990');
+INSERT INTO `auth_item` VALUES ('hi-user.index', '2', 'HiUser Index 注册用户列表', null, null, '1519368078', '1519368078');
+INSERT INTO `auth_item` VALUES ('hi-user.info', '2', 'HiUser Info 用户详情', null, null, '1519368106', '1519368106');
 INSERT INTO `auth_item` VALUES ('order', '2', '订单管理', null, null, '1516872208', '1516872208');
 INSERT INTO `auth_item` VALUES ('order.index', '2', 'order index 订单列表', null, null, '1516872227', '1516872227');
 
@@ -154,6 +150,8 @@ INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-add');
 INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-delete');
 INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-edit');
 INSERT INTO `auth_item_child` VALUES ('auth', 'auth.user-status');
+INSERT INTO `auth_item_child` VALUES ('hi-user', 'hi-user.index');
+INSERT INTO `auth_item_child` VALUES ('hi-user', 'hi-user.info');
 INSERT INTO `auth_item_child` VALUES ('index', 'index.login');
 INSERT INTO `auth_item_child` VALUES ('index', 'index.logout');
 INSERT INTO `auth_item_child` VALUES ('index', 'index.rbac-init');
@@ -183,13 +181,7 @@ INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.delete');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.edit');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.index');
 INSERT INTO `auth_item_child` VALUES ('role-admin', 'user.status');
-INSERT INTO `auth_item_child` VALUES ('role-user', 'user');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.activate');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.add');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.delete');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.edit');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.index');
-INSERT INTO `auth_item_child` VALUES ('user', 'user.status');
+INSERT INTO `auth_item_child` VALUES ('role-user', 'hi-user');
 
 -- ----------------------------
 -- Table structure for auth_rule

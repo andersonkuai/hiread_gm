@@ -31,7 +31,7 @@
                         <?= \Yii::t('app', '昵称：');?><?php echo $user->NickName;?>
                     </div>
                     <div class="col-xs-3">
-                        <?= \Yii::t('app', '联系电话：');?><?php echo $user->Mobile;?>
+                        <?= \Yii::t('app', '手机号：');?><?php echo $user->Mobile;?>
                     </div>
                 </div>
                 <div class="box-header row">
@@ -42,7 +42,7 @@
                         <?= \Yii::t('app', '城市：');?><?php echo $user->City;?>
                     </div>
                     <div class="col-xs-3">
-                        <?= \Yii::t('app', '地址：');?><?php echo $user->City;?>
+                        <?= \Yii::t('app', '性别：');?><?php if($user->Gender == 1){echo '男';}elseif ($user->Gender == 2){echo '女';};?>
                     </div>
                 </div>
                 <div class="box-header with-border">
@@ -77,7 +77,7 @@
                                             foreach ($answer[$val['ID']] as $v){
                                                 if(!empty($points[$val['ID']][$v])) $point += $points[$val['ID']][$v];
                                             }
-                                            echo $point;
+                                            if($val['ID'] != '7' && $val['ID'] != '8') {echo $point;}
                                         }
                                         ?>
                                     </td>

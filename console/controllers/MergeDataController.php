@@ -121,7 +121,7 @@ class MergeDataController extends Controller
     }
     /**
      * 合并用户数据
-     * 城市
+     * 省级地址，孩子性别
      */
     public function actionUsers3(){
         $userSuffix = [0,1,2,3,4,5,6,7,8,9];
@@ -129,8 +129,8 @@ class MergeDataController extends Controller
         foreach ($userSuffix as $v){
             $tableName = 'hi_user_survey_'.$v;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_merge(`Uid`,`City`,`CityId`) select `Uid`,`City`,`CityId` 
-                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`City`= values(City),CityId = VALUES(CityId);";
+            $sql = "INSERT INTO hi_user_merge(`Uid`,`City`,`CityId`,'Gender') select `Uid`,`Province`,`ProvinceId`,`Gender` 
+                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`City`= values(City),CityId = VALUES(CityId),Gender = VALUES(Gender);";
 //            $sql = "replace into hi_user_merge(`Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`) select `Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime` from {$tableName} where isMerge = 0";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
