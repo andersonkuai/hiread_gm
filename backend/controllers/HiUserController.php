@@ -52,10 +52,22 @@ class HiUserController extends BaseController
         if(empty($uid)) header("Location:http:/index.php?r=hi-user/index");
         //获取用户想信息
         $user = HiUserMerge::findOne(['Uid' => $uid]);
-//        echo '<pre>';
-//        print_r($user);
+        //获取问卷调查题目信息
+        $connection = \Yii::$app->hiread;
+        $sql = "select * from hi_conf_research";
+        $research = $connection->createCommand($sql)->queryAll();
+        //获取用户问卷调查答案
+        $suffix = substr($uid, -1);
+        $sql = "select * from hi_user_survey_{$suffix} where uid = '{$uid}'";
+        $result = $connection->createCommand($sql)->queryOne();
+        $answer = $result['Questions'];
+        if(!empty($answer)){
+            $answer = json_decode($answer,true);
+        }
         $renderData = [
             'user' => $user,
+            'research' => $research,
+            'answer' => $answer,
         ];
         return $this->display('info',$renderData);
     }

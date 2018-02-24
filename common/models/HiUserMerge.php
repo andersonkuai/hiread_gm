@@ -13,6 +13,7 @@ use Yii;
  * @property integer $Type
  * @property integer $Time
  * @property string $EnName
+ * @property string $NickName
  * @property string $UserStatus
  * @property integer $Birthday
  * @property integer $SurveyScore
@@ -50,6 +51,7 @@ class HiUserMerge extends \yii\db\ActiveRecord
             [['UserName'], 'string', 'max' => 50],
             [['Mobile'], 'string', 'max' => 11],
             [['EnName', 'UserStatus'], 'string', 'max' => 20],
+            [['NickName'], 'string', 'max' => 100],
             [['City'], 'string', 'max' => 60],
             [['ReadLevel'], 'string', 'max' => 255],
         ];
@@ -67,6 +69,7 @@ class HiUserMerge extends \yii\db\ActiveRecord
             'Type' => '用户类型(1:普通用户2:微信用户)',
             'Time' => '注册时间',
             'EnName' => '英文名',
+            'NickName' => '昵称',
             'UserStatus' => '用户状态，regist：注册用户，try：试听用户，charge：付费用户',
             'Birthday' => '生日',
             'SurveyScore' => '问卷调查分数',

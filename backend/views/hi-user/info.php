@@ -25,10 +25,10 @@
                 <!-- /.box-header -->
                 <div class="box-header row">
                     <div class="col-xs-3">
-                        <?= \Yii::t('app', '用户名：');?><?php echo $user->UserName;?>
+                        <?= \Yii::t('app', '学员姓名：');?><?php echo $user->EnName;?>
                     </div>
                     <div class="col-xs-3">
-                        <?= \Yii::t('app', '昵称：');?><?php echo $user->EnName;?>
+                        <?= \Yii::t('app', '昵称：');?><?php echo $user->NickName;?>
                     </div>
                     <div class="col-xs-3">
                         <?= \Yii::t('app', '联系电话：');?><?php echo $user->Mobile;?>
@@ -48,7 +48,34 @@
                 <div class="box-header with-border">
                     <span style="font-weight: bold"><?= \Yii::t('app', '课程学习记录');?></span>
                 </div>
-
+                <div class="box-header with-border" style="margin-top: 50px">
+                    <table class="table table-bordered" style="width: 80%;border: solid;border-width:2px">
+                        <tr style="border-bottom: solid;border-width: 2px">
+                            <th style="border-right: solid;border-width: 1px">SN</th>
+                            <th style="border-right: solid;border-width: 1px"><?= \Yii::t('app', '问题');?></th>
+                            <th style="border-right: solid;border-width: 1px"><?= \Yii::t('app', '答案');?></th>
+                            <th style="border-right: solid;border-width: 1px"><?= \Yii::t('app', '分值');?></th>
+                        </tr>
+                        <?php if(!empty($research)) { ?>
+                            <?php foreach($research as $val){?>
+                                <tr style="border-bottom: solid;border-width: 2px">
+                                    <td style="border-right: solid;border-width: 1px"><?=$val['ID']?></td>
+                                    <td style="border-right: solid;border-width: 1px"><?=$val['Name']?></td>
+                                    <td style="border-right: solid;border-width: 1px">
+                                        <?php
+                                            if(!empty($answer[$val['ID']])){
+                                                foreach ($answer[$val['ID']] as $v){
+                                                    echo explode('|',$val['Choice'])[$v - 1].'，';
+                                                }
+                                            }
+                                        ?>
+                                    </td>
+                                    <td style="border-right: solid;border-width: 1px"></td>
+                                </tr>
+                            <?php }?>
+                        <?php }?>
+                    </table>
+                </div>
             </div>
 
         </div>

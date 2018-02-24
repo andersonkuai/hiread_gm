@@ -76,7 +76,7 @@ class MergeDataController extends Controller
     }
     /**
      * 合并用户数据
-     * 学员姓名（英文名），生日，调查问卷得分，调查问卷时间，水平测试等级
+     * 学员姓名（英文名），生日，调查问卷得分，调查问卷时间，水平测试等级，昵称
      */
     public function actionUsers2(){
         $userSuffix = [0,1,2,3,4,5,6,7,8,9];
@@ -84,7 +84,7 @@ class MergeDataController extends Controller
         foreach ($userSuffix as $v){
             $tableName = 'hi_user_info_'.$v;
             $connection = \Yii::$app->hiread;
-            $sql = "select `Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime` from {$tableName} WHERE isMerge = 0";
+            $sql = "select `Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`NickName` from {$tableName} WHERE isMerge = 0";
             $result1 = $connection->createCommand($sql)->queryAll();
             if(!empty($result1)){
                 $value = '';
@@ -101,11 +101,11 @@ class MergeDataController extends Controller
                             }
                         }
                     }
-                    $value .= "('{$val['Uid']}','{$val['EnName']}','{$val['Birthday']}','{$val['SurveyScore']}','{$val['SurveyTime']}','{$level}'),";
+                    $value .= "('{$val['Uid']}','{$val['EnName']}','{$val['Birthday']}','{$val['SurveyScore']}','{$val['SurveyTime']}','{$level}','{$val['NickName']}'),";
                 }//end foreach
                 $value = rtrim($value,',');
-                $sql = "INSERT INTO `hi_user_merge` (`Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`ReadLevel`) VALUES {$value} 
-                        ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`EnName`= values(EnName),Birthday = VALUES(Birthday),SurveyScore = VALUES(SurveyScore),`SurveyTime` = VALUES(`SurveyTime`),`ReadLevel` = VALUES(`ReadLevel`);";
+                $sql = "INSERT INTO `hi_user_merge` (`Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`ReadLevel`,`NickName`) VALUES {$value} 
+                        ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`EnName`= values(EnName),Birthday = VALUES(Birthday),SurveyScore = VALUES(SurveyScore),`SurveyTime` = VALUES(`SurveyTime`),`ReadLevel` = VALUES(`ReadLevel`),`NickName` = VALUES(`NickName`) ;";
                 try{
                     $result2 = $connection->createCommand($sql)->execute();
                     //变更记录
@@ -138,6 +138,21 @@ class MergeDataController extends Controller
             echo 'replace:'.$result1.',update:'.$result2.'--';
         }//end for
     }
-
+    /**
+     * 合并用户地址数据
+     */
+    public function actionAddress(){
+        $userSuffix = [0,1,2,3,4,5,6,7,8,9];
+        foreach ($userSuffix as $v){
+            $tableName = 'hi_user_address_'.$v;
+            $connection = \Yii::$app->hiread;
+            $sql = "replace into hi_user_address_merge select * from {$tableName} where isMerge = 0";
+            $result1 = $connection->createCommand($sql)->execute();
+            //变更记录
+            $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
+            $result2 = $connection->createCommand($sql)->execute();
+            echo 'replace:'.$result1.',update:'.$result2.'--';
+        }//end foreach
+    }
 
 }
