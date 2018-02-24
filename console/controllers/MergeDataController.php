@@ -43,13 +43,14 @@ class MergeDataController extends Controller
     public function actionOrdersDetail(){
         //获取订单数据
         for ($i = 0; $i <= 9; $i++){
-            $tableName = 'hi_user_order_detail_'.$i;
+            $tableName1 = 'hi_user_order_detail_'.$i;
+            $tableName2 = 'hi_user_order_'.$i;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select `Uid`,`Oid`,`CourseId`,`Price`,`DiscountPrice`,`Count` 
-                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
+            $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select a.`Uid`,b.`OrderId`,a.`CourseId`,a.`Price`,a.`DiscountPrice`,a.`Count` 
+                    from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
-            $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
+            $sql = "update {$tableName1} set isMerge = 1 where isMerge = 0;";
             $result2 = $connection->createCommand($sql)->execute();
             echo 'replace:'.$result1.',update:'.$result2.'--';
         }//end for
