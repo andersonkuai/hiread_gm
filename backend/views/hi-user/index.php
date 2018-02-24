@@ -92,6 +92,9 @@
                     </table>
                 </div>
                 <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <?php echo $pageHtml;?>
+                </div>
             </div>
             <!-- /.box -->
         </div>
