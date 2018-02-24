@@ -70,7 +70,17 @@
                                             }
                                         ?>
                                     </td>
-                                    <td style="border-right: solid;border-width: 1px"></td>
+                                    <td style="border-right: solid;border-width: 1px">
+                                        <?php
+                                        if(!empty($answer[$val['ID']])){
+                                            $point = 0;
+                                            foreach ($answer[$val['ID']] as $v){
+                                                if(!empty($points[$val['ID']][$v])) $point += $points[$val['ID']][$v];
+                                            }
+                                            echo $point;
+                                        }
+                                        ?>
+                                    </td>
                                 </tr>
                             <?php }?>
                         <?php }?>

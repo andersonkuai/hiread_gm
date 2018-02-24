@@ -48,14 +48,25 @@ class HiUserController extends BaseController
      * 用户详情
      */
     public function actionInfo(){
+        //问卷调查的答案分值配置
+        $points = array(
+            1 => array(1 => 1,2 => 2,3 => 3,4 => 4),
+            2 => array(1 => 0,2 => 1,3 => 2,4 => 3,5 => 4,6 => 5),
+            3 => array(1 => 0,2 => 1,3 => 2,4 => 3,5 => 4,6 => 5),
+            4 => array(1 => 0,2 => 1,3 => 2,4 => 3,5 => 4,6 => 5),
+            5 => array(1 => 0,2 => 2,3 => 2,4 => 2),
+            6 => array(1 => 0,2 => 1,3 => 2,4 => 4),
+        );
         $uid = \Yii::$app->getRequest()->get('id');
         if(empty($uid)) header("Location:http:/index.php?r=hi-user/index");
-        //获取用户想信息
+        //获取用户信息
         $user = HiUserMerge::findOne(['Uid' => $uid]);
         //获取问卷调查题目信息
         $connection = \Yii::$app->hiread;
         $sql = "select * from hi_conf_research";
         $research = $connection->createCommand($sql)->queryAll();
+        //去掉最后一个题目
+        array_pop($research);
         //获取用户问卷调查答案
         $suffix = substr($uid, -1);
         $sql = "select * from hi_user_survey_{$suffix} where uid = '{$uid}'";
@@ -68,6 +79,7 @@ class HiUserController extends BaseController
             'user' => $user,
             'research' => $research,
             'answer' => $answer,
+            'points' => $points,
         ];
         return $this->display('info',$renderData);
     }
