@@ -28,7 +28,7 @@
                         <?= \Yii::t('app', '学员姓名：');?><?php echo $user->EnName;?>
                     </div>
                     <div class="col-xs-3">
-                        <?= \Yii::t('app', '昵称：');?><?php echo $user->NickName;?>
+                        <?= \Yii::t('app', '英文名：');?><?php echo $user->NickName;?>
                     </div>
                     <div class="col-xs-3">
                         <?= \Yii::t('app', '手机号：');?><?php echo $user->Mobile;?>
@@ -48,6 +48,44 @@
                 <div class="box-header with-border">
                     <span style="font-weight: bold"><?= \Yii::t('app', '课程学习记录');?></span>
                 </div>
+                <table border="1px">
+                    <tr>
+                        <td>是否试听</td>
+                        <th>课程名称</th>
+                        <th>课程等级</th>
+                        <th>购买日期</th>
+                        <th>开始时间</th>
+                        <th>有效期</th>
+                        <th>学习进度</th>
+                        <th>单元报告</th>
+                        <th>期末报告</th>
+                        <th>班主任</th>
+                    </tr>
+                    <?php if(!empty($userOrder)){?>
+                        <?php foreach($userOrder as $val){ ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if($val['isTry'] == 0){
+                                            echo '<span style="color: green">付费</span>';
+                                        }else{
+                                            echo '<span style="color: #FF0000">试听</span>';
+                                        }
+                                    ?>
+                                </td>
+                                <td><?= $val['courseName']?></td>
+                                <td><?= 'Level'.$val['level']?></td>
+                                <td><?= date('Y-m-d H:i:s',$val['Time'])?></td>
+                                <td><?= date('Y-m-d H:i:s',$val['starTime'])?></td>
+                                <td><?= date('Y-m-d H:i:s',($val['starTime'] + $val['expire']))?></td>
+                                <td><textarea name="" id="" cols="30" rows="5"><?= $val['study']?></textarea></td>
+                                <td style="color: #FF0000">暂无</td>
+                                <td style="color: #FF0000">暂无</td>
+                                <td style="color: #FF0000">暂无</td>
+                            </tr>
+                        <?php }?>
+                    <?php }?>
+                </table>
                 <div class="box-header with-border" style="margin-top: 50px">
                     <table class="table table-bordered" style="width: 80%;border: solid;border-width:2px">
                         <tr style="border-bottom: solid;border-width: 2px">

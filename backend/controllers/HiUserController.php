@@ -75,11 +75,61 @@ class HiUserController extends BaseController
         if(!empty($answer)){
             $answer = json_decode($answer,true);
         }
+        //获取用户订单
+        $orderTab = 'hi_user_order_'.$suffix;
+        $orderDetailTab = 'hi_user_order_detail_'.$suffix;
+        $orderDetailSql = "select b.CourseId,b.`Time` from {$orderTab} a INNER JOIN  {$orderDetailTab} b ON a.ID = b.Oid WHERE a.Uid = '{$uid}'";
+        $userOrder = $connection->createCommand($orderDetailSql)->queryAll();
+        if(!empty($userOrder)){
+            foreach ($userOrder as &$val){
+                $val['level'] = '';//级别
+                $val['expire'] = '';//有效期
+                $val['starTime'] = 0;//开始时间
+                $val['courseName'] = '';//课程名称
+                $val['study'] = '';//学习进度
+                $val['isTry'] = 0;//是否试听
+                //获取课程信息
+                if(!empty($val['CourseId'])){
+                    $userCourseTab1 = 'hi_user_course_'.$suffix;
+                    $userCourseSql1 = "select IsTry,`Time` from {$userCourseTab1} where Uid = '{$uid}' and Course = '{$val['CourseId']}' ORDER by id DESC ";
+                    $userCourse1 = $connection->createCommand($userCourseSql1)->queryOne();
+
+                    $userCourseTab = 'hi_user_course_unit_'.$suffix;
+                    $userCourseSql = "select CourseID,UnitId,SUnitId from {$userCourseTab} where Uid = '{$uid}' and CourseID = '{$val['CourseId']}' ORDER by SUnitId DESC ";
+                    $userCourse = $connection->createCommand($userCourseSql)->queryOne();
+                    if(!empty($userCourse)){
+                        //课程信息
+                        $courseTab = 'hi_conf_course';
+                        $courseSql = "select ProdName,`Level`,`Expire`,`ProdName` from {$courseTab} where ID = '{$userCourse['CourseID']}'";
+                        $course = $connection->createCommand($courseSql)->queryOne();
+                        //单元信息
+                        $unitTab = 'hi_conf_unit';
+                        $unitSql = "select Name from {$unitTab} where ID = '{$userCourse['UnitId']}'";
+                        $unit = $connection->createCommand($unitSql)->queryOne();
+                        //子单元信息
+                        $subUnitTab = 'hi_conf_sub_unit';
+                        $subUnitSql = "select Name from {$subUnitTab} where ID = '{$userCourse['SUnitId']}'";
+                        $subUnit = $connection->createCommand($subUnitSql)->queryOne();
+                        //得到学习进度
+                        $val['level'] = $course['Level'];//级别
+                        $val['expire'] = $course['Expire'];//有效期
+                        $val['starTime'] = $userCourse1['Time'];//开始时间
+                        $val['courseName'] = $course['ProdName'];//课程名称
+                        $val['study'] = $course['ProdName'].'-'.$unit['Name'].'_'.$subUnit['Name'];//学习进度
+                        $val['isTry'] = $userCourse1['IsTry'];//是否试听
+                    }
+                }//end if
+            }//end foreach
+        }//end if
+//        echo '<pre>';
+//        print_r($userOrder);
+//        exit;
         $renderData = [
             'user' => $user,
             'research' => $research,
             'answer' => $answer,
             'points' => $points,
+            'userOrder' => $userOrder,
         ];
         return $this->display('info',$renderData);
     }
