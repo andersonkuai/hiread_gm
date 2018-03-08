@@ -44,7 +44,7 @@ class OrderController extends BaseController
             $query = $query->andWhere("hi_user_order_merge.Time <= '{$activated_time}'");
         }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
-        $orders = $query->offset($pages->offset)->limit($pages->limit)->asArray()->all();
+        $orders = $query->orderBy("Time desc")->offset($pages->offset)->limit($pages->limit)->asArray()->all();
         $renderData = [
             'orders' => $orders,
             'searchData' => $searchData,
