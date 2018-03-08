@@ -18,8 +18,8 @@ class OrderController extends BaseController
         $query = HiUserOrderMerge::find()->select(['hi_user_order_merge.id','hi_user_order_merge.OrderId','hi_user_order_merge.Uid','hi_user_order_merge.Trade','hi_user_order_merge.Price','hi_user_order_merge.RecvId',
                 'hi_user_order_merge.Message','hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_order_merge.CourseId',
                 'hi_user_order_merge.PayTime','hi_user_order_merge.Time','hi_user_order_merge.PaymentInfo','hi_user_order_merge.DiscountPrice',
-                'hi_user_merge.UserName','hi_user_merge.Mobile','hi_user_merge.City',
-                'hi_user_address_merge.Province','hi_user_address_merge.City','hi_user_address_merge.Area','hi_user_address_merge.Address',
+                'hi_user_merge.UserName','hi_user_merge.City',
+                'hi_user_address_merge.Province','hi_user_address_merge.City','hi_user_address_merge.Area','hi_user_address_merge.Address','hi_user_address_merge.Mobile',
                 'hi_conf_course.ProdName',
             ])
             ->innerJoin('hi_user_merge','hi_user_order_merge.Uid = hi_user_merge.Uid')
@@ -31,7 +31,7 @@ class OrderController extends BaseController
         if (!isset($status)){
             $_GET["Status"] = 1;
         }
-        $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_merge.Mobile','hi_user_merge.UserName','hi_conf_course.ProdName']);
+        $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_address_merge.Mobile','hi_user_merge.UserName','hi_conf_course.ProdName']);
         //下单时间
         if(!empty($_GET['Time1'])){
             $searchData['Time1'] = $_GET['Time1'];

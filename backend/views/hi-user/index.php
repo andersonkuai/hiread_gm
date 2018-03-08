@@ -71,8 +71,22 @@
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
                                 <td><?php echo $user['EnName']?></td>
-                                <td>
-                                    <?php echo \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]]?>
+                                <td><?php
+                                        $status = \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]];
+                                        switch ($user['UserStatus']){
+                                            case 'try':
+                                                $str = "<span style='color: #FF0000;font-weight: bold'>{$status}</span>";
+                                                break;
+                                            case 'charge':
+                                                $str = "<span style='color: green;font-weight: bold''>{$status}</span>";
+                                                break;
+                                            default;
+                                                $str = "<span>{$status}</span>";
+                                                break;
+                                        }
+                                        echo $str;
+                                    ?>
+<!--                                    --><?php //echo \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]]?>
                                 </td>
                                 <td><?php echo $user['Channel']?></td>
                                 <td><?php echo $user['Mobile']?></td>

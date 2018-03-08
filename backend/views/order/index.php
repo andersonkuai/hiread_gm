@@ -95,19 +95,19 @@
                             <th><?= \Yii::t('app', '订单号');?></th>
                             <th><?= \Yii::t('app', '用户ID');?></th>
                             <th><?= \Yii::t('app', '用户名');?></th>
-                            <th><?= \Yii::t('app', '手机号');?></th>
 <!--                            <th>--><?//= \Yii::t('app', '第三方交易号');?><!--</th>-->
                             <th><?= \Yii::t('app', '订单价格');?></th>
                             <th><?= \Yii::t('app', '支付金额');?></th>
-                            <th><?= \Yii::t('app', '支付时间');?></th>
                             <th><?= \Yii::t('app', '抵扣金额');?></th>
                             <th><?= \Yii::t('app', '课程名称');?></th>
+                            <th><?= \Yii::t('app', '联系人');?></th>
                             <th><?= \Yii::t('app', '收货地址');?></th>
                             <th><?= \Yii::t('app', '城市');?></th>
                             <th><?= \Yii::t('app', '支付方式');?></th>
                             <th><?= \Yii::t('app', '订单状态');?></th>
                             <th><?= \Yii::t('app', '发货状态');?></th>
                             <th><?= \Yii::t('app', '订单生成时间');?></th>
+                            <th><?= \Yii::t('app', '支付时间');?></th>
 <!--                            <th>--><?//= \Yii::t('app', '操作');?><!--</th>-->
                         </tr>
 
@@ -117,13 +117,12 @@
                                 <td><?php echo $val['OrderId']?></td>
                                 <td><?php echo $val['Uid']?></td>
                                 <td><?php echo $val['UserName']?></td>
-                                <td><?php echo $val['Mobile']?></td>
 <!--                                <td>--><?php //echo $val['Trade']?><!--</td>-->
                                 <td><?php echo $val['Price']?></td>
                                 <td><?php echo $val['DiscountPrice']?></td>
-                                <td><?php if(!empty($val['PayTime'])) echo date("Y-m-d H:i:s", $val['PayTime'])?></td>
                                 <td><?php echo $val['Price'] - $val['DiscountPrice']?></td>
                                 <td><?php echo $val['ProdName']?></td>
+                                <td><?php echo $val['Mobile']?></td>
                                 <td><?php echo $val['Province'].$val['City'].$val['Area'].$val['Address']?></td>
                                 <td><?php echo $val['City']?></td>
                                 <td><?php echo \common\enums\Order::labels()[\common\enums\Order::pfwvalues('PAY_TYPE')[$val['PayType']]]?></td>
@@ -138,6 +137,7 @@
                                 echo '<span style="color: red">'.$send.'</span>';
                                 }?></td>
                                 <td><?php echo date("Y-m-d H:i:s", $val['Time'])?></td>
+                                <td><?php if(!empty($val['PayTime'])) echo date("Y-m-d H:i:s", $val['PayTime'])?></td>
 <!--                                <td></td>-->
                             </tr>
                         <?php }?>
