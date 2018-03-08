@@ -26,6 +26,11 @@ class OrderController extends BaseController
             ->innerJoin('hi_user_address_merge','hi_user_order_merge.RecvId = hi_user_address_merge.ID and hi_user_order_merge.Uid = hi_user_address_merge.Uid')
             ->leftJoin('hi_conf_course','hi_user_order_merge.CourseId = hi_conf_course.ID')
             ->andWhere(1);
+        $status = \Yii::$app->getRequest()->get("Status");
+        //默认显示已支付的订单
+        if (!isset($status)){
+            $_GET["Status"] = 1;
+        }
         $searchData = $this->searchForm($query, ['OrderId', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_merge.Mobile','hi_user_merge.UserName','hi_conf_course.ProdName']);
         //下单时间
         if(!empty($_GET['Time1'])){

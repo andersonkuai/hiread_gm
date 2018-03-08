@@ -1,6 +1,4 @@
 <!-- Content Header (Page header) -->
-<script language="javascript" type="text/javascript"
-        src="/97date/WdatePicker.js"></script>
 <section class="content-header">
     <h1>
         <?= \Yii::t('app', '订单列表');?>

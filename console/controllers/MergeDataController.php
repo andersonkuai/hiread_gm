@@ -49,6 +49,25 @@ class MergeDataController extends Controller
             $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select a.`Uid`,b.`OrderId`,a.`CourseId`,a.`Price`,a.`DiscountPrice`,a.`Count` 
                     from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
             $result1 = $connection->createCommand($sql)->execute();
+            //修改用户状态
+            $sql = "select a.`Uid`,a.`IsTry` from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where b.Status = 1";
+            $orders = $connection->createCommand($sql)->queryAll();
+            if (!empty($orders)){
+                foreach ($orders as $val){
+                    $state = $val["IsTry"] == 1 ? "try" : "charge" ;
+                    //查询用户数据
+                    $user = $connection->createCommand("select UserStatus from hi_user_merge where Uid = {$val['Uid']}")->queryOne();
+                    if(empty($user)){
+                        //插入数据
+                        $connection->createCommand("insert into hi_user_merge(`Uid`,`UserStatus`) VALUES ('{$val["Uid"]}','{$state}')")->execute();
+                    }else{
+                        if(($user["UserStatus"] == 'try' && $state == 'charge') || ($user['UserStatus'] == 'regist' && $state == 'try')){
+                            //更新数据
+                            $connection->createCommand("update hi_user_merge set `UserStatus` = '{$state}' where Uid = {$val['Uid']} ")->execute();
+                        }
+                    }//end if
+                }//end foreach
+            }
             //变更记录
             $sql = "update {$tableName1} set isMerge = 1 where isMerge = 0;";
             $result2 = $connection->createCommand($sql)->execute();
@@ -65,8 +84,8 @@ class MergeDataController extends Controller
         foreach ($userSuffix as $v){
             $tableName = 'hi_user_'.$v;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_merge(`Uid`,`UserName`,`Mobile`,`Time`) select `Uid`,`UserName`,`Mobile`,`Time` 
-                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`UserName`= values(UserName),Mobile = VALUES(Mobile),`Time` = VALUES(`Time`);";
+            $sql = "INSERT INTO hi_user_merge(`Uid`,`UserName`,`Mobile`,`Time`,`Channel`) select `Uid`,`UserName`,`Mobile`,`Time`,`Channel` 
+                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`UserName`= values(UserName),Mobile = VALUES(Mobile),`Time` = VALUES(`Time`),`Channel` = VALUES(`Channel`) ;";
 //            $sql = "replace into hi_user_merge(`Uid`,`UserName`,`Mobile`,`Time`) select `Uid`,`UserName`,`Mobile`,`Time` from {$tableName} where isMerge = 0";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录

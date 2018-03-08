@@ -33,7 +33,7 @@ class HiUserController extends BaseController
             $query = $query->andWhere("Time <= '{$activated_time}'");
         }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
-        $users = $query->offset($pages->offset)->limit($pages->limit)->all();
+        $users = $query->orderBy("Time desc")->offset($pages->offset)->limit($pages->limit)->all();
         $renderData = [
             'users' => $users,
             'searchData' => $searchData,

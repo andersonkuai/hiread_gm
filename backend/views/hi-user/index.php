@@ -1,6 +1,4 @@
 <!-- Content Header (Page header) -->
-<script language="javascript" type="text/javascript"
-        src="/97date/WdatePicker.js"></script>
 <section class="content-header">
     <h1>
         <?= \Yii::t('app', '注册用户信息');?>
@@ -58,6 +56,7 @@
                             <th>注册账号</th>
                             <th>学员姓名</th>
                             <th>用户状态</th>
+                            <th>渠道</th>
                             <th>联系电话</th>
                             <th>注册时间</th>
                             <th>年龄</th>
@@ -75,6 +74,7 @@
                                 <td>
                                     <?php echo \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]]?>
                                 </td>
+                                <td><?php echo $user['Channel']?></td>
                                 <td><?php echo $user['Mobile']?></td>
                                 <td><?php echo date('Y-m-d H:i:s',$user['Time'])?></td>
                                 <td><?php echo ceil((time()-$user['Birthday'])/(24*3600*365))?></td>

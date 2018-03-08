@@ -377,5 +377,7 @@ desired effect
 <script type="text/javascript">
     $(document).pjax('a[data-pjax],#pjax-container a', '#pjax-container', {timeout : 2000});
 </script>
+<script language="javascript" type="text/javascript"
+        src="/97date/WdatePicker.js"></script>
 </body>
 </html>
