@@ -78,7 +78,7 @@ class HiUserController extends BaseController
         //获取用户订单
         $orderTab = 'hi_user_order_'.$suffix;
         $orderDetailTab = 'hi_user_order_detail_'.$suffix;
-        $orderDetailSql = "select b.CourseId,b.`Time` from {$orderTab} a INNER JOIN  {$orderDetailTab} b ON a.ID = b.Oid WHERE a.Uid = '{$uid}'";
+        $orderDetailSql = "select b.CourseId,b.`Time` from {$orderTab} a INNER JOIN  {$orderDetailTab} b ON a.ID = b.Oid WHERE a.Uid = '{$uid}' and a.Status = 1";
         $userOrder = $connection->createCommand($orderDetailSql)->queryAll();
         if(!empty($userOrder)){
             foreach ($userOrder as &$val){
