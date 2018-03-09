@@ -1,0 +1,75 @@
+公司腾讯企业邮箱：kuaijinwei@luogow.com  密码：Ylmg888
+
+bug管理平台地址：http://192.168.1.16:8081/secure/Dashboard.jspa
+账号：kuaijinwei    密码：ylmg888
+
+商城svn
+kuaijw=kuanjw0726
+
+积分返还
+kuaijw=kuanjw0726
+
+云联惠商城
+kuaijw=kjw23587
+
+
+
+
+1.云联美购商城：www.yunlianmeigou.com  front项目
+2.云联美购官网：luogou.yunlianmeigou.com
+3.商城后台管理系统：sys.yunlianmeigou.com  dev developylmg789  back项目
+4.商务后台：shop.yunlianmeigou.com   shop项目 hujun1  shophj678
+5.api:api.yunlianmeigou.com  api项目
+6.thh:商城前端页面   thh项目
+
+（已弃用）
+beta环境机器 ：139.196.24.85 
+mall/malldev
+
+beta环境ftp账号和密码 nginx/ylmg666
+
+
+sudo ylmg front back pub shop thh api 分别对应我们6个项目
+
+sudo tail -f /var/log/messages
+
+监控项目的报错
+
+release note
+http://doc.yunlianmeigou.com/
+showdoc/ylmg123
+
+
+跑脚本（本地）
+1.0
+D:\server\php-7.0.22>php.exe D:/web/ylmg/branches/v1/ylmg-api/protected/yiic.php sharepoints updateRank
+2.0
+D:\web\yunlmg\life>php yii balance/test
+D:\web\yunlmg\life>php yii balance/balance-orders
+
+日志提交地址
+http://daily.yunlianmeigou.com
+kuaijw 123456
+
+云联商城用户积分中心
+http://u.luogow.com/index.php?r=m/point/index&type=white&accesstoken=69d40d25526928fc7f6eb9a325da3668
+
+文档中心
+http://doc.yunlianmeigou.com/
+showdoc ylmg123
+ylmg ylmg123
+
+云联惠文档
+v1 : https://docs.yunlianhui.cn/index.php?s=/1&page_id=6        YLHOPEN123
+v2 : https://docs.yunlianhui.com/index.php?s=/8&page_id=77        YLHOPEN123
+
+go
+go教程：https://www.yiibai.com/go/
+svn://139.196.24.85/goprj
+kuaijw=kjw1618898
+golang 下载地址：https://download.jetbrains.8686c.com/go/goland-2017.3.1.exe
+lincense server：http://idea.youbbs.org
+
+线上数据库访问：
+http://sql.yunlmg.com/
+phpdev    GyT5Xu3Fnh
