@@ -17,3 +17,15 @@ C1g5tgsArUcXS07B
 
 alter table hi_user_g add column isMerge tinyint(1) DEFAULT '0' COMMENT '是否合并，1：是，0：否';
 ALTER TABLE `hi_user_g` ADD INDEX isMerge ( `isMerge` )
+
+--------------------------------------------------------------
+118.178.224.4(公)
+10.28.13.134(内)
+
+root
+3WHkHBuj2UtD4wn4
+
+
+mysql
+root
+73kBnrGUDLdFbb01
