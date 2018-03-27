@@ -20,14 +20,14 @@ return  DIRECTORY_SEPARATOR=='\\' ? [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=127.0.0.1;dbname=management',
             'username' => 'root',
-            'password' => '',
+            'password' => 'Kuai920706',
             'charset' => 'utf8',
         ],
         'hiread' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=127.0.0.1;dbname=hiread',
             'username' => 'root',
-            'password' => '',
+            'password' => 'Kuai920706',
             'charset' => 'utf8',
         ],
         'wnmall' => [

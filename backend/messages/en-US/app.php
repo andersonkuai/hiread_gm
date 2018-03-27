@@ -68,5 +68,7 @@ return [
     '联系电话' => 'phone',
     '权限' => 'authority',
     '描述' => 'description',
+    '课程管理' => 'course management',
+    '课程列表' => 'course list',
 
 ];
