@@ -35,6 +35,7 @@ class HiUserController extends BaseController
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $users = $query->orderBy("Time desc")->offset($pages->offset)->limit($pages->limit)->all();
         $renderData = [
+            'userId' => $_GET['id'],
             'users' => $users,
             'searchData' => $searchData,
             'pageHtml' => LinkPager::widget([

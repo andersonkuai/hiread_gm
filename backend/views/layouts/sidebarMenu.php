@@ -27,7 +27,7 @@
         </ul>
     </li>
     <li class="treeview">
-        <a href="#"><i class="fa fa-user"></i> <span><?=\Yii::t('app','订单管理')?></span>
+        <a href="#"><i class="fa fa-reorder"></i> <span><?=\Yii::t('app','订单管理')?></span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>

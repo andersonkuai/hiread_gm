@@ -19,10 +19,15 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <div class="btn-group btn-group-sm" role="group">
-                        <a class="btn btn-default" href="?r=hi-user/index"><i class="fa fa-arrow-circle-o-left"></i> <?= \Yii::t('app', '返回');?></a>
+                        <a class="btn btn-default" href="javascript:history.back(-1)" ><i class="fa fa-arrow-circle-o-left"></i> <?= \Yii::t('app', '返回');?></a>
                     </div>
                 </div>
                 <!-- /.box-header -->
+                <div class="box-header row">
+                    <div class="col-xs-3">
+                        <?= \Yii::t('app', 'uid：');?><?php echo $user->Uid;?>
+                    </div>
+                </div>
                 <div class="box-header row">
                     <div class="col-xs-3">
                         <?= \Yii::t('app', '学员姓名：');?><?php echo $user->EnName;?>
@@ -77,7 +82,16 @@
                                 <td><?= 'Level'.$val['level']?></td>
                                 <td><?= date('Y-m-d H:i:s',$val['Time'])?></td>
                                 <td><?= date('Y-m-d H:i:s',$val['starTime'])?></td>
-                                <td><?= date('Y-m-d H:i:s',($val['starTime'] + $val['expire']))?></td>
+                                <td>
+                                    <?php
+                                        if(empty($val['expire'])){
+                                            echo \Yii::t('app', '无限制');
+                                        }else{
+                                            $months = "+".$val['expire']." months";
+                                            echo date('Y-m-d H:i:s',strtotime($months,$val['starTime']));
+                                        }
+                                    ?>
+                                </td>
                                 <td><textarea name="" id="" cols="30" rows="5"><?= $val['study']?></textarea></td>
                                 <td style="color: #FF0000">暂无</td>
                                 <td style="color: #FF0000">暂无</td>
@@ -103,7 +117,11 @@
                                         <?php
                                             if(!empty($answer[$val['ID']])){
                                                 foreach ($answer[$val['ID']] as $v){
-                                                    echo explode('|',$val['Choice'])[$v - 1].'，';
+                                                    if(!is_numeric($v)){
+                                                        echo $v.',';
+                                                    }else{
+                                                        echo explode('|',$val['Choice'])[$v - 1].'，';
+                                                    }
                                                 }
                                             }
                                         ?>

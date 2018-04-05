@@ -100,5 +100,22 @@ class Func
         Yii::$app->getSession()->set($keyName, time());
         return false;
     }
+    /**
+     * 递归创建目录
+     */
+    public static function mkdirRecursion($dir)
+    {
+        if(is_dir($dir) || @mkdir($dir,0777)){ //查看目录是否已经存在或尝试创建，加一个@抑制符号是因为第一次创建失败，会报一个“父目录不存在”的警告。
+            return $dir;//输出创建成功的目录
+        }else{
+            $dirArr=explode('/',$dir); //当子目录没创建成功时，试图创建父目录，用explode()函数以'/'分隔符切割成一个数组
+            array_pop($dirArr); //将数组中的最后一项（即子目录）弹出来
+            $newDir=implode('/',$dirArr); //重新组合成一个文件夹字符串
+            self::mkdirRecursion($newDir); //试图创建父目录
+            if(@mkdir($dir,0777)){
+                return $dir;
+            } //再次试图创建子目录,成功输出目录名
+        }
+    }
 
 }

@@ -10,7 +10,24 @@
         <li class="active"><?= \Yii::t('app', '注册用户信息');?></li>
     </ol>
 </section>
-
+<style type="text/css">
+    a:link {
+        color:#3C3C3C;
+        text-decoration:underline;
+    }
+    a:visited {
+        color:#0000FF;
+        text-decoration:none;
+    }
+    a:hover {
+        color:#FF00FF;
+        text-decoration:none;
+    }
+    a:active {
+        color:#D200D2;
+        text-decoration:none;
+    }
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -67,7 +84,9 @@
                         </tr>
 
                         <?php foreach($users as $user){?>
-                            <tr>
+                            <tr <?php
+                                if($user['Uid'] == $userId) echo 'style="background-color: #C6E746"';
+                            ?>>
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
                                 <td><?php echo $user['EnName']?></td>
@@ -97,7 +116,7 @@
                                 <td><?php echo $user['SurveyScore']?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="?r=hi-user/info&id=<?php echo $user['Uid']?>">详情</a>
+                                        <a onclick="markBackGround(this)" href="?r=hi-user/info&id=<?php echo $user['Uid']?>" target="_Blank">详情</a>
 <!--                                        <a class="btn btn-default" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=user/activate&id=123');"><i class="fa fa-edit"></i> 激活</a>-->
                                     </div>
                                 </td>
@@ -115,3 +134,9 @@
     </div>
 </section>
 <!-- /.content -->
+<script>
+    function markBackGround(obj) {
+        $('tr').css('background-color', '#ffffff')
+        $(obj).parent().parent().parent().css('background-color', '#C6E746')
+    }
+</script>
