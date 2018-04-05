@@ -84,9 +84,7 @@
                         </tr>
 
                         <?php foreach($users as $user){?>
-                            <tr <?php
-                                if($user['Uid'] == $userId) echo 'style="background-color: #C6E746"';
-                            ?>>
+                            <tr>
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
                                 <td><?php echo $user['EnName']?></td>
