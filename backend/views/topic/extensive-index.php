@@ -57,7 +57,7 @@
                                 <td><?php echo $val['Title']?></td>
                                 <td>
                                     <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_topic_img'].$val['Image']; ?>">
-                                        <img width="30%" src="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_topic_img'].$val['Image']; ?>" alt="">
+                                        <img width="30%" src="<?php if(!empty($val['Image'])) echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_topic_img'].$val['Image']; ?>" alt="">
                                     </a>
                                 </td>
                                 <td><?php echo \common\enums\Topic::params('type')[$val['Type']]?></td>

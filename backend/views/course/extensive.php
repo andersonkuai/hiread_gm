@@ -37,7 +37,7 @@
                                 </td>
                                 <td>
                                     <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_cover_img'].$val['Poster']; ?>">
-                                        <img width="30%" src="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_cover_img'].$val['Poster']; ?>" alt="">
+                                        <img width="30%" src="<?php if(!empty($val['Poster'])) echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_cover_img'].$val['Poster']; ?>" alt="">
                                     </a>
                                 </td>
                                 <td><?php if(!empty($val['OpenDay'])){echo date('Ymd',$val['OpenDay']);}else{echo 0;};?></td>
