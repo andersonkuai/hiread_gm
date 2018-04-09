@@ -605,9 +605,9 @@ class CourseController extends BaseController
         $isCreate = \common\helpers\Func::mkdirRecursion($base_address);//创建目录
         $file_name = date('s').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
         //保存数据
-//        if ($_FILES['questionPic']['error'] == 0){
-//            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
-//        }
+        if ($_FILES['questionPic']['error'] == 0){
+            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
+        }
         $return['code'] = 1;
         $return['pic'] = $file_name;
         $return['isCreate'] = $isCreate;
