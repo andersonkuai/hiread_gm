@@ -62,7 +62,11 @@
                                 <td><?php echo $val['Chapter']?></td>
                                 <td><?php echo $val['Page']?></td>
                                 <td><?php echo $val['Segment']?></td>
-                                <td><?php echo $val['AudioUrl']?></td>
+                                <td>
+                                    <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_read_audio'].$val['AudioUrl']; ?>">
+                                        <?php echo $val['AudioUrl']?>
+                                    </a>
+                                </td>
                                 <td><?php echo $val['Content']?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">

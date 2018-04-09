@@ -33,7 +33,6 @@
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a class="btn btn-default" href="/index.php?r=course/edit-unit&courseId=<?php echo $_GET['id'];?>&unitId=<?php echo $val['ID']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','修改')?></a>
                                         <a class="btn btn-default" href="/index.php?r=course/add-sub-unit&courseId=<?php echo $_GET['id'];?>&unitId=<?php echo $val['ID']?>"><i class="fa fa-plus"></i> <?=\Yii::t('app','添加子单元')?></a>
-                                        <a class="btn btn-default" href="/index.php?r=course/edit-extensive&courseId=<?php echo $_GET['id'];?>&extensiveId=<?php echo $val['ID']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','题目管理')?></a>
                                         <a class="btn btn-xs btn-default" href="/index.php?r=course/read&courseId=<?php echo $_GET['id'];?>&unitId=<?php echo $val['ID']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','每日朗读')?></a>
                                         <a class="btn btn-default" href="javascript:void(0);" onclick="UTILITY.OPERATE.get('?r=course/del-unit&courseId=<?php echo $_GET['id'];?>&unitId=<?php echo $val['ID']?>');"><i class="fa fa-trash-o"></i> <?=\Yii::t('app','删除')?></a>
                                     </div>
