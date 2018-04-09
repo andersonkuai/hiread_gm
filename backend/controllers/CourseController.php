@@ -42,8 +42,6 @@ class CourseController extends BaseController
      * @return string
      */
     public function actionIndex(){
-        echo Yii::$app->params['static_hiread'];
-        exit;
         $query = HiConfCourse::find()->select(['CategoryName' => 'hi_conf_category.name',
             'hi_conf_course.ProdName', 'BookName' => 'hi_conf_course.Name','CourseId' => 'hi_conf_course.ID',
             'CourseTime','Price','DiscountPrice','Expire','Level','MinAge','MaxAge',
