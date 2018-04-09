@@ -64,10 +64,6 @@ class TopicController extends BaseController
             }//end if
         }//end if
         $renderData['question'] = $test;
-        $test = \common\enums\topic::params('type');
-        echo '<pre>';
-        print_r($test);
-        exit;
         return $this->display('extensive-index', $renderData);
     }
     /**
