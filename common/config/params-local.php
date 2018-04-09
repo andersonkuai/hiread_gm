@@ -13,6 +13,9 @@ return [
     'view_Author' => 'course/book/',//查看目录
     //课程包地址
     'package' => 'D:/HTTP/upload_tmp_dir/course/book/',
+    //每日朗读音频
+    'read_audio' => 'D:/HTTP/upload_tmp_dir/course/book/',
+    'view_read_audio' => 'course/book/',
     /**
      * 泛读
      */
@@ -46,4 +49,31 @@ return [
     //泛读答案配对音频
     'extensive_answer_Pair1Audio' => 'D:/HTTP/upload_tmp_dir/course/answer/audio/',
     'view_extensive_answer_Pair1Audio' => 'course/answer/audio/',//查看目录
+    /**
+     * 精读
+     */
+    //题目图片
+    'unit_topic_img' => 'D:/HTTP/upload_tmp_dir/course/question/image/',
+    'view_unit_topic_img' => 'course/question/image/',//查看目录
+    //题目音频
+    'unit_topic_audio' => 'D:/HTTP/upload_tmp_dir/course/question/audio/',
+    'view_unit_topic_audio' => 'course/question/audio/',//查看目录
+    //题目描述音频
+    'unit_question_des_audio' => 'D:/HTTP/upload_tmp_dir/course/question/audio/',
+    'view_unit_question_des_audio' => 'course/question/audio/',//查看目录
+    //题目视频地址
+    'unit_topic_video' => 'D:/HTTP/upload_tmp_dir/course/question/video/',
+    'view_unit_topic_video' => 'course/question/video/',//查看目录
+    //视频封面
+    'unit_topic_poster' => 'D:/HTTP/upload_tmp_dir/course/question/image/',
+    'view_unit_topic_poster' => 'course/question/image/',//查看目录
+    //例句音频
+    'unit_SampleAudio' => 'D:/HTTP/upload_tmp_dir/course/question/audio/',
+    'view_unit_SampleAudio' => 'course/question/audio/',//查看目录
+    //题目解析音频
+    'unit_question_des_aaudio' => 'D:/HTTP/upload_tmp_dir/course/answer/audio/',
+    'view_unit_question_des_aaudio' => 'course/answer/audio/',//查看目录
+    //题目解析视频
+    'unit_question_des_avideo' => 'D:/HTTP/upload_tmp_dir/course/answer/video/',
+    'view_unit_question_des_avideo' => 'course/answer/video/',//查看目录
 ];

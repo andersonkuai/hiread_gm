@@ -63,7 +63,6 @@
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a class="btn btn-default" href="/index.php?r=course/edit&id=<?php echo $val['CourseId']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','修改')?></a>
                                         <a class="btn btn-default" href="/index.php?r=course/structure&id=<?php echo $val['CourseId']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','课程结构')?></a>
-                                        <a class="btn btn-default" href="/index.php?r=course/topic&id=<?php echo $val['CourseId']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','配置题目')?></a>
                                     </div>
                                 </td>
                             </tr>

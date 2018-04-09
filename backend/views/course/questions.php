@@ -1,18 +1,24 @@
 <form role="form" id="myForm" action="" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-xs-10">
-        <?= \Yii::t('app', '跳出题目时间');?>：
-        <input style="width: 50px" class="form" name="appearMin" type="text" value="<?php echo !empty($v['extensiveTopicList']['Min']) ? $v['extensiveTopicList']['Min'] : ''; ?>">分
-        <input style="width: 50px" class="form" name="appearSec" type="text" value="<?php echo !empty($v['extensiveTopicList']['Sec']) ? $v['extensiveTopicList']['Sec'] : ''; ?>">秒
+    <div class="col-xs-10" tab="<?php if(!empty($v['extensiveTopicList'])) {echo max(array_keys($v['extensiveTopicList']['Questions']));}else{echo 0;} ?>">
         <?php if(!empty($v['extensiveTopicList'])) { ?>
             <?php foreach ($v['extensiveTopicList']['Questions'] as $key=>$val){ ?>
                 <table style="margin-bottom: 20px;background-color: #C6E746;" tab="<?=$key?>">
                     <tr>
+                        <td>
+                            <?= \Yii::t('app', '跳出题目时间');?>：
+                        </td>
+                        <td>
+                            <input style="width: 50px" class="form" name="appearMin[<?=$key?>]" type="text" value="<?php echo !empty($val['Min']) ? $val['Min'] : ''; ?>">分
+                            <input style="width: 50px" class="form" name="appearSec[<?=$key?>]" type="text" value="<?php echo !empty($val['Sec']) ? $val['Sec'] : ''; ?>">秒
+                        </td>
+                    </tr>
+                    <tr>
                         <td><?= \Yii::t('app', '题目标题');?>：</td>
                         <td>
-                            <input class="form" name="Title[]"  type="text" value="<?php echo empty($val) ? '' : $val['Title'];?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class="form" name="Title[<?=$key?>]"  type="text" value="<?php echo empty($val) ? '' : $val['Title'];?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= \Yii::t('app', '题目类型');?>：
-                            <select name="Type[]">
+                            <select name="Type[<?=$key?>]">
                                 <?php foreach (\common\enums\Topic::params('type') as $key_t=>$val_t){ ?>
                                     <option value="<?= $key_t;?>" <?php if($key_t == $val['Type']) echo 'selected';?>><?= $val_t;?></option>
                                 <?php }?>
@@ -22,7 +28,7 @@
                     <tr>
                         <td><?= \Yii::t('app', '题目图片');?>：</td>
                         <td>
-                            <input class="form" name="Image[]" type="text" value="<?php echo empty($val) ? '' : $val['Image'];?>">
+                            <input class="form" name="Image[<?=$key?>]" type="text" value="<?php echo empty($val) ? '' : $val['Image'];?>">
                             <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadImg('extensive_topic_img',this)" accept="image/*" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -33,7 +39,7 @@
                     <tr>
                         <td><?= \Yii::t('app', '题目音频');?>：</td>
                         <td>
-                            <input class="form" name="Audio[]" type="text" value="<?php echo empty($val) ? '' : $val['Audio'];?>">
+                            <input class="form" name="Audio[<?=$key?>]" type="text" value="<?php echo empty($val) ? '' : $val['Audio'];?>">
                             <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_topic_audio',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -44,7 +50,7 @@
                     <tr>
                         <td><?= \Yii::t('app', '题目描述音频');?>：</td>
                         <td>
-                            <input class="form" name="QAudio[]" type="text" value="<?php echo empty($val) ? '' : $val['QAudio'];?>">
+                            <input class="form" name="QAudio[<?=$key?>]" type="text" value="<?php echo empty($val) ? '' : $val['QAudio'];?>">
                             <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_audio',this)"  />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -61,13 +67,13 @@
                     <tr>
                         <td><?= \Yii::t('app', '题目解析');?>：</td>
                         <td>
-                            <textarea name="Analysis[]" id="" cols="50" rows="5"><?=$val['Analysis']?></textarea>
+                            <textarea name="Analysis[<?=$key?>]" id="" cols="50" rows="5"><?=$val['Analysis']?></textarea>
                         </td>
                     </tr>
                     <tr>
                         <td><?= \Yii::t('app', '题目解析音频');?>：</td>
                         <td>
-                            <input class="form" name="AAudio[]" type="text" value="<?php echo empty($val) ? '' : $val['AAudio'];?>">
+                            <input class="form" name="AAudio[<?=$key?>]" type="text" value="<?php echo empty($val) ? '' : $val['AAudio'];?>">
                             <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_aaudio',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -78,7 +84,7 @@
                     <tr>
                         <td><?= \Yii::t('app', '题目解析视频');?>：</td>
                         <td>
-                            <input class="form" name="AVideo[]" type="text" value="<?php echo empty($val) ? '' : $val['AVideo'];?>">
+                            <input class="form" name="AVideo[<?=$key?>]" type="text" value="<?php echo empty($val) ? '' : $val['AVideo'];?>">
                             <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_avideo',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -89,13 +95,13 @@
                     <tr>
                         <td><?= \Yii::t('app', '翻译');?>：</td>
                         <td>
-                            <textarea name="Translate[]" id="" cols="50" rows="5"><?php echo empty($val) ? '' : $val['Translate'];?></textarea>
+                            <textarea name="Translate[<?=$key?>]" id="" cols="50" rows="5"><?php echo empty($val) ? '' : $val['Translate'];?></textarea>
                         </td>
                     </tr>
                     <tr>
                         <td><?= \Yii::t('app', '提示信息');?>：</td>
                         <td>
-                            <textarea name="Help[]" id="" cols="50" rows="5"><?php echo empty($val) ? '' : $val['Help'];?></textarea>
+                            <textarea name="Help[<?=$key?>]" id="" cols="50" rows="5"><?php echo empty($val) ? '' : $val['Help'];?></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -107,19 +113,19 @@
                                     $Matrix = explode('_',$val['Matrix']);
                                 }
                             ?>
-                            <input style="width: 30px" name="MatrixA[]" id=""type="text" value="<?=$Matrix[0]?>" />*<input style="width: 30px" name="MatrixB[]" id=""type="text" value="<?=$Matrix[1]?>" />
+                            <input style="width: 30px" name="MatrixA[<?=$key?>]" id=""type="text" value="<?=$Matrix[0]?>" />*<input style="width: 30px" name="MatrixB[<?=$key?>]" id=""type="text" value="<?=$Matrix[1]?>" />
                         </td>
                     </tr>
                     <tr>
                         <td><?= \Yii::t('app', '获得金币数量');?>：</td>
                         <td>
-                            <input name="Gold[]" id=""type="text" value="<?php echo empty($val) ? '' : $val['Gold'];?>" />
+                            <input name="Gold[<?=$key?>]" id=""type="text" value="<?php echo empty($val) ? '' : $val['Gold'];?>" />
                         </td>
                     </tr>
                     <tr>
                         <td><?= \Yii::t('app', '是否是练习题目');?>：</td>
                         <td>
-                            <select name="IsTrain[]" id="">
+                            <select name="IsTrain[<?=$key?>]" id="">
                                 <option value="1" <?php echo $val['IsTrain'] == 1 ? 'selected ' : '';?>>是</option>
                                 <option value="0" <?php echo $val['IsTrain'] == 0 ? 'selected ' : '';?>>否</option>
                             </select>
@@ -128,7 +134,7 @@
                     <tr>
                         <td><?= \Yii::t('app', 'CCSS细项');?>：</td>
                         <td>
-                            <input name="Category[]" id=""type="text" value="<?php echo empty($val) ? '' : $val['Category'];?>" />
+                            <input name="Category[<?=$key?>]" id=""type="text" value="<?php echo empty($val) ? '' : $val['Category'];?>" />
                         </td>
                     </tr>
                     <tr>
@@ -144,7 +150,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目标题');?>：</td>
                     <td>
-                        <input class="form" name="Title[]"  type="text" value="<?php echo empty($row) ? '' : $row['ProdName'];?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="form" name="Title[]"  type="text" value="">&nbsp;&nbsp;&nbsp;&nbsp;
                         <?= \Yii::t('app', '题目类型');?>：
                         <select name="Type[]" id="">
                             <?php foreach (\common\enums\Topic::params('type') as $keyType=>$valType){ ?>
@@ -156,7 +162,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目图片');?>：</td>
                     <td>
-                        <input class="form" name="Image[]" type="text" value="<?php echo empty($row) ? '' : $row['CoverImg'];?>">
+                        <input class="form" name="Image[]" type="text" value="">
                         <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadImg('extensive_topic_img',this)" accept="image/*" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -167,7 +173,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目音频');?>：</td>
                     <td>
-                        <input class="form" name="Audio[]" type="text" value="<?php echo empty($row) ? '' : $row['CoverImg'];?>">
+                        <input class="form" name="Audio[]" type="text" value="">
                         <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_topic_audio',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -178,7 +184,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目描述音频');?>：</td>
                     <td>
-                        <input class="form" name="QAudio[]" type="text" value="<?php echo empty($row) ? '' : $row['CoverImg'];?>">
+                        <input class="form" name="QAudio[]" type="text" value="">
                         <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_audio',this)"  />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -191,7 +197,11 @@
                         <?= \Yii::t('app', '答案');?>：
                     </td>
                     <td>
-                        <?php require('answer.php');?>
+                        <?php
+                            echo '<pre>';
+                            print_r($val)
+                        ?>
+                        <?php require ('answer.php')?>
                     </td>
                 </tr>
                 <tr>
@@ -203,7 +213,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目解析音频');?>：</td>
                     <td>
-                        <input class="form" name="AAudio[]" type="text" value="<?php echo empty($row) ? '' : $row['CoverImg'];?>">
+                        <input class="form" name="AAudio[]" type="text" value="">
                         <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_aaudio',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -214,7 +224,7 @@
                 <tr>
                     <td><?= \Yii::t('app', '题目解析视频');?>：</td>
                     <td>
-                        <input class="form" name="AVideo[]" type="text" value="<?php echo empty($row) ? '' : $row['CoverImg'];?>">
+                        <input class="form" name="AVideo[]" type="text" value="">
                         <span  id="questionPicTr">
                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('extensive_question_des_avideo',this)" />
                 <span class="btn-upload" id="CoverImg_btn"></span>
@@ -282,7 +292,8 @@
 <script>
     function addData(obj) {
         var dom = $(obj).parent().parent().parent().parent().parent().children('table').last()
-        var id = parseInt(dom.attr('tab')) + 1;
+        var id = parseInt(dom.parent().attr('tab')) + 1;
+//        var id = parseInt(dom.attr('tab')) + 1;
         //获取当前table元素
         var tr = $(obj).parent().parent().parent().parent()
 
@@ -292,16 +303,17 @@
         //ul标签
         var ul = tr.find('ul').get(0);
         var ulstr = ul.outerHTML;
+        var str1 = tr.html().replace(str,ulstr);
         //替换name值
-        var nameKey = $($(ul).find('input').get(0)).attr('name').slice(11,12)
+        var nameVal = $($(ul).find('input').get(0)).attr('name');
+        var length = parseInt(nameVal.length) - 14;
+        var nameKey = nameVal.substr(11,length)
+        console.log(nameKey);
         var grepVal = '\\['+nameKey+'\\]'
-        var ul1 = ulstr.replace(new RegExp(grepVal,'gm'),'['+id+']');
-
-        var str1 = tr.html().replace(str,ul1);
-
-
-
-        var html = '<table tab="'+id+'" style="margin-bottom: 20px;background-color: #C6E746;">' + str1 + '</table>';
+        var str2 = str1.replace(new RegExp(grepVal,'gm'),'['+id+']');
+        //修改tab值
+        dom.parent().attr('tab',id)
+        var html = '<table tab="'+id+'" style="margin-bottom: 20px;background-color: #C6E746;">' + str2 + '</table>';
         tr.after(html);
     }
     function minusData(obj) {
@@ -442,9 +454,9 @@
         var tab = $(obj).parent().parent().parent().parent().parent().parent().attr('tab')
         //获取html标签
         var str = tr.html();
-        var nameKey = $($(obj).parent().parent().find('input').get(0)).attr('name').slice(10,13)
-        var str1 = str.replace(new RegExp(nameKey,'gm'),tab);
-        var html = '<ul style="margin-top: 20px;background-color: burlywood">' + str1 + '</ul>';
+//        var nameKey = $($(obj).parent().parent().find('input').get(0)).attr('name').slice(11,13)
+//        var str1 = str.replace(new RegExp(nameKey,'gm'),tab);
+        var html = '<ul style="margin-top: 20px;background-color: burlywood">' + str + '</ul>';
         tr.after(html)
     }
     function minusAnswer(obj) {

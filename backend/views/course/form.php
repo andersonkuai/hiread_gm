@@ -170,6 +170,79 @@
                                             <textarea name="Tech" id="" cols="80" rows="6"><?php echo empty($row) ? 0 : $row['Tech'];?></textarea>
                                         </td>
                                     </tr>
+                                    <?php if(!empty($package)){ ?>
+                                        <?php foreach ($package as $k=>$v){ ?>
+                                            <tr>
+                                                <td><?= \Yii::t('app', '课程包');?>：</td>
+                                                <td>
+                                                    <input class="form" style="width: 40%;" name="FileName[]" type="text" value="<?php echo $v->FileName;?>">
+                                                    <input class="form" style="width: 10%;" name="FileSize[]" type="text" value="<?php echo $v->FileSize;?>">
+                                                    <span  id="">
+                                                        <input style="display: inline-block" class="fileupload" type="file" name="package" id="package" onchange="uploadFile(this)" />
+                                                        <span class="btn-upload"></span>
+                                                    </span>&nbsp;&nbsp;
+                                                </td>
+                                                <td>
+                                                    <a href="##" style="margin: 8px" onclick="addData(this)" class="fa fa-plus"></a>
+                                                </td>
+                                                <td>
+                                                    <a href="##" style="margin: 8px" onclick="minuxData(this)" class="fa fa-minus"></a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <tr>
+                                            <td><?= \Yii::t('app', '课程包');?>：</td>
+                                            <td>
+                                                <input class="form" style="width: 40%;" name="FileName[]" type="text" value="">
+                                                <input class="form" style="width: 10%;" name="FileSize[]" type="text" value="">
+                                                <span  id="">
+                                                    <input style="display: inline-block" class="fileupload" type="file" name="package" id="package" onchange="uploadFile(this)" />
+                                                    <span class="btn-upload"></span>
+                                                </span>&nbsp;&nbsp;
+                                            </td>
+                                            <td>
+                                                <a href="##" style="margin: 8px" onclick="addData(this)" class="fa fa-plus"></a>
+                                            </td>
+                                            <td>
+                                                <a href="##" style="margin: 8px" onclick="minuxData(this)" class="fa fa-minus"></a>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    <?php if(!empty($outline)){ ?>
+                                        <?php foreach ($outline as $k=>$v){ ?>
+                                            <tr>
+                                                <td><?= \Yii::t('app', '课程大纲');?>：</td>
+                                                <td>
+                                                    <input type="text" name="intensive_outline_name[]" value="<?php echo $v->Name;?>">&nbsp;
+                                                    <?= \Yii::t('app', '大纲描述');?>：
+                                                    <input type="text" style="width: 40%" name="intensive_outline_desc[]" value="<?php echo $v->Desc;?>">
+                                                </td>
+                                                <td>
+                                                    <a href="##" style="margin: 8px" onclick="addData(this)" class="fa fa-plus"></a>
+                                                </td>
+                                                <td>
+                                                    <a href="##" style="margin: 8px" onclick="minuxData(this)" class="fa fa-minus"></a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <tr>
+                                            <td><?= \Yii::t('app', '课程大纲');?>：</td>
+                                            <td>
+                                                <input type="text" name="intensive_outline_name[]" value="">&nbsp;
+                                                <?= \Yii::t('app', '大纲描述');?>：
+                                                <input type="text" style="width: 40%" name="intensive_outline_desc[]" value="">
+                                            </td>
+                                            <td>
+                                                <a href="##" style="margin: 8px" onclick="addData(this)" class="fa fa-plus"></a>
+                                            </td>
+                                            <td>
+                                                <a href="##" style="margin: 8px" onclick="minuxData(this)" class="fa fa-minus"></a>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+
                                 </table>
                             </div>
                         </div>
@@ -190,6 +263,50 @@
 </section>
 <!-- /.content -->
 <script type="text/javascript">
+    /**
+     * 上传课程包
+     */
+    function uploadFile(obj) {
+        var fileDom = $(obj);
+        var btn = fileDom.next()
+        var url = "index.php?r=course/upload-package"
+        fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
+        fileDom.parent().ajaxSubmit({
+            dataType:  'json',
+            beforeSend: function() {
+                var percentVal = '0%';
+                btn.addClass('disabled').text("上传中...");
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
+            },
+            success: function(data) {
+                if(data.code == 1){
+                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
+                    var fileName = fileDom.parent().parent().parent().children().get(0);
+                    var fileSize = fileDom.parent().parent().parent().children().get(1);
+                    $(fileName).val(data.pic)
+                    $(fileSize).val(data.size)
+                }
+                fileDom.unwrap();
+            },
+            error:function(xhr){
+                alert('上传失败');
+                fileDom.unwrap();
+            }
+        });
+    }
+    function addData(obj) {
+        //获取当前tr元素
+        var tr = $(obj).parent().parent()
+        var html = '<tr>' + tr.html() + '</tr>';
+        tr.after(html)
+    }
+    function minuxData(obj) {
+        //获取当前tr元素
+        var tr = $(obj).parent().parent()
+        tr.remove();
+    }
 
     //上传图片
     function uploadImg(action) {

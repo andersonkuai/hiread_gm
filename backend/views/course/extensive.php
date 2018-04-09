@@ -1,164 +1,63 @@
-<!--泛读-->
-<hr>
-<div>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a class="btn btn-primary" href="?r=course/add-extensive&courseId=<?php echo $_GET['id'];?>"><i class="fa fa-plus"></i> 添加</a>
+                        <a class="btn btn-default" href="?r=course/index"><i class="fa fa-arrow-circle-o-left"></i> <?= \Yii::t('app', '返回');?></a>
+                    </div>
+                    <div class="box-tools">
 
-    <div class="col-xs-8">
-        <?php if(!empty($extensive)){ ?>
-            <?php foreach($extensive as $k=>$v){ ?>
-                <table style="margin-bottom: 30px">
-                    <tr>
-                        <td><?= \Yii::t('app', '泛读标题');?>：</td>
-                        <td>
-                            <input class="form" name="extensiveTitle[]" type="text" value="<?php echo $v->Title;?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?= \Yii::t('app', '视频');?>：</td>
-                        <td>
-                            <input class="form" name="extensiveVideo[]" type="text" value="<?php echo $v->Video;?>">
-                            <span  id="VideoTr">
-                            <input style="display: inline-block" class="fileupload" type="file" name="VideoSource" id="VideoSource" onchange="uploadExtensiveVideo(this)" />
-                            <span class="btn-upload"></span>
-                        </span>&nbsp;&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?= \Yii::t('app', '视频封面');?>：</td>
-                        <td>
-                            <input class="form" name="extensivePoster[]" type="text" value="<?php echo $v->Poster;?>">
-                            <span  id="PosterPicTr">
-                        <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="Poster_pic" onchange="uploadExtensiveVideoImg(this)" accept="image/*" />
-                        <span class="btn-upload" id="Poster_btn"></span>
-                    </span>&nbsp;&nbsp;
-                            <a class="btn btn-sm btn-primary" href="##" onclick="viewImg('Poster',this)"><?= \Yii::t('app', '查看');?></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?= \Yii::t('app', '开放日期');?>：</td>
-                        <td>
-                            <input class="form" name="extensiveOpenDay[]" type="text" value="<?php echo empty($v->OpenDay) ? 0 : date('Ymd',$v->OpenDay) ;?>"> 格式：20180129，0:没有限制
-                        </td>
-                        <td>
-                            <a href="##" style="margin: 8px" onclick="addExtensive(this)" class="fa fa-plus"></a>
-                            <a href="##" style="margin: 8px" onclick="minuxExtensive(this)" class="fa fa-minus"></a>
-                        </td>
-                    </tr>
-                </table>
-            <?php }?>
-        <?php }else{ ?>
-            <table style="margin-bottom: 30px">
-                <tr>
-                    <td><?= \Yii::t('app', '泛读标题');?>：</td>
-                    <td>
-                        <input class="form" name="extensiveTitle[]" type="text" value="<?php echo empty($row) ? '' : $row['username'];?>">
-                    </td>
-                </tr>
-                <tr>
-                    <td><?= \Yii::t('app', '视频');?>：</td>
-                    <td>
-                        <input class="form" name="extensiveVideo[]" type="text" value="<?php echo empty($row) ? '' : $row['Video'];?>">
-                        <span  id="VideoTr">
-                        <input style="display: inline-block" class="fileupload" type="file" name="VideoSource" id="VideoSource" onchange="uploadExtensiveVideo(this)" />
-                        <span class="btn-upload"></span>
-                    </span>&nbsp;&nbsp;
-                    </td>
-                </tr>
-                <tr>
-                    <td><?= \Yii::t('app', '视频封面');?>：</td>
-                    <td>
-                        <input class="form" name="extensivePoster[]" type="text" value="<?php echo empty($row) ? '' : $row['Poster'];?>">
-                        <span  id="PosterPicTr">
-                        <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="Poster_pic" onchange="uploadExtensiveVideoImg(this)" accept="image/*" />
-                        <span class="btn-upload" id="Poster_btn"></span>
-                    </span>&nbsp;&nbsp;
-                        <a class="btn btn-sm btn-primary" href="##" onclick="viewImg('Poster',this)"><?= \Yii::t('app', '查看');?></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><?= \Yii::t('app', '开放日期');?>：</td>
-                    <td>
-                        <input class="form" name="extensiveOpenDay[]" type="text" value="<?php echo empty($row) ? date('Ymd') : $row['username'];?>"> 格式：20180129，0:没有限制
-                    </td>
-                    <td>
-                        <a href="##" style="margin: 8px" onclick="addExtensive(this)" class="fa fa-plus"></a>
-                        <a href="##" style="margin: 8px" onclick="minuxExtensive(this)" class="fa fa-minus"></a>
-                    </td>
-                </tr>
-            </table>
-        <?php } ?>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                            <th><?= \Yii::t('app', '泛读ID');?></th>
+                            <th><?= \Yii::t('app', '课程ID');?></th>
+                            <th><?= \Yii::t('app', '泛读视频标题');?></th>
+                            <th><?= \Yii::t('app', '视频');?></th>
+                            <th><?= \Yii::t('app', '泛读视频封面');?></th>
+                            <th><?= \Yii::t('app', 'OpenDay');?></th>
+                            <th><?= \Yii::t('app', '操作');?></th>
+                        </tr>
+
+                        <?php foreach($extensive as $val){?>
+                            <tr>
+                                <td><?php echo $val['ID']?></td>
+                                <td><?php echo $val['CourseId']?></td>
+                                <td><?php echo $val['Title']?></td>
+                                <td>
+                                    <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_video'].$val['Video']; ?>">
+                                        <?php echo $val['Video'];?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_cover_img'].$val['Poster']; ?>">
+                                        <img width="30%" src="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_cover_img'].$val['Poster']; ?>" alt="">
+                                    </a>
+                                </td>
+                                <td><?php if(!empty($val['OpenDay'])){echo date('Ymd',$val['OpenDay']);}else{echo 0;};?></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a class="btn btn-default" href="/index.php?r=course/edit-extensive&courseId=<?php echo $_GET['id'];?>&extensiveId=<?php echo $val['ID']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','修改')?></a>
+                                        <a class="btn btn-default" href="/index.php?r=topic/extensive-index&courseId=<?php echo $_GET['id'];?>&extensiveId=<?php echo $val['ID']?>"><i class="fa fa-edit"></i> <?=\Yii::t('app','题目管理')?></a>
+                                        <a class="btn btn-default" href="javascript:void(0);" onclick="UTILITY.OPERATE.get('?r=course/del-extensive&courseId=<?php echo $_GET['id'];?>&extensiveId=<?php echo $val['ID']?>');"><i class="fa fa-trash-o"></i> <?=\Yii::t('app','删除')?></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php }?>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
     </div>
-</div>
-
-<script>
-    function addExtensive(obj) {
-        //获取当前table元素
-        var tr = $(obj).parent().parent().parent().parent()
-        console.log(tr.html());
-        var html = '<table style="margin-bottom: 30px">' + tr.html() + '</table>';
-        tr.after(html)
-    }
-    function minuxExtensive(obj) {
-        //获取当前tr元素
-        var tr = $(obj).parent().parent().parent().parent()
-        tr.remove();
-    }
-
-    //上传视频
-    function uploadExtensiveVideo(obj) {
-        var fileDom = $(obj);
-        var btn = fileDom.next();
-        fileDom.wrap('<form action="index.php?r=course/uploadvideo&read_type=extensive" method="post" enctype="multipart/form-data"></form>');
-        $(obj).parent().parent().find('form').ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
-                var percentVal = '0%';
-                btn.addClass('disabled').text("上传中...");
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
-            },
-            success: function(data) {
-                if(data.code == 1){
-                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
-                    $(obj).parent().parent().prev().val(data.pic)
-                }else{
-                    alert('上传失败');
-                }
-                fileDom.unwrap();
-            },
-            error:function(xhr){
-                alert('上传失败');
-                fileDom.unwrap();
-            }
-        });
-    }
-    //上传图片
-    function uploadExtensiveVideoImg(obj) {
-        var action = 'Poster';
-        var fileDom = $(obj);
-        var btn = fileDom.next();
-        var url = "index.php?r=course/uploadimg&action="+action
-        fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
-        $(obj).parent().parent().find('form').ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
-                var percentVal = '0%';
-                btn.addClass('disabled').text("上传中...");
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
-            },
-            success: function(data) {
-                if(data.code == 1){
-                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
-                    $(obj).parent().parent().prev().val(data.pic)
-                }
-                fileDom.unwrap();
-            },
-            error:function(xhr){
-                alert('上传失败');
-                fileDom.unwrap();
-            }
-        });
-    }
-</script>
+</section>
+<!-- /.content -->

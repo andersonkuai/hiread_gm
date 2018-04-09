@@ -13,7 +13,7 @@
 <style type="text/css">
     a:link {
         color:#3C3C3C;
-        text-decoration:underline;
+        text-decoration:none;
     }
     a:visited {
         color:#0000FF;

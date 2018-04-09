@@ -10,13 +10,18 @@ namespace backend\controllers;
 
 use common\models\HiConfCategory;
 use common\models\HiConfCourse;
+use common\models\HiConfCourseCatalog;
 use common\models\HiConfCourseOutline;
 use common\models\HiConfCoursePackage;
+use common\models\HiConfCourseWord;
+use common\models\HiConfDayRead;
 use common\models\HiConfExtensive;
 use common\models\HiConfExtensiveTopic;
 use common\models\HiConfExtensiveTopicAnswer;
 use common\models\HiConfExtensiveTopicList;
 use common\models\HiConfSubUnit;
+use common\models\HiConfSubUnitTrain;
+use common\models\HiConfTopic;
 use common\models\HiConfUnit;
 use yii\data\Pagination;
 use yii\db\Exception;
@@ -27,6 +32,7 @@ class CourseController extends BaseController
 {
     public function __construct($id, $module, $config = [])
     {
+        date_default_timezone_set('PRC');
         $this->enableCsrfValidation = false;//关闭scrf验证
         parent::__construct($id, $module, $config);
 
@@ -85,6 +91,10 @@ class CourseController extends BaseController
             if (!empty($courseId)){
                 $course = HiConfCourse::findOne(['ID' => $courseId])->toArray();
             }
+            //课程包
+            $renderData['package'] = HiConfCoursePackage::findAll(['CourseId' => $courseId]);
+            //大纲
+            $renderData['outline'] = HiConfCourseOutline::findAll(['CourseId' => $courseId]);
             $renderData['row'] = !empty($course) ? $course : array();
             return $this->display('form', $renderData);
         }
@@ -115,6 +125,29 @@ class CourseController extends BaseController
                 if (empty($courseId)){
                     throw new Exception('插入课程数据失败');
                 }
+                //课程包
+                if(!empty($_POST['FileName'])){
+                    foreach ($_POST['FileName'] as $k=>$v){
+                        if(empty($v)) continue;
+                        $packageData[] = array($courseId,$v,$_POST['FileSize'][$k]);
+                    }
+                    if(!empty($packageData)){
+                        $coursePackage = new HiConfCoursePackage();
+                        $coursePackage->insertAll($packageData);
+                    }
+                }//end if
+                //课程大纲
+                if(!empty($_POST['intensive_outline_name'])){
+                    //大纲
+                    foreach ($_POST['intensive_outline_name'] as $k=>$v){
+                        if(empty($v)) continue;
+                        $courseOutlineData[] = array($courseId,$v,$_POST['intensive_outline_desc'][$k]);
+                    }
+                    if (!empty($courseOutlineData)){
+                        $courseOutline = new HiConfCourseOutline();
+                        $courseOutline->insertAll($courseOutlineData);
+                    }
+                }//end if
                 $transaction->commit();
             }catch (Exception $e){
                 $error = $e->getMessage();
@@ -127,283 +160,400 @@ class CourseController extends BaseController
         }else{
             //修改课程
             $course = new HiConfCourse();
-            $attr = $course->attributeLabels();//表字段
-            $updateData = array_intersect_key($data, $attr);
-            $courseSource = HiConfCourse::findOne($id);
-            $rtn = $courseSource->updateAttributes($updateData);
-            if ($rtn){
-                $this->exitJSON(1, 'success');
-            }else{
-                $this->exitJSON(0, 'fail!',$updateData);
-            }
-        }//end if
-    }
-
-    /**
-     * 配置题目
-     */
-    public function actionTopic()
-    {
-        date_default_timezone_set('PRC');
-        if(Yii::$app->getRequest()->getIsPost()){
-            //存储题目数据/答案数据/泛读题目表
-            $data = Yii::$app->getRequest()->post();
             $transaction = Yii::$app->hiread->beginTransaction();
             try{
-                $extensiveId = $data['extensiveId'];//泛读id
-                //删除原有数据
-                $questionAlready = HiConfExtensiveTopicList::find()->where(['ExtId' => $extensiveId])->asArray()->all();
-                if(!empty($questionAlready)){
-                    foreach ($questionAlready as $k=>$v){
-                        $questionAlreadyArray = explode('|',$v['Questions']);
-                        //删除数据
-                        HiConfExtensiveTopicAnswer::deleteAll(['Tid' => $questionAlreadyArray]);
-                        HiConfExtensiveTopic::deleteAll(['ID' => $questionAlreadyArray]);
-                        HiConfExtensiveTopicList::deleteAll(['ID' => $v['ID']]);
+                $attr = $course->attributeLabels();//表字段
+                $updateData = array_intersect_key($data, $attr);
+                $courseSource = HiConfCourse::findOne($id);
+                $rtn = $courseSource->updateAttributes($updateData);
+                //课程包
+                HiConfCoursePackage::deleteAll(['CourseId' => $id]);//删除课程包
+                if(!empty($_POST['FileName'])){
+                    foreach ($_POST['FileName'] as $k=>$v){
+                        if(empty($v)) continue;
+                        $packageData[] = array($id,$v,$_POST['FileSize'][$k]);
+                    }
+                    if(!empty($packageData)){
+                        $coursePackage = new HiConfCoursePackage();
+                        $coursePackage->insertAll($packageData);
                     }
                 }//end if
-                //添加数据
-                if (!empty($data['Title'])){
-                    $topicIDList = array();
-                    foreach ($data['Title'] as $k=>$v){
-                        if(empty($v)){
-                            continue;
-                        }
-                        //保存题目
-                        $topic = array(
-                            'Title' => $v,//题目标题
-                            'Image' => $data['Image'][$k],//题目图片
-                            'Audio' => $data['Audio'][$k],//题目音频
-                            'QAudio' => $data['QAudio'][$k],//题目描述音频
-                            'Analysis' => $data['Analysis'][$k],//题目解析
-                            'AAudio' => $data['AAudio'][$k],//题目解析音频
-                            'AVideo' => $data['AVideo'][$k],//题目解析视频
-                            'Translate' => $data['Translate'][$k],//翻译
-                            'Help' => $data['Help'][$k],//提示信息
-                            'Gold' => !empty($data['Gold'][$k]) ? $data['Gold'][$k] : 0,//获得金币数量
-                            'IsTrain' => $data['IsTrain'][$k],//是否是练习题目
-                            'Category' => $data['Category'][$k],//CCSS细项
-                        );
-                        $extensiveTopic = new HiConfExtensiveTopic();
-                        $extensiveTopic->setAttributes($topic,false);
-                        $extensiveTopic->save();
-                        $topicId = Yii::$app->hiread->getLastInsertID();
-                        $topicIDList[] = $topicId;
-                        //保存答案
-                        $correctAnswer = array();//正确答案
-                        if(!empty($data['answerName'][$k])){
-                            foreach ($data['answerName'][$k] as $key=>$val){
-                                $answer = array(
-                                    'Tid' => $topicId,
-                                    'Name' => $val,
-                                    'Image' => $data['answerImage'][$k][$key],
-                                    'Show' => $data['answerShow'][$k][$key],
-                                    'Pair1Text' => $data['answerPair1Text'][$k][$key],
-                                    'Pair1Audio' => $data['answerPair1Audio'][$k][$key],
-                                    'Pair1Img' => $data['answerPair1Img'][$k][$key],
-                                    'Pair2Text' => $data['answerPair2Text'][$k][$key],
-                                    'Pair2Audio' => $data['answerPair2Audio'][$k][$key],
-                                    'Pair2Img' => $data['answerPair2Img'][$k][$key],
-                                );
-                                $extensiveTopicAnswer = new HiConfExtensiveTopicAnswer();
-                                $extensiveTopicAnswer->setAttributes($answer,false);
-                                $extensiveTopicAnswer->save();
-                                $answerId = Yii::$app->hiread->getLastInsertID();
-                                //标记正确答案
-                                if($data['isTrue'][$k][$key] == '1'){
-                                    $correctAnswer[] = $answerId;
-                                }
-                            }//end foreach
-                        }//end if
-                        //更新题目的正确答案
-                        if(!empty($correctAnswer)){
-                            $correctAnswerStr = implode('|',$correctAnswer);
-                            HiConfExtensiveTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $topicId]);
-                        }
+                //课程大纲
+                HiConfCourseOutline::deleteAll(['CourseId' => $id]);//删除课程大纲
+                if(!empty($_POST['intensive_outline_name'])){
+                    //大纲
+                    foreach ($_POST['intensive_outline_name'] as $k=>$v){
+                        if(empty($v)) continue;
+                        $courseOutlineData[] = array($id,$v,$_POST['intensive_outline_desc'][$k]);
                     }
-                    //保存泛读视频题目列表
-                    if(!empty($topicIDList)){
-                        $insertData = array(
-                            'ExtId' => $extensiveId,
-                            'Questions' => implode('|',$topicIDList),
-                            'Min' => !empty($data['appearMin']) ? $data['appearMin'] : 0,
-                            'Sec' => !empty($data['appearSec']) ? $data['appearSec'] : 0,
-                        );
-                        $extensiveTopicList = new HiConfExtensiveTopicList();
-                        $extensiveTopicList->setAttributes($insertData,false);
-                        $extensiveTopicList->save();
+                    if (!empty($courseOutlineData)){
+                        $courseOutline = new HiConfCourseOutline();
+                        $courseOutline->insertAll($courseOutlineData);
                     }
                 }//end if
                 $transaction->commit();
             }catch (Exception $e){
                 $error = $e->getMessage();
                 $transaction->rollBack();
-                //添加失败
+                //修改失败
                 $this->exitJSON(0, $error);
             }
-            $this->exitJSON(0, 'this is error',$data);
-        }else{
-            $courseId = Yii::$app->getRequest()->get('id');
-            $extensive = HiConfExtensive::findAll(['CourseId' => $courseId]);
-            if (!empty($extensive)){//泛读
-                $renderData['readType'] = 'extensive';
-                //获取泛读题目列表
-                $extensiveList = HiConfExtensive::find()->where(['CourseId' => $courseId])->asArray()->all();
-                if(!empty($extensiveList)){
-                    foreach ($extensiveList as $k=>&$v){
-                        //获取题目列表
-                        $extensiveTopicList = HiConfExtensiveTopicList::find()->where(['ExtId' => $v['ID']])->asArray()->all();
-                        if(!empty($extensiveTopicList)){
-                            $topic = $extensiveTopicList['0'];
-                            $questionId = explode('|',$topic['Questions']);
-                            if(!empty($questionId)){
-                                $test = array();
-                                foreach ($questionId as $key=>$val){
-                                    //查询问题答案
-                                    $question = HiConfExtensiveTopic::findOne(['ID' => $val])->toArray();
-                                    $question['answer'] = HiConfExtensiveTopicAnswer::findAll(['Tid' => $val]);
-                                    $test[$val] = $question;
-                                }
-                                $topic['Questions'] = $test;
-                                $v['extensiveTopicList'] = $topic;
-                            }//end if
-                        }//end if
-                    }
-                }
-//                if(!empty($extensiveList)){
-//                    foreach ($extensiveList as $k=>&$v){
-//                        $toplic = array();
-//                        if(!empty($v['extensiveTopicList'])){
-//                            $toplic = $v['extensiveTopicList'][0];
-//                            $questionId = explode('|',$v['extensiveTopicList'][0]['Questions']);
-//                            if(!empty($questionId)){
-//                                $test = array();
-//                                foreach ($questionId as $key=>$val){
-//                                    //查询问题答案
-//                                    $question = HiConfExtensiveTopic::findOne(['ID' => $val])->toArray();
-//                                    $question['answer'] = HiConfExtensiveTopicAnswer::findAll(['Tid' => $val]);
-//                                    $test[$val] = $question;
-//                                }
-//                                $toplic['Questions'] = $test;
-//                            }//end if
-//                        }
-//                        $v['extensiveTopicList'] = $toplic;
-//                    }//end foreach
-//                }//end if
-                //获取题目类型
-                $renderData['extensive'] = $extensive;
-                $renderData['extensiveTopicList'] = $extensiveList;
-//                echo '<pre>';
-//                print_r($renderData['extensiveTopicList']);
-//                exit;
-                return $this->display('extensive_topic', $renderData);
-            }else{//精读
-                echo 1234;
-            }
+            $this->exitJSON(1, 'Success!');
         }//end if
     }
 
     /**
-     * 配置课程结构
+     * 课程结构
      */
     public function actionStructure()
     {
         //开放日期格式化
         date_default_timezone_set('PRC');
+        $courseId = Yii::$app->getRequest()->get('id');
+        //查看泛读
+        $extensive = HiConfExtensive::findAll(['CourseId' => $courseId]);
+        //查看单元（精读）
+        $unit = HiConfUnit::find()->joinWith(['subUnit'])->select(
+            'hi_conf_unit.ID,hi_conf_unit.CourseId,hi_conf_unit.Name Name,hi_conf_unit.OpenDay')
+            ->where(['hi_conf_unit.CourseId' => $courseId])->asArray()->indexBy('ID')->all();
+        $renderData['extensive'] = $extensive;
+        $renderData['unit'] = $unit;
+        $renderData['courseId'] = $courseId;
+        return $this->display('structure_empty', $renderData);
+    }
+    /**
+     * 添加泛读
+     */
+    public function actionAddExtensive()
+    {
+        $courseId = intval( Yii::$app->getRequest()->get('courseId') );
         if(Yii::$app->getRequest()->getIsPost()){
-            $data = Yii::$app->getRequest()->post();
-            $read_type = trim(Yii::$app->getRequest()->post('read_type'));
-            $courseId = intval( Yii::$app->getRequest()->post('id') );
-            //先删除相关数据
+            $this->doExtensiveForm($courseId);
+        }else{
+            return $this->display('extensive_form');
+        }
+    }
+    /**
+     * 修改泛读
+     */
+    public function actionEditExtensive()
+    {
+        $courseId = intval( Yii::$app->getRequest()->get('courseId') );
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doExtensiveForm($courseId);
+        }else{
+            $extensiveId = Yii::$app->getRequest()->get('extensiveId');
+            $extensive = HiConfExtensive::findOne(['ID' => $extensiveId]);
+            $renderData['extensive'] = $extensive;
+            return $this->display('extensive_form',$renderData);
+        }
+    }
+    /**
+     * @param $courseId 课程id
+     * 泛读操作
+     */
+    private function DoExtensiveForm($courseId)
+    {
+        if(empty($courseId)) $this->exitJSON(0, '课程id不能为空');
+        $extensiveId = intval( Yii::$app->getRequest()->post('extensiveId') );
+        $data = Yii::$app->getRequest()->post();
+        if(!empty($data['OpenDay'])){
+            $data['OpenDay'] = strtotime($data['OpenDay']);
+        }
+        $extensiveModel = new HiConfExtensive();
+        if(empty($extensiveId)){
+            //添加泛读
+            $data = array(
+                'CourseId' => $courseId,
+                'Title' => $data['Title'],
+                'Video' => $data['Video'],
+                'Poster' => $data['Poster'],
+                'OpenDay' => empty($data['OpenDay']) ? 0 : $data['OpenDay'],
+            );
+            $extensiveModel->setAttributes($data, false);
+            $rtn = $extensiveModel->insert();
+            if($rtn){
+                $this->exitJSON(1, 'Success!');
+            }
+        }else{
+            $data = array(
+                'CourseId' => $courseId,
+                'Title' => $data['Title'],
+                'Video' => $data['Video'],
+                'Poster' => $data['Poster'],
+                'OpenDay' => empty($data['OpenDay']) ? 0 : $data['OpenDay'],
+            );
+            $extensive = new HiConfExtensive();
+            $attr = $extensive->attributeLabels();//表字段
+            $updateData = array_intersect_key($data, $attr);
+            $source = HiConfExtensive::findOne($extensiveId);
+            $rtn = $source->updateAttributes($updateData);
+            if ($rtn){
+                $this->exitJSON(1, 'success');
+            }else{
+                $this->exitJSON(0, 'Fail!',$updateData);
+            }
+        }//end if
+        $this->exitJSON(0, 'Fail!',$data);
+    }
+    /**
+     * 删除泛读
+     */
+    public function actionDelExtensive()
+    {
+        $extensiveId = Yii::$app->getRequest()->get('extensiveId');
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            //删除相关题目
+            $topic = HiConfExtensiveTopicList::findAll(['ExtId' => $extensiveId]);
+            if(!empty($topic)){
+                foreach ($topic as $k=>$v){
+                    $questions = explode('|',$v['Questions']);
+                    if(!empty($questions)){
+                        foreach ($questions as $key=>$val){
+                            HiConfExtensiveTopic::deleteAll(['ID' => $val]);//删除题目
+                            HiConfExtensiveTopicAnswer::deleteAll(['Tid' => $val]);//删除答案
+                        }
+                    }//end if
+                }
+            }
+            HiConfExtensive::deleteAll(['ID' => $extensiveId]);//删除泛读
+            HiConfExtensiveTopicList::deleteAll(['ExtId' => $extensiveId]);//删除泛读题目中间表
+            $transaction->commit();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollBack();
+            //添加失败
+            $this->exitJSON(0, '删除失败！',$error);
+        }
+        $this->exitJSON(1, 'Success!');
+    }
+    /**
+     * 添加单元
+     */
+    public function actionAddUnit()
+    {
+        $courseId = intval( Yii::$app->getRequest()->get('courseId') );
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doUnitForm($courseId);
+        }else{
+            return $this->display('unit_form');
+        }
+    }
+    /**
+     * 删除单元
+     */
+    public function actionDelUnit()
+    {
+        $unitId = intval( Yii::$app->getRequest()->get('unitId') );
+        if(empty($unitId)){
+            $this->exitJSON(0, '单元ID不能为空!');
+        }
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            $subUnit = HiConfSubUnit::findAll(['UnitId' => $unitId]);
+            if(!empty($subUnit)){
+                foreach ($subUnit as $k=>$v){
+                    HiConfTopic::deleteAll(['SUnitId' => $v['ID']]);
+                    HiConfSubUnit::deleteAll(['ID' => $v['ID']]);
+                    HiConfSubUnitTrain::deleteAll(['SUnitId' => $v['ID']]);
+                }
+            }
+            //删除单元信息
+            HiConfUnit::deleteAll(['ID' => $unitId]);
+            $transaction->commit();
+            $this->exitJSON(1, 'success');
+        }catch (Exception $e){
+            $this->exitJSON(0, 'Fail!');
+        }
+
+    }
+    /**
+     * 修改单元
+     */
+    public function actionEditUnit()
+    {
+        $courseId = intval( Yii::$app->getRequest()->get('courseId') );
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doUnitForm($courseId);
+        }else{
+            $unitId = Yii::$app->getRequest()->get('unitId');
+            $unit = HiConfUnit::findOne(['ID' => $unitId]);
+            $renderData['unit'] = $unit;
+            return $this->display('unit_form',$renderData);
+        }
+    }
+    private function DoUnitForm($courseId)
+    {
+        if(empty($courseId)) $this->exitJSON(0, '课程id不能为空');
+        $unitId = intval( Yii::$app->getRequest()->post('unitId') );
+        $data = Yii::$app->getRequest()->post();
+        if(!empty($data['OpenDay'])){
+            $data['OpenDay'] = strtotime($data['OpenDay']);
+        }
+        $unitModel = new HiConfUnit();
+        if(empty($unitId)){
             $transaction = Yii::$app->hiread->beginTransaction();
             try{
-                HiConfCourseOutline::deleteAll(['CourseId' => $courseId]);//删除课程大纲
-                HiConfCoursePackage::deleteAll(['CourseId' => $courseId]);//删除课程包
-                $unit = HiConfUnit::findAll(['CourseId' => $courseId]);//查询单元信息
-                $unitId = array();
-                foreach ($unit as $v){
-                    $unitId[] = $v['ID'];
-                }
-                HiConfSubUnit::deleteAll(['UnitId' => $unitId]);//删除子单元
-                HiConfUnit::deleteAll(['CourseId' => $courseId]);//删除单元
-                HiConfExtensive::deleteAll(['CourseId' => $courseId]);//删除泛读信息
-                //新增数据
-                if($read_type == 'extensive'){
-                    //泛读
-                    if(!empty($_POST['extensiveTitle'])){
-                        foreach ($_POST['extensiveTitle'] as $k=>$val){
-                            if (empty($val)) continue;
-                            $extensiveData[] = array(
-                                $courseId,
-                                $val,
-                                $_POST['extensiveVideo'][$k],
-                                $_POST['extensivePoster'][$k],
-                                strtotime($_POST['extensiveOpenDay'][$k]),
-                            );
-                        }
-                        if (!empty($extensiveData)){
-                            $extensiveModel = new HiConfExtensive();
-                            $extensiveModel->insertAll($extensiveData);
-                        }
+                //添加泛读
+                $extensiveData = array(
+                    'CourseId' => $courseId,
+                    'Name' => $data['Name'],
+                    'OpenDay' => empty($data['OpenDay']) ? 0 : $data['OpenDay'],
+                );
+                $unitModel->setAttributes($extensiveData, false);
+                $rtn = $unitModel->insert();
+                $id = $unitModel->ID;
+                //添加子单元
+                if(!empty($data['subUnitName'])){
+                    $insertData = [];
+                    foreach ($data['subUnitName'] as $k=>$v){
+                        if(empty($v)) continue;
+                        $insertData[] = array($id,$data['subUnitType'][$k],$v,1);
                     }
-                }else{//精读
-                    //课程包
-                    if(!empty($_POST['FileName'])){
-                        foreach ($_POST['FileName'] as $k=>$v){
-                            if(empty($v)) continue;
-                            $packageData[] = array($courseId,$v,$_POST['FileSize'][$k]);
-                        }
-                        if(!empty($packageData)){
-                            $coursePackage = new HiConfCoursePackage();
-                            $coursePackage->insertAll($packageData);
-                        }
-                    }//end if
-                    if(!empty($_POST['intensive_outline_name'])){
-                        //大纲
-                        foreach ($_POST['intensive_outline_name'] as $k=>$v){
-                            if(empty($v)) continue;
-                            $courseOutlineData[] = array($courseId,$v,$_POST['intensive_outline_desc'][$k]);
-                        }
-                        if (!empty($courseOutlineData)){
-                            $courseOutline = new HiConfCourseOutline();
-                            $courseOutline->insertAll($courseOutlineData);
-                        }
-                    }//end if
-
+                    if(!empty($insertData)){
+                        $subUnit = new HiConfSubUnit();
+                        $subUnit->insertAll($insertData);
+                    }
                 }
                 $transaction->commit();
+                $this->exitJSON(1, 'success!',$data);
             }catch (Exception $e){
                 $error = $e->getMessage();
                 $transaction->rollBack();
                 //添加失败
                 $this->exitJSON(0, $error);
             }
-            $this->exitJSON(1, 'success!');
+            $this->exitJSON(1, 'Success2!');
         }else{
-            $courseId = Yii::$app->getRequest()->get('id');
-            //获取课程信息
-            $course = $courseSource = HiConfCourse::findOne($courseId);
-            //精度
-            //课程包
-            $package = HiConfCoursePackage::findAll(['CourseId' => $courseId]);
-            //大纲
-            $outline = HiConfCourseOutline::findAll(['CourseId' => $courseId]);
-            //单元
-            $unit = HiConfUnit::find()->joinWith(['subUnit'])->select(
-                'hi_conf_unit.ID,hi_conf_unit.CourseId,hi_conf_unit.Name,hi_conf_unit.OpenDay,hi_conf_sub_unit.Type,hi_conf_sub_unit.Name')
-                ->where(['hi_conf_unit.CourseId' => $courseId])->asArray()->all();
-            //泛读
-            $extensive = HiConfExtensive::findAll(['CourseId' => $courseId]);
-            $renderData = array();
-            $renderData['course'] = $course;
-            $renderData['package'] = $package;
-            $renderData['outline'] = $outline;
-            $renderData['extensive'] = $extensive;
-            $renderData['unit'] = $unit;
-            return $this->display('structure', $renderData);
-        }
-
+            $updateData1 = array(
+                'Name' => $data['Name'],
+                'OpenDay' => empty($data['OpenDay']) ? 0 : $data['OpenDay'],
+            );
+            $unitModel = new HiConfUnit();
+            $attr = $unitModel->attributeLabels();//表字段
+            $updateData = array_intersect_key($updateData1, $attr);
+            $source = HiConfUnit::findOne($unitId);
+            $rtn = $source->updateAttributes($updateData);
+            if ($rtn){
+                $this->exitJSON(1, 'success');
+            }else{
+                $this->exitJSON(0, 'Fail!',$updateData);
+            }
+        }//end if
+        $this->exitJSON(0, 'Fail!',$data);
     }
+
+    /**
+     * 添加子单元
+     * @return string
+     */
+    public function actionAddSubUnit()
+    {
+        $unitId = intval( Yii::$app->getRequest()->get('unitId') );
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doSubUnitForm($unitId);
+        }else{
+            //获取单元信息
+            $unit = HiConfUnit::findOne(['ID' => $unitId])->toArray();
+            $renderData['unit'] = $unit;
+            return $this->display('sub_unit_form',$renderData);
+        }
+    }
+    /**
+     * 修改子单元
+     * @return string
+     */
+    public function actionEditSubUnit()
+    {
+        $unitId = intval( Yii::$app->getRequest()->get('unitId') );
+        $subUnitId = intval( Yii::$app->getRequest()->get('subUnitId') );
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doSubUnitForm($unitId);
+        }else{
+            //获取单元信息
+            $unit = HiConfUnit::findOne(['ID' => $unitId])->toArray();
+            $renderData['unit'] = $unit;
+            //获取子单元
+            $subUnit = HiConfSubUnit::findOne(['ID' => $subUnitId])->toArray();
+            $renderData['subUnit'] = $subUnit;
+            return $this->display('sub_unit_form',$renderData);
+        }
+    }
+    private function DoSubUnitForm($unitId)
+    {
+        if(empty($unitId)) $this->exitJSON(0, '单元id不能为空');
+        $subUnitId = intval( Yii::$app->getRequest()->post('subUnitId') );
+        $data = Yii::$app->getRequest()->post();
+        $model = new HiConfSubUnit();
+        if(empty($subUnitId)){
+            //添加子单元
+            $insertData = array(
+                'UnitId' => $unitId,
+                'Type' => $data['Type'],
+                'Name' => $data['Name'],
+            );
+            $model->setAttributes($insertData, false);
+            $rtn = $model->insert();
+            if($rtn){
+                $this->exitJSON(1, 'Success!');
+            }
+        }else{
+            //修改子单元
+            $updateData1 = array(
+                'UnitId' => $unitId,
+                'Type' => $data['Type'],
+                'Name' => $data['Name'],
+            );
+            $subUnitModel = new HiConfSubUnit();
+            $attr = $subUnitModel->attributeLabels();//表字段
+            $updateData = array_intersect_key($updateData1, $attr);
+            $source = HiConfSubUnit::findOne($subUnitId);
+            $rtn = $source->updateAttributes($updateData);
+            if ($rtn){
+                $this->exitJSON(1, 'success');
+            }else{
+                $this->exitJSON(0, 'Fail!',$updateData);
+            }
+        }//end if
+        $this->exitJSON(0, 'Fail!',$data);
+    }
+    /**
+     * 删除子单元
+     */
+    public function actionDelSubUnit()
+    {
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        if(empty($subUnitId)){
+            $this->exitJSON(0, 'Fail!');
+        }
+        $result = $this->delsubUnitTopic($subUnitId);
+        if($result){
+            $this->exitJSON(1, 'Success!');
+        }else{
+            $this->exitJSON(0, 'Fail!');
+        }
+    }
+    /**
+     * 删除子单元和子单元下面的题目
+     */
+    private function delsubUnitTopic($subUnitId)
+    {
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            HiConfTopic::deleteAll(['SUnitId' => $subUnitId]);
+            HiConfSubUnit::deleteAll(['ID' => $subUnitId]);
+            HiConfSubUnitTrain::deleteAll(['SUnitId' => $subUnitId]);
+            $transaction->commit();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollBack();
+            //添加失败
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 上传图片信息
      */
@@ -549,5 +699,279 @@ class CourseController extends BaseController
         $return['code'] = 1;
         $return['pic'] = $file_name;
         exit(json_encode($return));
+    }
+    /**
+     * 课程目录
+     */
+    public function actionCatalog()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        //获取课程目录
+        $catalog = HiConfCourseCatalog::find()->where(['SUnitId' => $subUnitId])->asArray()->all();
+        $renderData['catalog'] = $catalog;
+        return $this->display('catalog', $renderData);
+    }
+    /**
+     * 添加课程目录
+     */
+    public function actionAddCatalog()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doCataLogForm();
+        }else{
+            return $this->display('catalog_form');
+        }
+    }
+    /**
+     * 修改课程目录
+     */
+    public function actionEditCatalog()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $catalogId = Yii::$app->getRequest()->get('catalogId');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doCataLogForm();
+        }else{
+            //获取课程目录信息
+            $catalog = HiConfCourseCatalog::find()->where(['ID' => $catalogId])->asArray()->one();
+            $renderData['row'] = $catalog;
+            return $this->display('catalog_form',$renderData);
+        }
+    }
+
+    /**
+     * 删除课程目录
+     */
+    public function actionDelCatalog()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $catalogId = Yii::$app->getRequest()->get('catalogId');
+        if(empty($catalogId)){
+            $this->exitJSON(0, 'Fail!');
+        }
+        $result = HiConfCourseCatalog::deleteAll(['ID' => $catalogId]);
+        if($result){
+            $this->exitJSON(1, 'success!');
+        }else{
+            $this->exitJSON(0, 'Fail!');
+        }
+    }
+    private function doCataLogForm()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $id = Yii::$app->getRequest()->post('catalogId');
+        $data = Yii::$app->getRequest()->post();
+        $data['CourseId'] = $courseId;
+        $data['SUnitId'] = $subUnitId;
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            if(!empty($id)){
+                //修改数据
+                $model = new HiConfCourseCatalog();
+                $attr = $model->attributeLabels();//表字段
+                $updateData = array_intersect_key($data, $attr);
+                $courseSource = HiConfCourseCatalog::findOne($id);
+                $rtn = $courseSource->updateAttributes($updateData);
+            }else{
+                //添加数据
+                $model = new HiConfCourseCatalog();
+                $model->setAttributes($data,false);
+                $model->save();
+            }
+            $transaction->commit();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollBack();
+            $this->exitJSON(0, $error);
+        }
+        $this->exitJSON(1, 'success!');
+    }
+    /**
+     * 视频词汇表
+     */
+    public function actionWord()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        //获取课程目录
+        $catalog = HiConfCourseWord::find()->where(['SUnitId' => $subUnitId])->asArray()->all();
+        $renderData['catalog'] = $catalog;
+        return $this->display('word', $renderData);
+    }
+    /**
+     * 添加视频词汇
+     */
+    public function actionAddWord()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doWordForm();
+        }else{
+            return $this->display('word_form');
+        }
+    }
+    /**
+     * 修改课程视频词汇
+     */
+    public function actionEditWord()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $catalogId = Yii::$app->getRequest()->get('catalogId');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doWordForm();
+        }else{
+            //获取课程目录信息
+            $catalog = HiConfCourseWord::find()->where(['ID' => $catalogId])->asArray()->one();
+            $renderData['row'] = $catalog;
+            return $this->display('word_form',$renderData);
+        }
+    }
+    /**
+     * 删除课程视频词汇
+     */
+    public function actionDelWord()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $catalogId = Yii::$app->getRequest()->get('catalogId');
+        if(empty($catalogId)){
+            $this->exitJSON(0, 'Fail!');
+        }
+        $result = HiConfCourseWord::deleteAll(['ID' => $catalogId]);
+        if($result){
+            $this->exitJSON(1, 'success!');
+        }else{
+            $this->exitJSON(0, 'Fail!');
+        }
+    }
+    private function doWordForm()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('subUnitId');
+        $id = Yii::$app->getRequest()->post('id');
+        $data = Yii::$app->getRequest()->post();
+        $data['CourseId'] = $courseId;
+        $data['SUnitId'] = $subUnitId;
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            if(!empty($id)){
+                //修改数据
+                $model = new HiConfCourseWord();
+                $attr = $model->attributeLabels();//表字段
+                $updateData = array_intersect_key($data, $attr);
+                $courseSource = HiConfCourseWord::findOne($id);
+                $rtn = $courseSource->updateAttributes($updateData);
+            }else{
+                //添加数据
+                $model = new HiConfCourseWord();
+                $model->setAttributes($data,false);
+                $model->save();
+            }
+            $transaction->commit();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollBack();
+            $this->exitJSON(0, $error);
+        }
+        $this->exitJSON(1, 'success!');
+    }
+    /**
+     * 每日朗读
+     */
+    public function actionRead()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $unitId = Yii::$app->getRequest()->get('unitId');
+        //获取课程目录
+        $catalog = HiConfDayRead::find()->where(['UnitID' => $unitId])->asArray()->all();
+        $renderData['catalog'] = $catalog;
+        return $this->display('read', $renderData);
+    }
+    /**
+     * 添加每日朗读
+     */
+    public function actionAddRead()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $unitId = Yii::$app->getRequest()->get('unitId');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doReadForm();
+        }else{
+            return $this->display('read_form');
+        }
+    }
+    /**
+     * 修改每日朗读
+     */
+    public function actionEditRead()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $unitId = Yii::$app->getRequest()->get('unitId');
+        $id = Yii::$app->getRequest()->get('id');
+        if(Yii::$app->getRequest()->getIsPost()){
+            $this->doReadForm();
+        }else{
+            //获取课程目录信息
+            $catalog = HiConfDayRead::find()->where(['ID' => $id])->asArray()->one();
+            $renderData['row'] = $catalog;
+            return $this->display('read_form',$renderData);
+        }
+    }
+    /**
+     * 删除每日阅读
+     */
+    public function actionDelRead()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $unitId = Yii::$app->getRequest()->get('unitId');
+        $id = Yii::$app->getRequest()->get('id');
+        if(empty($id)){
+            $this->exitJSON(0, 'Fail!');
+        }
+        $result = HiConfDayRead::deleteAll(['ID' => $id]);
+        if($result){
+            $this->exitJSON(1, 'success!');
+        }else{
+            $this->exitJSON(0, 'Fail!');
+        }
+    }
+    private function doReadForm()
+    {
+        $courseId = Yii::$app->getRequest()->get('courseId');
+        $subUnitId = Yii::$app->getRequest()->get('unitId');
+        $id = Yii::$app->getRequest()->post('id');
+        $data = Yii::$app->getRequest()->post();
+        $data['CourseId'] = $courseId;
+        $data['UnitID'] = $subUnitId;
+        $transaction = Yii::$app->hiread->beginTransaction();
+        try{
+            if(!empty($id)){
+                //修改数据
+                $model = new HiConfDayRead();
+                $attr = $model->attributeLabels();//表字段
+                $updateData = array_intersect_key($data, $attr);
+                $courseSource = HiConfDayRead::findOne($id);
+                $rtn = $courseSource->updateAttributes($updateData);
+            }else{
+                //添加数据
+                $model = new HiConfDayRead();
+                $model->setAttributes($data,false);
+                $model->save();
+            }
+            $transaction->commit();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollBack();
+            $this->exitJSON(0, $error);
+        }
+        $this->exitJSON(1, 'success!');
     }
 }

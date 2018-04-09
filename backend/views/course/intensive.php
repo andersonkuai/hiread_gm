@@ -131,19 +131,141 @@
             <?php } ?>
         </table>
     </div>
-    <div class="col-xs-12">
+    <div class="col-xs-8" tab="<?php if(!empty($unit)) {echo max(array_keys($unit));}else{echo 0;} ?>">
         <h3><?= \Yii::t('app', '课程单元');?></h3>
-        <table width="50%">
-            <tr>
-                <th style="width: 70%"><?= \Yii::t('app', '单元名称');?></th>
-                <th style="width: 30%"><?= \Yii::t('app', '开放时间,(格式：20180808，0：无限制)');?></th>
-            </tr>
-        </table>
+        <div class="row">
+            <div class="col-xs-4"><?= \Yii::t('app', '单元名称');?></div>
+            <div class="col-xs-6"><?= \Yii::t('app', '开放时间,(格式：20180808，0：无限制)');?></div>
+        </div>
+        <?php if(!empty($unit)){ ?>
+            <?php foreach ($unit as $key=>$val){?>
+                <div class="unit" tab="0">
+                    <div class="row" style="border: solid 1px;border-radius:10px;margin-bottom: 5px;margin-top: 20px">
+                        <div class="col-xs-4">
+                            <input type="text" name="unitName[<?=$key?>]" value="<?php echo $val['Name']?>">
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" name="openDay[<?=$key?>]" value="<?php echo $val['OpenDay']?>">
+                        </div>
+                        <div class="col-xs-4">
+                            <a href="##" onclick="addUnit(this)" style="margin-right: 1px"><span class="fa fa-plus"></span></a>
+                            <a href="##" onclick="minusUnit(this)" style="margin-right: 1px"><span class="fa fa-minus"></span></a>
+                            <a href="##" class="btn btn-info btn-xs" onclick="showSubUnit(this)">子单元</a>
+                        </div>
+                    </div>
+                    <div class="row" style="border: solid 1px;padding: 10px;display: none;">
+                        <?php if(!empty($val['subUnit'])){?>
+                            <?php foreach ($val['subUnit'] as $k=>$v){?>
+                                <div class="row col-xs-12">
+                                    <div class="col-xs-6"><input type="text" name="subUnitName[<?=$key?>][]" value="<?php echo $v['Name'];?>"></div>
+                                    <div class="col-xs-3">
+                                        <select class="subUnit" name="subUnitType[<?=$key?>][]" id="">
+                                            <?php foreach (\common\enums\subUnit::params('type') as $key_t=>$val_t){ ?>
+                                                <option value="<?= $key_t;?>" <?php if($v['Type'] == $key_t){echo 'selected';}?>><?= $val_t;?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <a href="##" onclick="addSubUnit(this)" style="margin-right: 1px"><span class="fa fa-plus"></span></a>
+                                        <a href="##" onclick="minusSubUnit(this)" style="margin-right: 1px"><span class="fa fa-minus"></span></a>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        <?php }else{?>
+                            <div class="row col-xs-12">
+                                <div class="col-xs-6"><input type="text" name="subUnitName[<?=$key?>][]" value=""></div>
+                                <div class="col-xs-3">
+                                    <select class="subUnit" name="subUnitType[<?=$key?>][]" id="">
+                                        <?php foreach (\common\enums\subUnit::params('type') as $key_t=>$val_t){ ?>
+                                            <option value="<?= $key_t;?>"><?= $val_t;?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                                <div class="col-xs-2">
+                                    <a href="##" onclick="addSubUnit(this)" style="margin-right: 1px"><span class="fa fa-plus"></span></a>
+                                    <a href="##" onclick="minusSubUnit(this)" style="margin-right: 1px"><span class="fa fa-minus"></span></a>
+                                </div>
+                            </div>
+                        <?php }?>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php }else{ ?>
+        <div class="unit" tab="0">
+            <div class="row" style="border: solid 1px;border-radius:10px;margin-bottom: 5px;margin-top: 20px">
+                <div class="col-xs-4">
+                    <input type="text" name="unitName[]" value="">
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" name="openDay[]" value="">
+                </div>
+                <div class="col-xs-4">
+                    <a href="##" onclick="addUnit(this)" style="margin-right: 1px"><span class="fa fa-plus"></span></a>
+                    <a href="##" onclick="minusUnit(this)" style="margin-right: 1px"><span class="fa fa-minus"></span></a>
+                    <a href="##" class="btn btn-info btn-xs" onclick="showSubUnit(this)">子单元</a>
+                </div>
+            </div>
+            <div class="row" style="border: solid 1px;padding: 10px;display: none;">
+                <div class="row col-xs-12">
+                    <div class="col-xs-6"><input type="text" name="subUnitName[0][]" value=""></div>
+                    <div class="col-xs-3">
+                        <select class="subUnit" name="subUnitType[0][]" id="">
+                            <?php foreach (\common\enums\subUnit::params('type') as $key_t=>$val_t){ ?>
+                                <option value="<?= $key_t;?>"><?= $val_t;?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="##" onclick="addSubUnit(this)" style="margin-right: 1px"><span class="fa fa-plus"></span></a>
+                        <a href="##" onclick="minusSubUnit(this)" style="margin-right: 1px"><span class="fa fa-minus"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php } ?>
     </div>
-
 </div>
 
 <script>
+    //添加子单元
+    function addSubUnit(obj) {
+        var dom = $(obj).parent().parent();
+        var html = '<div class="row col-xs-12">' + dom.html() + '</div>';
+        dom.after(html)
+    }
+    //删除子单元
+    function minusSubUnit(obj) {
+        var dom = $(obj).parent().parent();
+        dom.remove()
+    }
+    //添加单元
+    function addUnit(obj) {
+        var dom = $(obj).parent().parent().parent();
+//        var idStr = $(obj).parent().parent().parent().parent().children('.unit').last().attr('tab');
+        var idStr = $(obj).parent().parent().parent().parent().attr('tab');
+        var id = parseInt(idStr) + 1;
+        var html = '<div class="unit" tab="'+id+'">' + dom.html() + '</div>';
+        //替换name值
+        var nameVal = $(obj).parent().parent().next().children('div').children('div').one().children().attr('name');
+        var length = parseInt(nameVal.length) - 15;
+        var nameKey = nameVal.substr(12,length)
+        var grepVal = '\\['+nameKey+'\\]'
+        var html1 = html.replace(new RegExp(grepVal,'gm'),'['+id+']');
+        //修改tab值
+        $(obj).parent().parent().parent().parent().attr('tab',id);
+        dom.after(html1)
+    }
+    //删除单元
+    function minusUnit(obj) {
+        var dom = $(obj).parent().parent().parent();
+        dom.remove()
+    }
+    //展示子单元
+    function showSubUnit(obj) {
+        var div = $(obj).parent().parent().next().html()
+        $(obj).parent().parent().next().toggle();
+    }
+
     function addData(obj) {
         //获取当前tr元素
         var tr = $(obj).parent().parent()

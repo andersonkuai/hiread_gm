@@ -55,4 +55,12 @@ class HiConfSubUnit extends \yii\db\ActiveRecord
             'Force' => '是否强制',
         ];
     }
+    /**
+     * 批量插入数据
+     */
+    public function insertAll($data)
+    {
+        Yii::$app->hiread->createCommand()->batchInsert(self::tableName(),['UnitId','Type','Name','Force'],$data)->execute();
+        return $data;
+    }
 }
