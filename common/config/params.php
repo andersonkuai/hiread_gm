@@ -1,8 +1,15 @@
 <?php
 $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/static/';
+if(YII_ENV == 2){
+    //测试服
+    $static_hiread = 'https://static.dev.hiread.cn/';
+}elseif(YII_ENV == 3){
+    //线上
+    $static_hiread = 'https://cdn1.hiread.cn/';
+}
 return [
     //文件域名
-    'static_hiread' => 'https://cdn1.hiread.cn/',
+    'static_hiread' => $static_hiread,
 
     //课程封面地址
     'cover_img' => $static_dir.'/course/book/',
