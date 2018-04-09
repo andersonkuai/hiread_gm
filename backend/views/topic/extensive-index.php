@@ -1,3 +1,6 @@
+<?php
+use common\enums\topic;
+?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
@@ -60,7 +63,7 @@
                                         <img width="30%" src="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_topic_img'].$val['Image']; ?>" alt="">
                                     </a>
                                 </td>
-                                <td><?php echo common\enums\topic::params('type')[$val['Type']]?></td>
+                                <td><?php echo topic::params('type')[$val['Type']]?></td>
                                 <td><?php echo $val['PreviewIntro']?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
