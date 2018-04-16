@@ -35,7 +35,7 @@
                                         <td>
                                             <input class="form" name="ProdName"  type="text" value="<?php echo empty($row) ? '' : $row['ProdName'];?>">&nbsp;&nbsp;&nbsp;&nbsp;
                                             <?= \Yii::t('app', '课程开放时间');?>：
-                                            <input class="form" style="width: 10%" name="OpenDay"  type="text" value="<?php echo empty($row) ? 0 : $row['OpenDay'];?>">
+                                            <input class="form" style="width: 10%" name="OpenDay"  type="text" value="<?php echo empty($row['OpenDay']) ? 0 : date('Ymd',$row['OpenDay']);?>">
                                             <span style="color: red">格式：20180101，0:无时间随时开放</span>
                                         </td>
                                     </tr>

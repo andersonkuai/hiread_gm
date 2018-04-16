@@ -38,10 +38,12 @@
                     </div>
                 </div>
                 <!-- /.box-header -->
+                <form role="form" id="myForm" action="" method="post" enctype="multipart/form-data">
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
                             <th><?= \Yii::t('app', '题目ID');?></th>
+                            <th><?= \Yii::t('app', '排序');?></th>
                             <th><?= \Yii::t('app', '题目跳出时间');?></th>
                             <th><?= \Yii::t('app', '题目名称');?></th>
                             <th><?= \Yii::t('app', '题目图片');?></th>
@@ -53,6 +55,10 @@
                         <?php foreach($question as $val){?>
                             <tr>
                                 <td><?php echo $val['ID']?></td>
+                                <td>
+                                    <input style="width: 50px" type="hidden" name="topic_id[]" value="<?=$val['ID']?>">
+                                    <input style="width: 50px" type="text" name="topic_order[]" value="<?=$val['Order']?>">
+                                </td>
                                 <td><?php echo $val['Min'].'分'.$val['Sec'].'秒'?></td>
                                 <td><?php echo $val['Title']?></td>
                                 <td>
@@ -74,8 +80,11 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-
+                    <?php if(!empty($question)){ ?>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    <?php } ?>
                 </div>
+                </form>
             </div>
             <!-- /.box -->
         </div>

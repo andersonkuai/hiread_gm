@@ -32,6 +32,7 @@ use Yii;
  * @property integer $IsTrain
  * @property string $Category
  * @property integer $VideoTime
+ * @property integer $Order
  */
 class HiConfExtensiveTopic extends \yii\db\ActiveRecord
 {
@@ -57,7 +58,7 @@ class HiConfExtensiveTopic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Type', 'Gold', 'IsTrain', 'VideoTime'], 'integer'],
+            [['Type', 'Gold', 'IsTrain', 'VideoTime', 'Order'], 'integer'],
             [['Analysis', 'Translate'], 'string'],
             [['Title', 'Image', 'Audio', 'QAudio', 'Video', 'Poster', 'PreviewIntro', 'AAudio', 'AVideo', 'Help'], 'string', 'max' => 255],
             [['SoundMark'], 'string', 'max' => 50],
@@ -99,6 +100,7 @@ class HiConfExtensiveTopic extends \yii\db\ActiveRecord
             'IsTrain' => '是否是联系题目(0:否1:是)',
             'Category' => 'CCSS细项',
             'VideoTime' => '视频时长',
+            'Order' => '排序',
         ];
     }
 }

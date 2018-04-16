@@ -33,6 +33,37 @@ class TopicController extends BaseController
         $extensiveId = Yii::$app->getRequest()->get('extensiveId');
         //获取泛读题目
         $topicList = HiConfExtensiveTopicList::find()->where(['ExtId' => $extensiveId])->asArray()->all();
+        //保存题目排序
+        if(Yii::$app->getRequest()->getIsPost()){
+            if(!empty($_POST['topic_id'])){
+                $orderData = array();
+                foreach ($_POST['topic_id'] as $k=>$v){
+                    $source = HiConfExtensiveTopic::findOne($v);
+                    $source->Order = $_POST['topic_order'][$k];
+                    $source->save();
+                    $orderData[$v] = $_POST['topic_order'][$k];
+                }
+                asort($orderData);
+                //修改题目列表排序规则
+                if(!empty($topicList)){
+                    foreach ($topicList as $k=>$v){
+                        $lastList = array();
+                        $questionIds = explode('|',$v['Questions']);
+                        foreach ($orderData as $key => $val){
+                            if(in_array($key,$questionIds)) $lastList[] = $key;
+                        }
+                        $lastListStr = implode('|',$lastList);
+                        if(!empty($lastList) && $v['Questions'] != $lastListStr){
+                            $source = HiConfExtensiveTopicList::findOne($v['ID']);
+                            $source->Questions = $lastListStr;
+                            $source->save();
+                        }
+                    }//end foreach
+                }
+            }//end if
+        }
+        //获取泛读题目
+        $topicList = HiConfExtensiveTopicList::find()->where(['ExtId' => $extensiveId])->asArray()->all();
         $test = array();
         if(!empty($topicList)){
             $questionId = [];
@@ -91,7 +122,8 @@ class TopicController extends BaseController
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
             HiConfExtensiveTopicAnswer::deleteAll(['Tid' => $questionId]);
-            HiConfExtensiveTopic::deleteAll(['ID' => $questionId]);
+//            HiConfExtensiveTopic::deleteAll(['ID' => $questionId]);
+            HiConfExtensiveTopic::findOne($questionId)->delete();
             //更新泛读视频题目列表
             $list = HiConfExtensiveTopicList::find()->where(['ExtId' => $extensiveId])->all();
             if(!empty($list)){
@@ -104,9 +136,13 @@ class TopicController extends BaseController
                         //更新数据表
                         $questionIdStr = implode('|',$questionIds);
                         if(!empty($questionIdStr)){
-                            HiConfExtensiveTopicList::updateAll(['Questions' => $questionIdStr], ['ID' => $v['ID']]);
+//                            HiConfExtensiveTopicList::updateAll(['Questions' => $questionIdStr], ['ID' => $v['ID']]);
+                            $sourceObj = HiConfExtensiveTopicList::findOne($v['ID']);
+                            $sourceObj->Questions = $questionIdStr;
+                            $sourceObj->save();
                         }else{
-                            HiConfExtensiveTopicList::deleteAll(['ID' => $v['ID']]);
+//                            HiConfExtensiveTopicList::deleteAll(['ID' => $v['ID']]);
+                            HiConfExtensiveTopicList::findOne($v['ID'])->delete();
                         }
                     }//end if
                 }
@@ -172,7 +208,13 @@ class TopicController extends BaseController
                 $attr = $model->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfExtensiveTopic::findOne($questionId);
-                $rtn = $courseSource->updateAttributes($updateData);
+//                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
                 //添加答案
                 foreach ($data['answerName'] as $k=>$v){
                     $answer = array(
@@ -199,8 +241,62 @@ class TopicController extends BaseController
                 //更新题目的正确答案
                 if(!empty($correctAnswer)){
                     $correctAnswerStr = implode('|',$correctAnswer);
-                    HiConfExtensiveTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $questionId]);
+//                    HiConfExtensiveTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $questionId]);
+                    $sourse = HiConfExtensiveTopic::findOne($questionId);
+                    $sourse->Correct = $correctAnswerStr;
+                    $sourse->save();
                 }
+                //删除原有题目列表数据
+                $topicList = HiConfExtensiveTopicList::find()->where(['ExtId' => $extensiveId])->asArray()->all();
+                if(!empty($topicList)){
+                    foreach ($topicList as $k=>$v){
+                        $questionIds = explode('|',$v['Questions']);
+                        if(!empty($questionIds)){
+                            $action = 0;
+                            foreach ($questionIds as $key => $val){
+                                if($val == $questionId){
+                                    unset($questionIds[$key]);
+                                    $action = 1;
+                                }
+                            }
+                            //重新保存题目列表信息
+                            if($action == 1){
+                                if(empty($questionIds)){
+                                    HiConfExtensiveTopicList::findOne($v['ID'])->delete();
+                                }else{
+                                    $sourse = HiConfExtensiveTopicList::findOne($v['ID']);
+                                    $sourse->Questions = implode('|',$questionIds);
+                                    $sourse->save();
+                                }
+                            }
+                        }
+                    }//end foreach
+                }
+                //保存泛读视频题目列表
+                if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
+                if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
+                $topic = HiConfExtensiveTopicList::findOne(['ExtId' => $extensiveId,'Min' => $min,'Sec' => $sec]);
+                if(empty($topic)){
+                    //插入数据
+                    $insertData = array('ExtId' => $extensiveId,'Questions' => (string)$questionId,'Min' => $min,'Sec' => $sec);
+                    $extensiveTopicListModel = new HiConfExtensiveTopicList();
+                    $extensiveTopicListModel->setAttributes($insertData,false);
+                    $result = $extensiveTopicListModel->save();
+                }else{
+                    //更新数据
+                    if(!empty($topic->Questions)){
+                        $updateData = array('Questions' => $topic->Questions.'|'.$questionId);
+                    }else{
+                        $updateData = array('Questions' => $questionId);
+                    }
+                    $sourse = HiConfExtensiveTopicList::findOne($topic->ID);
+                    $sourse->Questions = $updateData['Questions'];
+                    $rtn = $sourse->save();
+//                    $rtn = $sourse->updateAttributes($updateData);
+                    if (!$rtn){
+                        $this->exitJSON(0, 'fail!',$updateData);
+                    }
+                }//end if
                 $transaction->commit();
             }else{
                 $question = new HiConfExtensiveTopic();
@@ -233,7 +329,10 @@ class TopicController extends BaseController
                 //更新题目的正确答案
                 if(!empty($correctAnswer)){
                     $correctAnswerStr = implode('|',$correctAnswer);
-                    HiConfExtensiveTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $topicId]);
+//                    HiConfExtensiveTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $topicId]);
+                    $sourse = HiConfExtensiveTopic::findOne($topicId);
+                    $sourse->Correct = $correctAnswerStr;
+                    $sourse->save();
                 }
                 //保存泛读视频题目列表
                 if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
@@ -253,7 +352,9 @@ class TopicController extends BaseController
                         $updateData = array('Questions' => $topicId);
                     }
                     $sourse = HiConfExtensiveTopicList::findOne($topic->ID);
-                    $rtn = $sourse->updateAttributes($updateData);
+                    $sourse->Questions = $updateData['Questions'];
+                    $rtn = $sourse->save();
+//                    $rtn = $sourse->updateAttributes($updateData);
                     if (!$rtn){
                         $this->exitJSON(0, 'fail!',$updateData);
                     }
@@ -275,7 +376,38 @@ class TopicController extends BaseController
     public function actionUnitIndex(){
         $courseId = Yii::$app->getRequest()->get('courseId');
         $extensiveId = Yii::$app->getRequest()->get('subUnitId');
-        //获取泛读题目
+        //获取题目
+        $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
+        //保存题目排序
+        if(Yii::$app->getRequest()->getIsPost()){
+            if(!empty($_POST['topic_id'])){
+                $orderData = array();
+                foreach ($_POST['topic_id'] as $k=>$v){
+                    $source = HiConfTopic::findOne($v);
+                    $source->Order = $_POST['topic_order'][$k];
+                    $source->save();
+                    $orderData[$v] = $_POST['topic_order'][$k];
+                }
+                asort($orderData);
+                //修改题目列表排序规则
+                if(!empty($topicList)){
+                    foreach ($topicList as $k=>$v){
+                        $lastList = array();
+                        $questionIds = explode('|',$v['Questions']);
+                        foreach ($orderData as $key => $val){
+                            if(in_array($key,$questionIds)) $lastList[] = $key;
+                        }
+                        $lastListStr = implode('|',$lastList);
+                        if(!empty($lastList) && $v['Questions'] != $lastListStr){
+                            $source = HiConfSubUnitTrain::findOne($v['ID']);
+                            $source->Questions = $lastListStr;
+                            $source->save();
+                        }
+                    }//end foreach
+                }
+            }//end if
+        }
+        //获取题目
         $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
         $test = array();
         if(!empty($topicList)){
@@ -376,7 +508,13 @@ class TopicController extends BaseController
                 $attr = $model->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfTopic::findOne($questionId);
-                $rtn = $courseSource->updateAttributes($updateData);
+//                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
                 //添加答案
                 foreach ($data['answerName'] as $k=>$v){
                     $answer = array(
@@ -403,8 +541,62 @@ class TopicController extends BaseController
                 //更新题目的正确答案
                 if(!empty($correctAnswer)){
                     $correctAnswerStr = implode('|',$correctAnswer);
-                    HiConfTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $questionId]);
+//                    HiConfTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $questionId]);
+                    $sourse = HiConfTopic::findOne($questionId);
+                    $sourse->Correct = $correctAnswerStr;
+                    $sourse->save();
                 }
+                //删除原有题目列表数据
+                $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $subUnitId])->asArray()->all();
+                if(!empty($topicList)){
+                    foreach ($topicList as $k=>$v){
+                        $questionIds = explode('|',$v['Questions']);
+                        if(!empty($questionIds)){
+                            $action = 0;
+                            foreach ($questionIds as $key => $val){
+                                if($val == $questionId){
+                                    unset($questionIds[$key]);
+                                    $action = 1;
+                                }
+                            }
+                            //重新保存题目列表信息
+                            if($action == 1){
+                                if(empty($questionIds)){
+                                    HiConfSubUnitTrain::findOne($v['ID'])->delete();
+                                }else{
+                                    $sourse = HiConfSubUnitTrain::findOne($v['ID']);
+                                    $sourse->Questions = implode('|',$questionIds);
+                                    $sourse->save();
+                                }
+                            }
+                        }
+                    }//end foreach
+                }
+                //保存泛读视频题目列表
+                if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
+                if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
+                $topic = HiConfSubUnitTrain::findOne(['SUnitId' => $subUnitId,'Min' => $min,'Sec' => $sec]);
+                if(empty($topic)){
+                    //插入数据
+                    $insertData = array('SUnitId' => $subUnitId,'Questions' => (string)$questionId,'Min' => $min,'Sec' => $sec);
+                    $extensiveTopicListModel = new HiConfSubUnitTrain();
+                    $extensiveTopicListModel->setAttributes($insertData,false);
+                    $result = $extensiveTopicListModel->save();
+                }else{
+                    //更新数据
+                    if(!empty($topic->Questions)){
+                        $updateData = array('Questions' => $topic->Questions.'|'.$questionId);
+                    }else{
+                        $updateData = array('Questions' => $questionId);
+                    }
+                    $sourse = HiConfSubUnitTrain::findOne($topic->ID);
+                    $sourse->Questions = $updateData['Questions'];
+                    $rtn = $sourse->save();
+//                    $rtn = $sourse->updateAttributes($updateData);
+                    if (!$rtn){
+                        $this->exitJSON(0, 'fail!',$updateData);
+                    }
+                }//end if
                 $transaction->commit();
             }else{
                 $question = new HiConfTopic();
@@ -437,7 +629,10 @@ class TopicController extends BaseController
                 //更新题目的正确答案
                 if(!empty($correctAnswer)){
                     $correctAnswerStr = implode('|',$correctAnswer);
-                    HiConfTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $topicId]);
+//                    HiConfTopic::updateAll(['Correct' => $correctAnswerStr], ['ID' => $topicId]);
+                    $sourse = HiConfTopic::findOne($topicId);
+                    $sourse->Correct = $correctAnswerStr;
+                    $sourse->save();
                 }
                 //保存题目列表
                 if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
@@ -457,7 +652,9 @@ class TopicController extends BaseController
                         $updateData = array('Questions' => $topicId);
                     }
                     $sourse = HiConfSubUnitTrain::findOne($topic->ID);
-                    $rtn = $sourse->updateAttributes($updateData);
+                    $sourse->Questions = $updateData['Questions'];
+                    $rtn = $sourse->save();
+//                    $rtn = $sourse->updateAttributes($updateData);
                     if (!$rtn){
                         $this->exitJSON(0, 'fail!',$updateData);
                     }
@@ -483,7 +680,8 @@ class TopicController extends BaseController
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
             HiConfTopicAnswer::deleteAll(['Tid' => $questionId]);
-            HiConfTopic::deleteAll(['ID' => $questionId]);
+//            HiConfTopic::deleteAll(['ID' => $questionId]);
+            HiConfTopic::findOne($questionId)->delete();
             //更新题目列表
             $list = HiConfSubUnitTrain::find()->where(['SUnitId' => $subUnitId])->all();
             if(!empty($list)){
@@ -496,9 +694,13 @@ class TopicController extends BaseController
                         //更新数据表
                         $questionIdStr = implode('|',$questionIds);
                         if(!empty($questionIdStr)){
-                            HiConfSubUnitTrain::updateAll(['Questions' => $questionIdStr], ['ID' => $v['ID']]);
+//                            HiConfSubUnitTrain::updateAll(['Questions' => $questionIdStr], ['ID' => $v['ID']]);
+                            $sourceObj = HiConfSubUnitTrain::findOne($v['ID']);
+                            $sourceObj->Questions = $questionIdStr;
+                            $sourceObj->save();
                         }else{
-                            HiConfSubUnitTrain::deleteAll(['ID' => $v['ID']]);
+//                            HiConfSubUnitTrain::deleteAll(['ID' => $v['ID']]);
+                            HiConfSubUnitTrain::findOne($v['ID'])->delete();
                         }
                     }//end if
                 }

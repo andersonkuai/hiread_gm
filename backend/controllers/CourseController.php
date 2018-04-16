@@ -35,7 +35,6 @@ class CourseController extends BaseController
         date_default_timezone_set('PRC');
         $this->enableCsrfValidation = false;//关闭scrf验证
         parent::__construct($id, $module, $config);
-
     }
     /**
      * 课程列表
@@ -129,24 +128,32 @@ class CourseController extends BaseController
                 if(!empty($_POST['FileName'])){
                     foreach ($_POST['FileName'] as $k=>$v){
                         if(empty($v)) continue;
-                        $packageData[] = array($courseId,$v,$_POST['FileSize'][$k]);
-                    }
-                    if(!empty($packageData)){
-                        $coursePackage = new HiConfCoursePackage();
-                        $coursePackage->insertAll($packageData);
+                        $packageModel = new HiConfCoursePackage();
+                        //添加课程包
+                        $addData = array(
+                            'CourseId' => $courseId,
+                            'FileName' => $v,
+                            'FileSize' => $_POST['FileSize'][$k]
+                        );
+                        $packageModel->setAttributes($addData,true);
+                        $packageModel->insert();
                     }
                 }//end if
                 //课程大纲
                 if(!empty($_POST['intensive_outline_name'])){
-                    //大纲
                     foreach ($_POST['intensive_outline_name'] as $k=>$v){
                         if(empty($v)) continue;
-                        $courseOutlineData[] = array($courseId,$v,$_POST['intensive_outline_desc'][$k]);
+                        $outlineModel = new HiConfCourseOutline();
+                        //添加大纲
+                        $addData = array(
+                            'CourseId' => $courseId,
+                            'Name' => $v,
+                            'Desc' => $_POST['intensive_outline_desc'][$k]
+                        );
+                        $outlineModel->setAttributes($addData,false);
+                        $outlineModel->insert();
                     }
-                    if (!empty($courseOutlineData)){
-                        $courseOutline = new HiConfCourseOutline();
-                        $courseOutline->insertAll($courseOutlineData);
-                    }
+
                 }//end if
                 $transaction->commit();
             }catch (Exception $e){
@@ -165,31 +172,45 @@ class CourseController extends BaseController
                 $attr = $course->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfCourse::findOne($id);
-                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
                 //课程包
                 HiConfCoursePackage::deleteAll(['CourseId' => $id]);//删除课程包
                 if(!empty($_POST['FileName'])){
                     foreach ($_POST['FileName'] as $k=>$v){
                         if(empty($v)) continue;
-                        $packageData[] = array($id,$v,$_POST['FileSize'][$k]);
+                        $packageModel = new HiConfCoursePackage();
+                        //添加课程包
+                        $addData = array(
+                            'CourseId' => $id,
+                            'FileName' => $v,
+                            'FileSize' => $_POST['FileSize'][$k]
+                        );
+                        $packageModel->setAttributes($addData,false);
+                        $packageModel->insert();
                     }
-                    if(!empty($packageData)){
-                        $coursePackage = new HiConfCoursePackage();
-                        $coursePackage->insertAll($packageData);
-                    }
+
                 }//end if
                 //课程大纲
                 HiConfCourseOutline::deleteAll(['CourseId' => $id]);//删除课程大纲
                 if(!empty($_POST['intensive_outline_name'])){
-                    //大纲
                     foreach ($_POST['intensive_outline_name'] as $k=>$v){
                         if(empty($v)) continue;
-                        $courseOutlineData[] = array($id,$v,$_POST['intensive_outline_desc'][$k]);
+                        $outlineModel = new HiConfCourseOutline();
+                        //添加大纲
+                        $addData = array(
+                            'CourseId' => $id,
+                            'Name' => $v,
+                            'Desc' => $_POST['intensive_outline_desc'][$k]
+                        );
+                        $outlineModel->setAttributes($addData,false);
+                        $outlineModel->insert();
                     }
-                    if (!empty($courseOutlineData)){
-                        $courseOutline = new HiConfCourseOutline();
-                        $courseOutline->insertAll($courseOutlineData);
-                    }
+
                 }//end if
                 $transaction->commit();
             }catch (Exception $e){
@@ -287,7 +308,13 @@ class CourseController extends BaseController
             $attr = $extensive->attributeLabels();//表字段
             $updateData = array_intersect_key($data, $attr);
             $source = HiConfExtensive::findOne($extensiveId);
-            $rtn = $source->updateAttributes($updateData);
+            if(!empty($updateData)){
+                foreach ($updateData as $k=>$v){
+                    $source->$k = $v;
+                }
+            }
+            $rtn = $source->save();
+//            $rtn = $source->updateAttributes($updateData);
             if ($rtn){
                 $this->exitJSON(1, 'success');
             }else{
@@ -317,7 +344,8 @@ class CourseController extends BaseController
                     }//end if
                 }
             }
-            HiConfExtensive::deleteAll(['ID' => $extensiveId]);//删除泛读
+//            HiConfExtensive::deleteAll(['ID' => $extensiveId]);//删除泛读
+            HiconfExtensive::findOne($extensiveId)->delete();//删除泛读
             HiConfExtensiveTopicList::deleteAll(['ExtId' => $extensiveId]);//删除泛读题目中间表
             $transaction->commit();
         }catch (Exception $e){
@@ -434,7 +462,13 @@ class CourseController extends BaseController
             $attr = $unitModel->attributeLabels();//表字段
             $updateData = array_intersect_key($updateData1, $attr);
             $source = HiConfUnit::findOne($unitId);
-            $rtn = $source->updateAttributes($updateData);
+//            $rtn = $source->updateAttributes($updateData);
+            if(!empty($updateData)){
+                foreach ($updateData as $k=>$v){
+                    $source->$k = $v;
+                }
+            }
+            $rtn = $source->save();
             if ($rtn){
                 $this->exitJSON(1, 'success');
             }else{
@@ -509,7 +543,13 @@ class CourseController extends BaseController
             $attr = $subUnitModel->attributeLabels();//表字段
             $updateData = array_intersect_key($updateData1, $attr);
             $source = HiConfSubUnit::findOne($subUnitId);
-            $rtn = $source->updateAttributes($updateData);
+//            $rtn = $source->updateAttributes($updateData);
+            if(!empty($updateData)){
+                foreach ($updateData as $k=>$v){
+                    $source->$k = $v;
+                }
+            }
+            $rtn = $source->save();
             if ($rtn){
                 $this->exitJSON(1, 'success');
             }else{
@@ -542,7 +582,8 @@ class CourseController extends BaseController
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
             HiConfTopic::deleteAll(['SUnitId' => $subUnitId]);
-            HiConfSubUnit::deleteAll(['ID' => $subUnitId]);
+//            HiConfSubUnit::deleteAll(['ID' => $subUnitId]);
+            HiConfSubUnit::findOne($subUnitId)->delete();
             HiConfSubUnitTrain::deleteAll(['SUnitId' => $subUnitId]);
             $transaction->commit();
         }catch (Exception $e){
@@ -756,7 +797,8 @@ class CourseController extends BaseController
         if(empty($catalogId)){
             $this->exitJSON(0, 'Fail!');
         }
-        $result = HiConfCourseCatalog::deleteAll(['ID' => $catalogId]);
+//        $result = HiConfCourseCatalog::deleteAll(['ID' => $catalogId]);
+        $result = HiConfCourseCatalog::findOne($catalogId)->delete();
         if($result){
             $this->exitJSON(1, 'success!');
         }else{
@@ -779,7 +821,13 @@ class CourseController extends BaseController
                 $attr = $model->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfCourseCatalog::findOne($id);
-                $rtn = $courseSource->updateAttributes($updateData);
+//                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
             }else{
                 //添加数据
                 $model = new HiConfCourseCatalog();
@@ -847,7 +895,8 @@ class CourseController extends BaseController
         if(empty($catalogId)){
             $this->exitJSON(0, 'Fail!');
         }
-        $result = HiConfCourseWord::deleteAll(['ID' => $catalogId]);
+//        $result = HiConfCourseWord::deleteAll(['ID' => $catalogId]);
+        $result = HiConfCourseWord::findOne($catalogId)->delete();
         if($result){
             $this->exitJSON(1, 'success!');
         }else{
@@ -870,7 +919,13 @@ class CourseController extends BaseController
                 $attr = $model->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfCourseWord::findOne($id);
-                $rtn = $courseSource->updateAttributes($updateData);
+//                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
             }else{
                 //添加数据
                 $model = new HiConfCourseWord();
@@ -938,7 +993,8 @@ class CourseController extends BaseController
         if(empty($id)){
             $this->exitJSON(0, 'Fail!');
         }
-        $result = HiConfDayRead::deleteAll(['ID' => $id]);
+//        $result = HiConfDayRead::deleteAll(['ID' => $id]);
+        $result = HiConfDayRead::findOne($id)->delete();
         if($result){
             $this->exitJSON(1, 'success!');
         }else{
@@ -955,13 +1011,25 @@ class CourseController extends BaseController
         $data['UnitID'] = $subUnitId;
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
+            if(empty($data['Chapter'])){
+                throw new Exception('章节不能为空');
+            }
+            if(empty($data['Page'])){
+                throw new Exception('页码不能为空');
+            }
             if(!empty($id)){
                 //修改数据
                 $model = new HiConfDayRead();
                 $attr = $model->attributeLabels();//表字段
                 $updateData = array_intersect_key($data, $attr);
                 $courseSource = HiConfDayRead::findOne($id);
-                $rtn = $courseSource->updateAttributes($updateData);
+//                $rtn = $courseSource->updateAttributes($updateData);
+                if(!empty($updateData)){
+                    foreach ($updateData as $k=>$v){
+                        $courseSource->$k = $v;
+                    }
+                }
+                $rtn = $courseSource->save();
             }else{
                 //添加数据
                 $model = new HiConfDayRead();

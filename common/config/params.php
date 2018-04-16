@@ -2,6 +2,7 @@
 $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/static/';
 if(YII_ENV == 2){
     //测试服
+    $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
 }elseif(YII_ENV == 3){
     //线上

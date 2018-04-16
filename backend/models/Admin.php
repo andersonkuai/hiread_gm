@@ -6,6 +6,25 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
+/**
+ * This is the model class for table "admin".
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $password
+ * @property string $nickname
+ * @property string $realname
+ * @property string $mobile
+ * @property integer $login_time
+ * @property string $login_ip
+ * @property integer $status
+ * @property string $auth_key
+ * @property integer $modified
+ * @property integer $created
+ * @property string $province
+ * @property string $city
+ * @property string $country
+ */
 class Admin extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;

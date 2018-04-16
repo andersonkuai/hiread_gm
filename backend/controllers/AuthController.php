@@ -72,7 +72,14 @@ class AuthController extends BaseController
 
         $checkids =  Yii::$app->getRequest()->post('checkids');
 
-        $rtn = Admin::updateAll(['status' => $status], ['id' => $checkids]);
+        if(!empty($checkids)){
+            foreach ($checkids as $k=>$v){
+                $admin = Admin::findOne($v);
+                $admin->status = $status;
+                $rtn = $admin->save();
+            }
+        }
+//        $rtn = Admin::updateAll(['status' => $status], ['id' => $checkids]);
 
         if( $rtn ){
             $this->exitJSON(1, 'Success!');
@@ -90,7 +97,8 @@ class AuthController extends BaseController
         if( $id ){
 
             $admin = Admin::findOne( $id );
-            $admin->updateAttributes(['status' => Admin::STATUS_DELETED]);
+            $admin->status = Admin::STATUS_DELETED;
+            $admin->save();
         }
         $this->exitJSON(1, 'Success!');
     }
@@ -112,8 +120,12 @@ class AuthController extends BaseController
 
         if( $id ){
             $admin = Admin::findOne( $id );
-            if( !empty($password) ) $data['password'] = $admin->generatePasswordHash($password);
-            $rtn = $admin->updateAttributes($data);
+            if( !empty($password) ) $admin->password = $admin->generatePasswordHash($password);
+            $admin->nickname = $data['nickname'];
+            $admin->realname = $data['realname'];
+            $admin->mobile = $data['mobile'];
+            $admin->modified = $data['modified'];
+            $rtn = $admin->save();
         }else{
 
             if(empty($username)) $this->exitJSON(0, '用户名不能为空');
@@ -154,7 +166,7 @@ class AuthController extends BaseController
     public function actionPerm(){
 
         $mAuthItem = new AuthItem();
-        $perms = $mAuthItem->findAll(['where' => ['type' => 2], 'orderBy' => ['name' => 'asc']]);
+        $perms = $mAuthItem::find()->where(['type' => '2'])->orderBy('name asc')->asArray()->all();
 //        //格式化数据列表
 //        $authList = array();
 //        if(!empty($perms)){
@@ -178,7 +190,7 @@ class AuthController extends BaseController
     public function actionRole(){
 
         $mAuthItem = new AuthItem();
-        $roles= $mAuthItem->findAll(['where' => ['type' => 1], 'orderBy' => ['name' => 'asc']]);
+        $roles= $mAuthItem::find()->where(['type'=> 1])->orderBy('name asc')->asArray()->all();
 
         $renderData['roles'] = $roles;
         return $this->display('role', $renderData);
@@ -195,22 +207,26 @@ class AuthController extends BaseController
         $type = trim(Yii::$app->getRequest()->post('type'));
         $description = trim(Yii::$app->getRequest()->post('description'));
 
-        $row = $mAuthItem->findRow("name='{$name}'");
+        $row = $mAuthItem::findOne($name);
 
         $data = array(
             'description' => $description,
             'updated_at' => time()
         );
         if( $key ){
-            $rtn = $mAuthItem->update($data, "name='{$key}'");
-
+            $admin = AuthItem::findOne($key);
+//            $admin->name = $name;
+            $admin->description = $description;
+            $admin->updated_at = time();
+            $rtn = $admin->save();
+//            $rtn = $mAuthItem->update($data, "name='{$key}'");
         }else{
             if(!empty($row)) $this->exitJSON(0, '权限标识已存在！');
             $data['name'] = $name;
             $data['type'] = $type;
             $data['created_at'] = time();
-
-            $rtn = $mAuthItem->insert($data);
+            $mAuthItem->setAttributes($data,false);
+            $rtn = $mAuthItem->insert();
         }
 
         if( $rtn ){
@@ -232,9 +248,9 @@ class AuthController extends BaseController
             $children = Yii::$app->getRequest()->post('children');
 
 
-            $row = $mAuthItem->findRow("name='{$name}'");
+            $row = $mAuthItem::findOne($name);
             if( empty($row) ) $this->showMsg('记录不存在！');
-            $items= $mAuthItem->findAll([ 'orderBy' => ['type' => 'asc', 'name' => 'asc'], 'indexBy' => 'name']);
+            $items= $mAuthItem::find()->orderBy('type asc,name asc')->asArray()->all();
 
             $parent = $row['type'] == 1 ? $auth->getRole($name) : $auth->getPermission($name);
             $auth->removeChildren($parent);
@@ -254,14 +270,14 @@ class AuthController extends BaseController
             $this->exitJSON(1, 'success!');
         }else{
             $name = trim(Yii::$app->getRequest()->get('name'));
-            $row = $mAuthItem->findRow("name='{$name}'");
+            $row = AuthItem::findOne($name);
             if( empty($row) ) $this->showMsg('记录不存在！');
 
             $where = [];
             $where = ['type' => 2];
             $where = "`type` = 2 and name != '{$name}'";
 //            if($row['type'] == 2) $where = ['type' => 2];
-            $items= $mAuthItem->findAll(['where' => $where, 'orderBy' => ['type' => 'asc', 'name' => 'asc']]);
+            $items= $mAuthItem::find()->where("`type` = 2 and name != '{$name}'")->orderBy('type asc , name asc')->asArray()->all();
 
             $children = (new AuthItemChild())->getChildren($name);
 

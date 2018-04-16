@@ -46,6 +46,26 @@
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=course/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','课程列表')?></a></li>
         </ul>
     </li>
+    <li class="treeview">
+        <a href="#"><i class="fa fa-cogs"></i> <span><?=\Yii::t('app','功能管理')?></span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=coupon/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','代金券管理')?></a></li>
+        </ul>
+    </li>
+    <li class="treeview">
+        <a href="#"><i class="fa fa-cogs"></i> <span><?=\Yii::t('app','日志管理')?></span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=admin-log/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','后台日志')?></a></li>
+        </ul>
+    </li>
 
 </ul>
 <!-- /.sidebar-menu -->

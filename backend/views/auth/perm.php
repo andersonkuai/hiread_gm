@@ -52,7 +52,7 @@
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button class="btn btn-default"
-                                                data-toggle="modal" data-target="#exampleModal" data-whatever='<?php echo json_encode($row)?>'>
+                                                data-toggle="modal" data-target="#exampleModal" data-whatever='<?php echo json_encode($row);?>'>
                                             <i class="fa fa-edit"></i> <?= \Yii::t('app', '编辑');?></button>
                                         <a class="btn btn-default" href="?r=auth/parent-child&name=<?php echo $row['name'];?>"><i class="fa fa-code-fork"></i> <?= \Yii::t('app', '子权限');?></a>
                                     </div>
@@ -108,8 +108,8 @@ $('#exampleModal').on('show.bs.modal', function (event) {
     modal.find('.modal-body input[name=name]').val('');
     modal.find('.modal-body textarea').val('');
     if( recipient != '' ){
-        modal.find('.modal-footer input[name=key]').val(recipient.name);
-        modal.find('.modal-body input[name=name]').val(recipient.name);
+        modal.find('.modal-footer input[name=key]').val(recipient['name']);
+        modal.find('.modal-body input[name=name]').val(recipient['name']);
         modal.find('.modal-body textarea').val(recipient.description);
     }
 });
