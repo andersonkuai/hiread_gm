@@ -614,37 +614,38 @@ class CourseController extends BaseController
         }
         //保存地址
         $action = trim(Yii::$app->getRequest()->get('action'));
-        switch ($action){
-            case 'Poster':
-                $base_address = Yii::$app->params['extensive_cover_img'];//泛读封面
-                break;
-            case 'CoverImg':
-                $base_address = Yii::$app->params['cover_img'];//课程封面
-                break;
-            case 'DetailImg':
-                $base_address = Yii::$app->params['detail_img'];//课程简介图片
-                break;
-            case 'Author':
-                $base_address = Yii::$app->params['author_img'];//作者头像
-                break;
-            case 'extensive_topic_img':
-                $base_address = Yii::$app->params['extensive_topic_img'];//泛读题目图片
-                break;
-            case 'extensive_topic_audio':
-                $base_address = Yii::$app->params['extensive_topic_audio'];//泛读题目音频
-                break;
-            case 'extensive_answer_image':
-                $base_address = Yii::$app->params['extensive_answer_image'];//泛读答案图片
-                break;
-            case 'extensive_answer_Pair1Img':
-                $base_address = Yii::$app->params['extensive_answer_Pair1Img'];//泛读答案配对图片1
-                break;
-            default :
-                exit(json_encode($return));
-                break;
-        }
+        $base_address = Yii::$app->params[$action];
+//        switch ($action){
+//            case 'Poster':
+//                $base_address = Yii::$app->params['extensive_cover_img'];//泛读封面
+//                break;
+//            case 'CoverImg':
+//                $base_address = Yii::$app->params['cover_img'];//课程封面
+//                break;
+//            case 'DetailImg':
+//                $base_address = Yii::$app->params['detail_img'];//课程简介图片
+//                break;
+//            case 'Author':
+//                $base_address = Yii::$app->params['author_img'];//作者头像
+//                break;
+//            case 'extensive_topic_img':
+//                $base_address = Yii::$app->params['extensive_topic_img'];//泛读题目图片
+//                break;
+//            case 'extensive_topic_audio':
+//                $base_address = Yii::$app->params['extensive_topic_audio'];//泛读题目音频
+//                break;
+//            case 'extensive_answer_image':
+//                $base_address = Yii::$app->params['extensive_answer_image'];//泛读答案图片
+//                break;
+//            case 'extensive_answer_Pair1Img':
+//                $base_address = Yii::$app->params['extensive_answer_Pair1Img'];//泛读答案配对图片1
+//                break;
+//            default :
+//                exit(json_encode($return));
+//                break;
+//        }
         $isCreate = \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('s').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
+        $file_name = date('YmdHis').'_'.rand(1,999).rand(1,999).'_'.$_FILES['questionPic']['name'];
         //保存数据
         if ($_FILES['questionPic']['error'] == 0){
             move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
@@ -675,7 +676,7 @@ class CourseController extends BaseController
         $base_address = Yii::$app->params['extensive_video'];
 
         \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['VideoSource']['name'];
+        $file_name = date('YmdHis').'_'.rand(1,999).rand(1,999).'_'.$_FILES['VideoSource']['name'];
         //保存数据
         if ($_FILES['VideoSource']['error'] == 0){
             move_uploaded_file($_FILES['VideoSource']['tmp_name'],$base_address.'/'.$file_name);
@@ -704,7 +705,7 @@ class CourseController extends BaseController
         $base_address = Yii::$app->params['package'];
 
         \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['package']['name'];
+        $file_name = date('YmdHis').'_'.rand(1,999).rand(1,999).'_'.$_FILES['package']['name'];
         //保存数据
         if ($_FILES['package']['error'] == 0){
             move_uploaded_file($_FILES['package']['tmp_name'],$base_address.'/'.$file_name);
@@ -734,7 +735,7 @@ class CourseController extends BaseController
         $action = trim(Yii::$app->getRequest()->get('action'));
         $base_address = Yii::$app->params[$action];
         \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
+        $file_name = date('YmdHis').'_'.rand(1,999).rand(1,999).'_'.$_FILES['questionPic']['name'];
         //保存数据
         if ($_FILES['questionPic']['error'] == 0){
             move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);

@@ -104,61 +104,61 @@
 
 <script>
     //上传视频
-    function uploadExtensiveVideo(obj) {
-        var fileDom = $(obj);
-        var btn = fileDom.next();
-        fileDom.wrap('<form action="index.php?r=course/uploadvideo&read_type=extensive" method="post" enctype="multipart/form-data"></form>');
-        $(obj).parent().parent().find('form').ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
-                var percentVal = '0%';
-                btn.addClass('disabled').text("上传中...");
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
-            },
-            success: function(data) {
-                if(data.code == 1){
-                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
-                    $(obj).parent().parent().prev().val(data.pic)
-                }else{
-                    alert('上传失败');
-                }
-                fileDom.unwrap();
-            },
-            error:function(xhr){
-                alert('上传失败');
-                fileDom.unwrap();
-            }
-        });
-    }
+//    function uploadExtensiveVideo(obj) {
+//        var fileDom = $(obj);
+//        var btn = fileDom.next();
+//        fileDom.wrap('<form action="index.php?r=course/uploadvideo&read_type=extensive" method="post" enctype="multipart/form-data"></form>');
+//        $(obj).parent().parent().find('form').ajaxSubmit({
+//            dataType:  'json',
+//            beforeSend: function() {
+//                var percentVal = '0%';
+//                btn.addClass('disabled').text("上传中...");
+//            },
+//            uploadProgress: function(event, position, total, percentComplete) {
+//                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
+//            },
+//            success: function(data) {
+//                if(data.code == 1){
+//                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
+//                    $(obj).parent().parent().prev().val(data.pic)
+//                }else{
+//                    alert('上传失败');
+//                }
+//                fileDom.unwrap();
+//            },
+//            error:function(xhr){
+//                alert('上传失败');
+//                fileDom.unwrap();
+//            }
+//        });
+//    }
     //上传图片
-    function uploadExtensiveVideoImg(obj) {
-        var action = 'Poster';
-        var fileDom = $(obj);
-        var btn = fileDom.next();
-        var url = "index.php?r=course/uploadimg&action="+action
-        fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
-        $(obj).parent().parent().find('form').ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
-                var percentVal = '0%';
-                btn.addClass('disabled').text("上传中...");
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
-            },
-            success: function(data) {
-                if(data.code == 1){
-                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
-                    $(obj).parent().parent().prev().val(data.pic)
-                }
-                fileDom.unwrap();
-            },
-            error:function(xhr){
-                alert('上传失败');
-                fileDom.unwrap();
-            }
-        });
-    }
+//    function uploadExtensiveVideoImg(obj) {
+//        var action = 'Poster';
+//        var fileDom = $(obj);
+//        var btn = fileDom.next();
+//        var url = "index.php?r=course/uploadimg&action="+action
+//        fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
+//        $(obj).parent().parent().find('form').ajaxSubmit({
+//            dataType:  'json',
+//            beforeSend: function() {
+//                var percentVal = '0%';
+//                btn.addClass('disabled').text("上传中...");
+//            },
+//            uploadProgress: function(event, position, total, percentComplete) {
+//                btn.addClass('disabled').text("上传中..."+percentComplete + '%');
+//            },
+//            success: function(data) {
+//                if(data.code == 1){
+//                    btn.addClass('disabled').html("<span style='color: #00aa00'>上传成功</span>");
+//                    $(obj).parent().parent().prev().val(data.pic)
+//                }
+//                fileDom.unwrap();
+//            },
+//            error:function(xhr){
+//                alert('上传失败');
+//                fileDom.unwrap();
+//            }
+//        });
+//    }
 </script>

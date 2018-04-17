@@ -110,7 +110,7 @@
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_topic_video',this)" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
                                 </span>&nbsp;&nbsp;
-                                <a class="btn btn-sm btn-primary" href="##" onclick="playAudio('unit_topic_audio',this)"><?= \Yii::t('app', '查看');?></a>
+                                <a class="btn btn-sm btn-primary" href="##" onclick="playAudio('unit_topic_video',this)"><?= \Yii::t('app', '查看');?></a>
                             </td>
                         </tr>
                         <tr>
@@ -285,7 +285,7 @@
     function uploadImg(action,obj) {
         var fileDom = $(obj);
         var btn = $(obj).next()
-        var url = "index.php?r=topic/uploadimg&action="+action
+        var url = "index.php?r=course/uploadimg&action="+action
         fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
         fileDom.parent().ajaxSubmit({
             dataType:  'json',
@@ -314,7 +314,7 @@
     function uploadFile(action,obj) {
         var fileDom = $(obj);
         var btn = $(obj).next()
-        var url = "index.php?r=topic/upload-file&action="+action
+        var url = "index.php?r=course/upload-file&action="+action
         fileDom.wrap('<form action="'+url+'" method="post" enctype="multipart/form-data"></form>');
         fileDom.parent().ajaxSubmit({
             dataType:  'json',

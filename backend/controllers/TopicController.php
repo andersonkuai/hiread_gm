@@ -717,119 +717,119 @@ class TopicController extends BaseController
     /**
      * 上传图片信息
      */
-    public function actionUploadimg()
-    {
-        $return = array(
-            'code' => 0,
-            'image_id' => '',
-            'pic' => '',
-            'msg' => ''
-        );
-        $imgFile = @file_get_contents($_FILES['questionPic']['tmp_name']);
-        $imgFileSize = @getimagesizefromstring($imgFile);
-        if (!$imgFile || !$imgFileSize) {
-            $return['msg'] = '不是图片或者出错了';
-            exit(json_encode($return));
-        }
-        //保存地址
-        $action = trim(Yii::$app->getRequest()->get('action'));
-        switch ($action){
-            case 'Poster':
-                $base_address = Yii::$app->params['extensive_cover_img'];//泛读封面
-                break;
-            case 'CoverImg':
-                $base_address = Yii::$app->params['cover_img'];//课程封面
-                break;
-            case 'DetailImg':
-                $base_address = Yii::$app->params['detail_img'];//课程简介图片
-                break;
-            case 'Author':
-                $base_address = Yii::$app->params['author_img'];//作者头像
-                break;
-            case 'unit_topic_img':
-                $base_address = Yii::$app->params['unit_topic_img'];//单元题目地址
-                break;
-            case 'extensive_topic_audio':
-                $base_address = Yii::$app->params['extensive_topic_audio'];//泛读题目音频
-                break;
-            case 'extensive_answer_image':
-                $base_address = Yii::$app->params['extensive_answer_image'];//泛读答案图片
-                break;
-            case 'extensive_answer_Pair1Img':
-                $base_address = Yii::$app->params['extensive_answer_Pair1Img'];//泛读答案配对图片1
-                break;
-            default :
-                exit(json_encode($return));
-                break;
-        }
-        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
-        //保存数据
-        if ($_FILES['questionPic']['error'] == 0){
-            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
-        }
-        $return['code'] = 1;
-        $return['pic'] = $file_name;
-        exit(json_encode($return));
-    }
+//    public function actionUploadimg()
+//    {
+//        $return = array(
+//            'code' => 0,
+//            'image_id' => '',
+//            'pic' => '',
+//            'msg' => ''
+//        );
+//        $imgFile = @file_get_contents($_FILES['questionPic']['tmp_name']);
+//        $imgFileSize = @getimagesizefromstring($imgFile);
+//        if (!$imgFile || !$imgFileSize) {
+//            $return['msg'] = '不是图片或者出错了';
+//            exit(json_encode($return));
+//        }
+//        //保存地址
+//        $action = trim(Yii::$app->getRequest()->get('action'));
+//        switch ($action){
+//            case 'Poster':
+//                $base_address = Yii::$app->params['extensive_cover_img'];//泛读封面
+//                break;
+//            case 'CoverImg':
+//                $base_address = Yii::$app->params['cover_img'];//课程封面
+//                break;
+//            case 'DetailImg':
+//                $base_address = Yii::$app->params['detail_img'];//课程简介图片
+//                break;
+//            case 'Author':
+//                $base_address = Yii::$app->params['author_img'];//作者头像
+//                break;
+//            case 'unit_topic_img':
+//                $base_address = Yii::$app->params['unit_topic_img'];//单元题目地址
+//                break;
+//            case 'extensive_topic_audio':
+//                $base_address = Yii::$app->params['extensive_topic_audio'];//泛读题目音频
+//                break;
+//            case 'extensive_answer_image':
+//                $base_address = Yii::$app->params['extensive_answer_image'];//泛读答案图片
+//                break;
+//            case 'extensive_answer_Pair1Img':
+//                $base_address = Yii::$app->params['extensive_answer_Pair1Img'];//泛读答案配对图片1
+//                break;
+//            default :
+//                exit(json_encode($return));
+//                break;
+//        }
+//        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
+//        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
+//        //保存数据
+//        if ($_FILES['questionPic']['error'] == 0){
+//            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
+//        }
+//        $return['code'] = 1;
+//        $return['pic'] = $file_name;
+//        exit(json_encode($return));
+//    }
     /**
      * 上传视频信息
      */
-    public function actionUploadvideo()
-    {
-        $return = array(
-            'code' => 0,
-            'image_id' => '',
-            'pic' => '',
-            'msg' => ''
-        );
-        $File = @file_get_contents($_FILES['VideoSource']['tmp_name']);
-        if (!$File) {
-            $return['msg'] = '出错了';
-            exit(json_encode($return));
-        }
-        //保存地址
-        $base_address = Yii::$app->params['extensive_video'];
-
-        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['VideoSource']['name'];
-        //保存数据
-        if ($_FILES['VideoSource']['error'] == 0){
-            move_uploaded_file($_FILES['VideoSource']['tmp_name'],$base_address.'/'.$file_name);
-        }
-        $return['code'] = 1;
-        $return['pic'] = $file_name;
-        exit(json_encode($return));
-    }
+//    public function actionUploadvideo()
+//    {
+//        $return = array(
+//            'code' => 0,
+//            'image_id' => '',
+//            'pic' => '',
+//            'msg' => ''
+//        );
+//        $File = @file_get_contents($_FILES['VideoSource']['tmp_name']);
+//        if (!$File) {
+//            $return['msg'] = '出错了';
+//            exit(json_encode($return));
+//        }
+//        //保存地址
+//        $base_address = Yii::$app->params['extensive_video'];
+//
+//        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
+//        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['VideoSource']['name'];
+//        //保存数据
+//        if ($_FILES['VideoSource']['error'] == 0){
+//            move_uploaded_file($_FILES['VideoSource']['tmp_name'],$base_address.'/'.$file_name);
+//        }
+//        $return['code'] = 1;
+//        $return['pic'] = $file_name;
+//        exit(json_encode($return));
+//    }
     /**
      * 上传文件
      */
-    public function actionUploadFile()
-    {
-        $return = array(
-            'code' => 0,
-            'image_id' => '',
-            'pic' => '',
-            'msg' => ''
-        );
-        $imgFile = @file_get_contents($_FILES['questionPic']['tmp_name']);
-        if (!$imgFile) {
-            $return['msg'] = '出错了';
-            exit(json_encode($return));
-        }
-        //保存地址
-        $action = trim(Yii::$app->getRequest()->get('action'));
-        $base_address = Yii::$app->params[$action];
-        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
-        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
-        //保存数据
-        if ($_FILES['questionPic']['error'] == 0){
-            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
-        }
-        $return['code'] = 1;
-        $return['pic'] = $file_name;
-        exit(json_encode($return));
-    }
+//    public function actionUploadFile()
+//    {
+//        $return = array(
+//            'code' => 0,
+//            'image_id' => '',
+//            'pic' => '',
+//            'msg' => ''
+//        );
+//        $imgFile = @file_get_contents($_FILES['questionPic']['tmp_name']);
+//        if (!$imgFile) {
+//            $return['msg'] = '出错了';
+//            exit(json_encode($return));
+//        }
+//        //保存地址
+//        $action = trim(Yii::$app->getRequest()->get('action'));
+//        $base_address = Yii::$app->params[$action];
+//        \common\helpers\Func::mkdirRecursion($base_address);//创建目录
+//        $file_name = date('YmdHis').'_'.uniqid().'_'.$_FILES['questionPic']['name'];
+//        //保存数据
+//        if ($_FILES['questionPic']['error'] == 0){
+//            move_uploaded_file($_FILES['questionPic']['tmp_name'],$base_address.'/'.$file_name);
+//        }
+//        $return['code'] = 1;
+//        $return['pic'] = $file_name;
+//        exit(json_encode($return));
+//    }
 
 
 }

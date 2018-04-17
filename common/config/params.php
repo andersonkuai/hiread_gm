@@ -1,11 +1,16 @@
 <?php
-$static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/static/';
-if(YII_ENV == 2){
+
+if(YII_ENV == 1){
+    //本地
+    $static_dir = 'D:/HTTP/upload_tmp_dir/';
+    $static_hiread = 'http://dev-static.hiread.cn/';
+}elseif(YII_ENV == 2){
     //测试服
     $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
 }elseif(YII_ENV == 3){
     //线上
+    $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/static/';
     $static_hiread = 'https://cdn1.hiread.cn/';
 }
 return [
@@ -13,16 +18,17 @@ return [
     'static_hiread' => $static_hiread,
 
     //课程封面地址
-    'cover_img' => $static_dir.'/course/book/',
+    'CoverImg' => $static_dir.'/course/book/',
     'view_CoverImg' => 'course/book/',//查看目录
     //课程简介图片地址
-    'detail_img' => $static_dir.'/course/book/',
+    'DetailImg' => $static_dir.'/course/book/',
     'view_DetailImg' => 'course/book/',//查看目录
     //作者头像目录
-    'author_img' => $static_dir.'/course/book/',
+    'Author' => $static_dir.'/course/book/',
     'view_Author' => 'course/book/',//查看目录
     //课程包地址
     'package' => $static_dir.'/course/book/',
+    'view_package' => 'course/book/',//查看目录
     //每日朗读音频
     'read_audio' => $static_dir.'/course/book/',
     'view_read_audio' => 'course/book/',
@@ -30,7 +36,7 @@ return [
      * 泛读
      */
     //泛读封面地址
-    'extensive_cover_img' => $static_dir.'/course/question/image/extensive/',
+    'Poster' => $static_dir.'/course/question/image/extensive/',
     'view_extensive_cover_img' => 'course/question/image/extensive/',//查看目录
     //泛读视频地址
     'extensive_video' => $static_dir.'/course/question/video/extensive/',
