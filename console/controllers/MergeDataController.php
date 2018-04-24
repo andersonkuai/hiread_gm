@@ -50,7 +50,7 @@ class MergeDataController extends Controller
                     from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
             $result1 = $connection->createCommand($sql)->execute();
             //修改用户状态
-            $sql = "select a.`Uid`,a.`IsTry` from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where b.Status = 1 and b.isMerge = 0";
+            $sql = "select a.`Uid`,a.`IsTry` from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where b.Status = 1 and a.isMerge = 0";
             $orders = $connection->createCommand($sql)->queryAll();
             if (!empty($orders)){
                 foreach ($orders as $val){
