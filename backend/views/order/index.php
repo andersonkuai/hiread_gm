@@ -40,6 +40,18 @@
                                        value="<?=!empty($searchData['ProdName'])?$searchData['ProdName']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
+                                <select class="form-control" name="Type" id="">
+                                    <option value="" ><?= \Yii::t('app', '订单类型');?></option>
+                                    <?php
+                                    foreach (\common\enums\Order::pfvalues('TYPE') as $key => $obj){
+                                        $selected = isset($searchData['Type']) && $searchData['Type'] == $obj->getValue()
+                                            ? 'selected="selected"':'';
+                                        echo '<option '.$selected.' value="'.$obj->getValue().'">'.\common\enums\Order::labels()[$key].'</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-sm">
                                 <select class="form-control" name="PayType" id="">
                                     <option value="" ><?= \Yii::t('app', '支付方式');?></option>
                                     <?php
@@ -93,6 +105,7 @@
                         <tr>
                             <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>
                             <th><?= \Yii::t('app', '订单号');?></th>
+                            <th><?= \Yii::t('app', '订单类型');?></th>
                             <th><?= \Yii::t('app', '用户ID');?></th>
                             <th><?= \Yii::t('app', '用户名');?></th>
 <!--                            <th>--><?//= \Yii::t('app', '第三方交易号');?><!--</th>-->
@@ -115,6 +128,7 @@
                             <tr>
                                 <td align="center"><input type="checkbox" name="checkids[]" value="<?php echo $val['OrderId'];?>"/></td>
                                 <td><?php echo $val['OrderId']?></td>
+                                <td><?php echo \common\enums\Order::labels()[\common\enums\Order::pfwvalues('TYPE')[$val['Type']]];?></td>
                                 <td><?php echo $val['Uid']?></td>
                                 <td><?php echo $val['UserName']?></td>
 <!--                                <td>--><?php //echo $val['Trade']?><!--</td>-->

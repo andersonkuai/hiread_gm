@@ -24,6 +24,10 @@ class Order extends Enum
     const SEND_STATUS_NO = '0';
     const SEND_STATUS_SEND = '1';
     const SEND_STATUS_SIGN = '2';
+    //订单类型
+    const TYPE_NORMAL = '1';
+    const TYPE_GROUOP = '2';
+    const TYPE_MARKETING = '3';
 
 
     public static function labels(){
@@ -40,6 +44,10 @@ class Order extends Enum
             'SEND_STATUS_NO' => '未发货',
             'SEND_STATUS_SEND' => '已发货',
             'SEND_STATUS_SIGN' => '已签收',
+
+            'TYPE_NORMAL' => '普通课程',
+            'TYPE_GROUOP' => '拼团',
+            'TYPE_MARKETING' => '试听课',
         ];
     }
 }

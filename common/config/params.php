@@ -5,7 +5,7 @@ if(YII_ENV == 1){
     $static_dir = 'F:/project_svn/pc/www/static/';
     $static_hiread = 'http://kail-static.hiread.cn/';
 }elseif(YII_ENV == 2){
-    //测试服git 
+    //测试服
     $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
 }elseif(YII_ENV == 3){

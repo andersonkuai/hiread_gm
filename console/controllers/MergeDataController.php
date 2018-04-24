@@ -23,11 +23,11 @@ class MergeDataController extends Controller
         for ($i = 0; $i <= 9; $i++){
             $tableName = 'hi_user_order_'.$i;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_order_merge(`ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`) 
-                    select `ID`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo` 
+            $sql = "INSERT INTO hi_user_order_merge(`ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`) 
+                    select `ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo` 
                     from {$tableName} where isMerge = 0 
                     ON DUPLICATE KEY UPDATE 
-                    `ID`= values(ID),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
+                    `ID`= values(ID),`Type`= values(`Type`),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
                     `PayType` = VALUES(`PayType`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),`Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`);";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
