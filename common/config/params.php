@@ -2,10 +2,10 @@
 
 if(YII_ENV == 1){
     //本地
-    $static_dir = 'D:/HTTP/upload_tmp_dir/';
-    $static_hiread = 'http://dev-static.hiread.cn/';
+    $static_dir = 'F:/project_svn/pc/www/static/';
+    $static_hiread = 'http://kail-static.hiread.cn/';
 }elseif(YII_ENV == 2){
-    //测试服
+    //测试服git 
     $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
 }elseif(YII_ENV == 3){

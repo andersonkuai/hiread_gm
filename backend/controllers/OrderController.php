@@ -23,7 +23,7 @@ class OrderController extends BaseController
                 'hi_conf_course.ProdName',
             ])
             ->innerJoin('hi_user_merge','hi_user_order_merge.Uid = hi_user_merge.Uid')
-            ->innerJoin('hi_user_address_merge','hi_user_order_merge.RecvId = hi_user_address_merge.ID and hi_user_order_merge.Uid = hi_user_address_merge.Uid')
+            ->leftJoin('hi_user_address_merge','hi_user_order_merge.RecvId = hi_user_address_merge.ID and hi_user_order_merge.Uid = hi_user_address_merge.Uid')
             ->leftJoin('hi_conf_course','hi_user_order_merge.CourseId = hi_conf_course.ID')
             ->andWhere(1);
         $status = \Yii::$app->getRequest()->get("Status");
