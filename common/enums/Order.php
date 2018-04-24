@@ -20,6 +20,8 @@ class Order extends Enum
     const STATUS_UNPAY = '0';
     const STATUS_PAY = '1';
     const STATUS_FAILED = '2';
+    const STATUS_ALL_REFUND = '3';
+    const STATUS_PARTIAL_REFUND = '4';
     //发货状态
     const SEND_STATUS_NO = '0';
     const SEND_STATUS_SEND = '1';
@@ -40,6 +42,8 @@ class Order extends Enum
             'STATUS_UNPAY' => '未支付',
             'STATUS_PAY' => '已支付',
             'STATUS_FAILED' => '支付失败',
+            'STATUS_ALL_REFUND' => '全部退款',
+            'STATUS_PARTIAL_REFUND' => '部分退款',
 
             'SEND_STATUS_NO' => '未发货',
             'SEND_STATUS_SEND' => '已发货',
