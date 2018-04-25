@@ -84,6 +84,8 @@ class Controller extends Component implements ViewContextInterface
         $this->id = $id;
         $this->module = $module;
         parent::__construct($config);
+        //设置时区
+        date_default_timezone_set('PRC');
     }
 
     /**
