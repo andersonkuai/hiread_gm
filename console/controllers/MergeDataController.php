@@ -84,8 +84,8 @@ class MergeDataController extends Controller
         foreach ($userSuffix as $v){
             $tableName = 'hi_user_'.$v;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_merge(`Uid`,`UserName`,`Mobile`,`Time`,`Channel`) select `Uid`,`UserName`,`Mobile`,`Time`,`Channel` 
-                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`UserName`= values(UserName),Mobile = VALUES(Mobile),`Time` = VALUES(`Time`),`Channel` = VALUES(`Channel`) ;";
+            $sql = "INSERT INTO hi_user_merge(`Uid`,`InviteCode`,`UserName`,`Mobile`,`Time`,`Channel`) select `Uid`,`InviteCode`,`UserName`,`Mobile`,`Time`,`Channel` 
+                    from {$tableName} where isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`InviteCode`=values(`InviteCode`),`UserName`= values(UserName),Mobile = VALUES(Mobile),`Time` = VALUES(`Time`),`Channel` = VALUES(`Channel`) ;";
 //            $sql = "replace into hi_user_merge(`Uid`,`UserName`,`Mobile`,`Time`) select `Uid`,`UserName`,`Mobile`,`Time` from {$tableName} where isMerge = 0";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
