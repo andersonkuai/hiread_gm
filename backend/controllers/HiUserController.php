@@ -20,7 +20,7 @@ class HiUserController extends BaseController
      */
     public function actionIndex(){
         $query = HiUserMerge::find()->andWhere(1);
-        $searchData = $this->searchForm($query, ['UserName', 'ReadLevel', 'ylmguid','Mobile']);
+        $searchData = $this->searchForm($query, ['UserName', 'ReadLevel', 'ylmguid','Mobile','InviteCode']);
         //注册时间
         if(!empty($_GET['Time1'])){
             $searchData['Time1'] = $_GET['Time1'];

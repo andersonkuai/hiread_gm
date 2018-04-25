@@ -45,6 +45,10 @@
                                        value="<?=!empty($searchData['UserName'])?$searchData['UserName']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
+                                <input type="text" name="InviteCode" class="form-control" placeholder="优惠码"
+                                       value="<?=!empty($searchData['InviteCode'])?$searchData['InviteCode']:''?>">
+                            </div>
+                            <div class="form-group form-group-sm">
                                 <input type="text" name="ReadLevel" class="form-control" placeholder="水平测试等级"
                                        value="<?=!empty($searchData['ReadLevel'])?$searchData['ReadLevel']:''?>">
                             </div>
@@ -71,6 +75,7 @@
 <!--                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>-->
                             <th>UID</th>
                             <th>注册账号</th>
+                            <th>优惠码</th>
                             <th>学员姓名</th>
                             <th>用户状态</th>
                             <th>渠道</th>
@@ -87,6 +92,7 @@
                             <tr>
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
+                                <td><?php echo $user['InviteCode']?></td>
                                 <td><?php echo $user['EnName']?></td>
                                 <td><?php
                                         $status = \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]];
