@@ -23,12 +23,13 @@ class MergeDataController extends Controller
         for ($i = 0; $i <= 9; $i++){
             $tableName = 'hi_user_order_'.$i;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_order_merge(`ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`) 
-                    select `ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo` 
+            $sql = "INSERT INTO hi_order_merge(`ID`,`OrderId`,`Uid`,`Type`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`RefundPrice`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`,`RefundTime`,`Mark`) 
+                    select `ID`,`OrderId`,`Uid`,`Type`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`RefundPrice`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`,`RefundTime`,`Mark` 
                     from {$tableName} where isMerge = 0 
                     ON DUPLICATE KEY UPDATE 
-                    `ID`= values(ID),`Type`= values(`Type`),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
-                    `PayType` = VALUES(`PayType`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),`Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`);";
+                    `ID`= values(ID),OrderId = VALUES(OrderId),`Uid`= values(Uid),`Type`= values(`Type`),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
+                    `PayType` = VALUES(`PayType`),`RefundPrice` = VALUES(`RefundPrice`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),
+                    `Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`),`RefundTime` = VALUES(`RefundTime`),`Mark` = VALUES(`Mark`);";
             $result1 = $connection->createCommand($sql)->execute();
             //变更记录
             $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
@@ -36,6 +37,28 @@ class MergeDataController extends Controller
             echo 'replace:'.$result1.',update:'.$result2.'--';
         }//end for
     }
+//    /**
+//     * 合并订单数据
+//     * 基本信息
+//     */
+//    public function actionOrders(){
+//        //获取订单数据
+//        for ($i = 0; $i <= 9; $i++){
+//            $tableName = 'hi_user_order_'.$i;
+//            $connection = \Yii::$app->hiread;
+//            $sql = "INSERT INTO hi_user_order_merge(`ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`)
+//                    select `ID`,`Type`,`Uid`,`OrderId`,`Trade`,`Price`,`RecvId`,`Message`,`PayType`,`Status`,`SendStatus`,`PayTime`,`Time`,`PaymentInfo`
+//                    from {$tableName} where isMerge = 0
+//                    ON DUPLICATE KEY UPDATE
+//                    `ID`= values(ID),`Type`= values(`Type`),`Uid`= values(Uid),OrderId = VALUES(OrderId),Trade = VALUES(Trade),Price = VALUES(Price),`RecvId` = VALUES(`RecvId`),`Message` = VALUES(`Message`),
+//                    `PayType` = VALUES(`PayType`),`Status` = VALUES(`Status`),`SendStatus` = VALUES(`SendStatus`),`PayTime` = VALUES(`PayTime`),`Time` = VALUES(`Time`),`PaymentInfo` = VALUES(`PaymentInfo`);";
+//            $result1 = $connection->createCommand($sql)->execute();
+//            //变更记录
+//            $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
+//            $result2 = $connection->createCommand($sql)->execute();
+//            echo 'replace:'.$result1.',update:'.$result2.'--';
+//        }//end for
+//    }
     /**
      * 合并订单数据
      * 详情
@@ -46,8 +69,11 @@ class MergeDataController extends Controller
             $tableName1 = 'hi_user_order_detail_'.$i;
             $tableName2 = 'hi_user_order_'.$i;
             $connection = \Yii::$app->hiread;
-            $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select a.`Uid`,b.`OrderId`,a.`CourseId`,a.`Price`,a.`DiscountPrice`,a.`Count` 
-                    from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
+            $sql = "INSERT INTO hi_order_detail_merge(`ID`,`Uid`,`OrderId`,`Oid`,`CourseId`,`Group`,`Price`,`DiscountPrice`,`IsTry`,`Count`,`Time`) 
+                    select a.`ID`,a.`Uid`,b.`OrderId`,a.`Oid`,a.`CourseId`,a.`Group`,a.`Price`,a.`DiscountPrice`,a.`IsTry`,a.`Count`,a.`Time` 
+                    from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 
+                    ON DUPLICATE KEY UPDATE `ID`= values(ID),`Uid`= values(Uid),`OrderId`= values(OrderId),`Oid`= values(`Oid`),CourseId = VALUES(CourseId),
+                    `Group` = VALUES(`Group`),`Price` = VALUES(`Price`),DiscountPrice = VALUES(DiscountPrice),IsTry = VALUES(IsTry),`Count` = VALUES(`Count`),`Time` = VALUES(`Time`);";
             $result1 = $connection->createCommand($sql)->execute();
             //修改用户状态
             $sql = "select a.`Uid`,a.`IsTry` from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where b.Status = 1 and a.isMerge = 0";
@@ -74,6 +100,44 @@ class MergeDataController extends Controller
             echo 'replace:'.$result1.',update:'.$result2.'--';
         }//end for
     }
+//    /**
+//     * 合并订单数据
+//     * 详情
+//     */
+//    public function actionOrdersDetail(){
+//        //获取订单数据
+//        for ($i = 0; $i <= 9; $i++){
+//            $tableName1 = 'hi_user_order_detail_'.$i;
+//            $tableName2 = 'hi_user_order_'.$i;
+//            $connection = \Yii::$app->hiread;
+//            $sql = "INSERT INTO hi_user_order_merge(`Uid`,`OrderId`,`CourseId`,`OriginalPrice`,`DiscountPrice`,`Count`) select a.`Uid`,b.`OrderId`,a.`CourseId`,a.`Price`,a.`DiscountPrice`,a.`Count`
+//                    from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where a.isMerge = 0 ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`OrderId`= values(OrderId),CourseId = VALUES(CourseId),OriginalPrice = VALUES(OriginalPrice),DiscountPrice = VALUES(DiscountPrice),`Count` = VALUES(`Count`);";
+//            $result1 = $connection->createCommand($sql)->execute();
+//            //修改用户状态
+//            $sql = "select a.`Uid`,a.`IsTry` from {$tableName1} a INNER JOIN {$tableName2} b ON a.Oid = b.ID where b.Status = 1 and a.isMerge = 0";
+//            $orders = $connection->createCommand($sql)->queryAll();
+//            if (!empty($orders)){
+//                foreach ($orders as $val){
+//                    $state = $val["IsTry"] == 1 ? "try" : "charge" ;
+//                    //查询用户数据
+//                    $user = $connection->createCommand("select UserStatus from hi_user_merge where Uid = {$val['Uid']}")->queryOne();
+//                    if(empty($user)){
+//                        //插入数据
+//                        $connection->createCommand("insert into hi_user_merge(`Uid`,`UserStatus`) VALUES ('{$val["Uid"]}','{$state}')")->execute();
+//                    }else{
+//                        if(($user["UserStatus"] == 'try' && $state == 'charge') || ($user['UserStatus'] == 'regist' && $state == 'try') || ($user['UserStatus'] == 'regist' && $state == 'charge')){
+//                            //更新数据
+//                            $connection->createCommand("update hi_user_merge set `UserStatus` = '{$state}' where Uid = {$val['Uid']} ")->execute();
+//                        }
+//                    }//end if
+//                }//end foreach
+//            }
+//            //变更记录
+//            $sql = "update {$tableName1} set isMerge = 1 where isMerge = 0;";
+//            $result2 = $connection->createCommand($sql)->execute();
+//            echo 'replace:'.$result1.',update:'.$result2.'--';
+//        }//end for
+//    }
     /**
      * 合并用户数据
      * uid，注册账号，联系电话，注册时间
