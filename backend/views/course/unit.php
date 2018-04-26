@@ -39,7 +39,7 @@
                                 </td>
                             </tr>
                             <tr style="display: none">
-                                <td colspan="4">
+                                <td colspan="5">
                                     <?php if(!empty($val['subUnit'])){?>
                                         <table class="table table-hover">
                                             <tr>

@@ -31,7 +31,7 @@ use Yii;
  * @property string $Matrix
  * @property integer $Gold
  * @property integer $IsTrain
- * @property string $Category
+ * @property integer $Category
  * @property integer $VideoTime
  * @property integer $Order
  */
@@ -59,14 +59,14 @@ class HiConfTopic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['SUnitId', 'Type', 'Gold', 'IsTrain', 'VideoTime', 'Order'], 'integer'],
+            [['SUnitId', 'Type', 'Gold', 'IsTrain', 'Category', 'VideoTime', 'Order'], 'integer'],
             [['Analysis', 'Translate'], 'string'],
             [['Title', 'Image', 'Audio', 'QAudio', 'Video', 'Poster', 'PreviewIntro', 'AAudio', 'AVideo', 'Help'], 'string', 'max' => 255],
             [['SoundMark', 'Correct'], 'string', 'max' => 50],
             [['CNMark'], 'string', 'max' => 30],
             [['ENMark', 'SampleAudio'], 'string', 'max' => 200],
             [['Sample'], 'string', 'max' => 100],
-            [['Matrix', 'Category'], 'string', 'max' => 20],
+            [['Matrix'], 'string', 'max' => 20],
         ];
     }
 
