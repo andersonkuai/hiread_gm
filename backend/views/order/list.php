@@ -39,7 +39,7 @@
                     </div>
                     <div class="box-tools">
                         <form action="" method="get" class="form-inline">
-                            <input type="hidden" name="r" value="order/list">
+                            <input type="hidden" name="r" value="order/index">
                             <div class="form-group form-group-sm">
                                 <input type="text" name="Uid" class="form-control" placeholder="<?= \Yii::t('app', '用户ID');?>"
                                        value="<?=!empty($searchData['Uid'])?$searchData['Uid']:''?>">
