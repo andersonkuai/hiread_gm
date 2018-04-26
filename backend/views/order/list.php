@@ -10,7 +10,24 @@
         <li class="active"><?= \Yii::t('app', '订单列表');?></li>
     </ol>
 </section>
-
+<style type="text/css">
+    a:link {
+        color:#3C3C3C;
+        text-decoration:none;
+    }
+    a:visited {
+        color:#0000FF;
+        text-decoration:none;
+    }
+    a:hover {
+        color:#FF00FF;
+        text-decoration:none;
+    }
+    a:active {
+        color:#D200D2;
+        text-decoration:none;
+    }
+</style>
 <!-- Main content -->
 <section class="content">
     <div class="row">
