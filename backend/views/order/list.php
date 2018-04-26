@@ -117,6 +117,7 @@
                         <tr>
 <!--                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>-->
                             <th><?= \Yii::t('app', '订单号');?></th>
+                            <th><?= \Yii::t('app', '第三方交易号');?></th>
                             <th><?= \Yii::t('app', '订单类型');?></th>
                             <th><?= \Yii::t('app', '用户ID');?></th>
                             <th><?= \Yii::t('app', '用户名');?></th>
@@ -125,7 +126,6 @@
                             <th><?= \Yii::t('app', '订单价格');?></th>
                             <th><?= \Yii::t('app', '订单状态');?></th>
                             <th><?= \Yii::t('app', '支付方式');?></th>
-                            <th><?= \Yii::t('app', '第三方交易号');?></th>
                             <th><?= \Yii::t('app', '发货状态');?></th>
                             <th><?= \Yii::t('app', '订单生成时间');?></th>
                             <th><?= \Yii::t('app', '支付时间');?></th>
@@ -136,6 +136,7 @@
                             <tr onclick="showDetail('<?=$val['OrderId'];?>')">
 <!--                                <td align="center"><input type="checkbox" name="checkids[]" value="--><?php //echo $val['OrderId'];?><!--"/></td>-->
                                 <td><?php echo $val['OrderId']?></td>
+                                <td><?php echo $val['Trade'];?></td>
                                 <td><?php echo \common\enums\Order::labels()[\common\enums\Order::pfwvalues('TYPE')[$val['Type']]];?></td>
                                 <td><?php echo $val['Uid']?></td>
                                 <td><?php echo $val['UserName']?></td>
@@ -148,7 +149,6 @@
                                         echo '<span style="color: red">'.$status.'</span>';
                                     }?></td>
                                 <td><?php echo \common\enums\Order::labels()[\common\enums\Order::pfwvalues('PAY_TYPE')[$val['PayType']]]?></td>
-                                <td><?php echo $val['Trade'];?></td>
                                 <td><?php $send = \common\enums\Order::labels()[\common\enums\Order::pfwvalues('SEND')[$val['SendStatus']]];if($val['SendStatus'] == 1){
                                 echo '<span style="color: green">'.$send.'</span>';
                                 }else{
@@ -167,7 +167,7 @@
                             <?php if(!empty($val['detail'])){ ?>
                             <tr class="<?=$val['OrderId'];?>" style="background-color: #f5f3e5;display: none;">
                                 <th>课程id</th>
-                                <th colspan="3">课程名称</th>
+                                <th colspan="4">课程名称</th>
                                 <th>数量</th>
                                 <th>原价</th>
                                 <th>折扣价</th>
@@ -176,7 +176,7 @@
                                 <?php foreach ($val['detail'] as $v){?>
                                     <tr class="<?=$val['OrderId'];?>" style="background-color: #f5f3e5;display: none;">
                                         <td><?=$v['CourseId'];?></td>
-                                        <td colspan="3"><?=$v['ProdName'];?></td>
+                                        <td colspan="4"><?=$v['ProdName'];?></td>
                                         <td><?=$v['Count'];?></td>
                                         <td><?=$v['Price'];?></td>
                                         <td><?=$v['DiscountPrice'];?></td>
