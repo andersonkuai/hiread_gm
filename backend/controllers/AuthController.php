@@ -250,7 +250,7 @@ class AuthController extends BaseController
 
             $row = $mAuthItem::findOne($name);
             if( empty($row) ) $this->showMsg('记录不存在！');
-            $items= $mAuthItem::find()->orderBy('type asc,name asc')->asArray()->all();
+            $items= $mAuthItem::find()->orderBy('type asc,name asc')->indexBy('name')->asArray()->all();
 
             $parent = $row['type'] == 1 ? $auth->getRole($name) : $auth->getPermission($name);
             $auth->removeChildren($parent);
