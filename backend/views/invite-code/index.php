@@ -52,7 +52,7 @@
                                 <td><?php echo $user['ID']?></td>
                                 <td><?php echo $user['Code']?></td>
                                 <td><?php echo $user['UserName']?></td>
-                                <td><?php echo empty($count[$user['Code']]['count']) ? 0 : $count[$user['Code']]['count'] ;?></td>
+                                <td><?php echo empty($count[strtoupper($user['Code'])]['count']) ? 0 : $count[strtoupper($user['Code'])]['count'] ;?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a href="?r=invite-code/edit&id=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit">修改</i></a>&nbsp;&nbsp;

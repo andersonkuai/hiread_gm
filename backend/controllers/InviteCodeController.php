@@ -38,7 +38,7 @@ class InviteCodeController extends BaseController
             if(!empty($count_init)){
                 foreach ($count_init as $val){
                     if(empty($val['InviteCode'])) continue;
-                    $count[$val['InviteCode']] = $val;
+                    $count[strtoupper($val['InviteCode'])] = $val;
                 }
             }
 //            echo '<pre>';
