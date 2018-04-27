@@ -67,8 +67,10 @@ class OrderController extends BaseController
         $query = HiOrderMerge::find()->alias('a')->select([
                'b.UserName','b.Mobile','b.InviteCode',
                 'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime',
+                'InvitedBy'=>'c.UserName',
             ])
             ->leftJoin('hi_user_merge as b','a.Uid = b.Uid')
+            ->leftJoin('hi_invite_code as c', 'b.InviteCode = c.Code')
             ->andWhere(1);
         $status = \Yii::$app->getRequest()->get("Status");
         //默认显示已支付的订单

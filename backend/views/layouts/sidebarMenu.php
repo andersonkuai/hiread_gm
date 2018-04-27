@@ -54,6 +54,7 @@
         </a>
         <ul class="treeview-menu">
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=coupon/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','代金券管理')?></a></li>
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=invite-code/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','邀请码管理')?></a></li>
         </ul>
     </li>
     <li class="treeview">

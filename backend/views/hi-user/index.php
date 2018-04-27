@@ -76,6 +76,7 @@
                             <th>UID</th>
                             <th>注册账号</th>
                             <th>优惠码</th>
+                            <th>邀请者</th>
                             <th>学员姓名</th>
                             <th>用户状态</th>
                             <th>渠道</th>
@@ -93,6 +94,7 @@
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['UserName']?></td>
                                 <td><?php echo $user['InviteCode']?></td>
+                                <td><?php echo (!empty($user['InvitedBy'])?$user['InvitedBy']:'');?></td>
                                 <td><?php echo $user['EnName']?></td>
                                 <td><?php
                                         $status = \common\enums\User::labels()[\common\enums\User::pfwvalues('USERSTATUS')[$user['UserStatus']]];

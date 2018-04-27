@@ -122,7 +122,7 @@
                             <th><?= \Yii::t('app', '用户ID');?></th>
                             <th><?= \Yii::t('app', '用户名');?></th>
                             <th><?= \Yii::t('app', '手机号');?></th>
-                            <th><?= \Yii::t('app', '邀请码');?></th>
+                            <th><?= \Yii::t('app', '邀请者');?></th>
                             <th><?= \Yii::t('app', '订单价格');?></th>
                             <th><?= \Yii::t('app', '订单状态');?></th>
                             <th><?= \Yii::t('app', '支付方式');?></th>
@@ -141,7 +141,7 @@
                                 <td><?php echo $val['Uid']?></td>
                                 <td><?php echo $val['UserName']?></td>
                                 <td><?php echo $val['Mobile']?></td>
-                                <td><?php echo $val['InviteCode']?></td>
+                                <td><?php echo empty($val['InvitedBy'])? $val['InviteCode']:$val['InvitedBy'];?></td>
                                 <td><?php echo $val['Price']?></td>
                                 <td><?php $status = \common\enums\Order::labels()[\common\enums\Order::pfwvalues('STATUS')[$val['Status']]];if($val['Status'] == 1){
                                         echo '<span style="color: green">'.$status.'</span>';
