@@ -168,7 +168,7 @@ class MergeDataController extends Controller
         foreach ($userSuffix as $v){
             $tableName = 'hi_user_info_'.$v;
             $connection = \Yii::$app->hiread;
-            $sql = "select `Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`NickName` from {$tableName} WHERE isMerge = 0";
+            $sql = "select `Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`NickName`,`Gold` from {$tableName} WHERE isMerge = 0";
             $result1 = $connection->createCommand($sql)->queryAll();
             if(!empty($result1)){
                 $value = '';
@@ -185,11 +185,12 @@ class MergeDataController extends Controller
                             }
                         }
                     }
-                    $value .= "('{$val['Uid']}','{$val['EnName']}','{$val['Birthday']}','{$val['SurveyScore']}','{$val['SurveyTime']}','{$level}','{$val['NickName']}'),";
+                    $value .= "('{$val['Uid']}','{$val['EnName']}','{$val['Birthday']}','{$val['SurveyScore']}','{$val['SurveyTime']}','{$level}','{$val['NickName']}','{$val['Gold']}'),";
                 }//end foreach
                 $value = rtrim($value,',');
-                $sql = "INSERT INTO `hi_user_merge` (`Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`ReadLevel`,`NickName`) VALUES {$value} 
-                        ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`EnName`= values(EnName),Birthday = VALUES(Birthday),SurveyScore = VALUES(SurveyScore),`SurveyTime` = VALUES(`SurveyTime`),`ReadLevel` = VALUES(`ReadLevel`),`NickName` = VALUES(`NickName`) ;";
+                $sql = "INSERT INTO `hi_user_merge` (`Uid`,`EnName`,`Birthday`,`SurveyScore`,`SurveyTime`,`ReadLevel`,`NickName`,`Gold`) VALUES {$value} 
+                        ON DUPLICATE KEY UPDATE `Uid`= values(Uid),`EnName`= values(EnName),Birthday = VALUES(Birthday),SurveyScore = VALUES(SurveyScore),
+                        `SurveyTime` = VALUES(`SurveyTime`),`ReadLevel` = VALUES(`ReadLevel`),`NickName` = VALUES(`NickName`),`Gold` = VALUES(`Gold`) ;";
                 try{
                     $result2 = $connection->createCommand($sql)->execute();
                     //变更记录

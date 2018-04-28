@@ -84,6 +84,7 @@
                             <th>注册时间</th>
                             <th>年龄</th>
                             <th>城市</th>
+                            <th>金币</th>
                             <th>水平测试等级</th>
                             <th>调查问卷得分</th>
                             <th>学习状态</th>
@@ -118,6 +119,10 @@
                                 <td><?php echo date('Y-m-d H:i:s',$user['Time'])?></td>
                                 <td><?php echo ceil((time()-$user['Birthday'])/(24*3600*365))?></td>
                                 <td><?php echo $user['City']?></td>
+                                <td>
+                                    <a class="" href="##" onclick="queryGold('<?=$user['Uid']?>')"
+                                       data-toggle="modal" data-target="#myModal"><i class="fa fa-hand-o-right"></i><span id="gold_<?=$user['Uid']?>"><?php echo $user['Gold']?></span></a>
+                                </td>
                                 <td><?php echo $user['ReadLevel']?></td>
                                 <td><?php echo $user['SurveyScore']?></td>
                                 <td>
@@ -140,9 +145,97 @@
     </div>
 </section>
 <!-- /.content -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">增加/扣除金币</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="invite-code/allot" id="myForm" role="form">
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">用户ID</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="gold_uid" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">账号</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="gold_username" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">现有金币</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="gold_gold">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">增加</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="gold_add" value="0" type="number">
+                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">金币</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">扣除</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="gold_minus" value="0">
+                        </div>
+                        <label for="lastname" class="col-sm-2 control-label">金币</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" onclick="updateGold()" class="btn btn-primary">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <script>
     function markBackGround(obj) {
         $('tr').css('background-color', '#ffffff')
         $(obj).parent().parent().parent().css('background-color', '#C6E746')
+    }
+    /**
+     * 查询金币信息
+     */
+    function queryGold(uid) {
+        if(uid == undefined){
+            return
+        }
+        var postData = {"uid":uid};
+        $.post( 'index.php?r=hi-user/query-gold', postData, function(data){
+            if( data.code == 1 ){
+                $('#gold_uid').val(data.data.Uid);
+                $('#gold_username').val(data.data.UserName);
+                $('#gold_gold').val(data.data.Gold);
+                //改变列表里的值
+                $('#gold_'+uid).html(data.data.Gold);
+            }else{
+                return
+            }
+        }, 'json');
+    }
+    /**
+     * 修改金币数量
+     */
+    function updateGold() {
+        var uid = $('#gold_uid').val();
+        var addGold = $('#gold_add').val();
+        var minusGold = $('#gold_minus').val();
+        var postData = {"uid":uid,'add_gold':addGold,'minus_gold':minusGold};
+        $.post( 'index.php?r=hi-user/update-gold', postData, function(data){
+            console.log(data);
+            if( data.code == 1 ){
+                queryGold(uid);
+            }else{
+                return
+            }
+        }, 'json');
     }
 </script>

@@ -8,12 +8,19 @@
 
 namespace backend\controllers;
 
+use common\models\HiUserInfo;
 use common\models\HiUserMerge;
 use yii\data\Pagination;
+use yii\db\Exception;
 use yii\widgets\LinkPager;
 
 class HiUserController extends BaseController
 {
+    public function __construct($id, $module, $config = [])
+    {
+        $this->enableCsrfValidation = false;//关闭scrf验证
+        parent::__construct($id, $module, $config);
+    }
     /**
      * 注册用户信息列表
      * @return string
@@ -140,6 +147,66 @@ class HiUserController extends BaseController
             'userOrder' => $userOrder,
         ];
         return $this->display('info',$renderData);
+    }
+    /**
+     * 查询金币数量
+     */
+    public function actionQueryGold()
+    {
+        $uid = $_POST['uid'];
+        if(empty($uid)) $this->exitJSON(0,'fail!');
+        $table = 'hi_user_info_'.substr($uid,-1,1);
+        //查询用户现有金币
+        $connection  = \Yii::$app->hiread;
+        $sql = "select * from {$table} where Uid = {$uid}";
+        $command = $connection->createCommand($sql);
+        $res = $command->queryOne();
+        if(empty($res)){
+            $this->exitJSON(0,'fail!');
+        }
+        $this->exitJSON(1,'',$res);
+    }
+    /**
+     * 修改金币数量
+     */
+    public function actionUpdateGold()
+    {
+        $uid = $_POST['uid'];
+        if(empty($uid)) $this->exitJSON(0,'fail!');
+        $table = 'hi_user_info_'.substr($uid,-1,1);
+        $add = intval($_POST['add_gold']);
+        $minus = intval($_POST['minus_gold']);
+        $final = $add - $minus;
+        if(!empty($final)){
+            $transaction = \Yii::$app->hiread->beginTransaction();
+            try{
+                //修改原始表
+                $source = HiUserInfo::findOnex($table,['Uid' => $uid]);
+                $source->Gold = $source->Gold + $final;
+                $res = $source->save();
+                //修改统计表
+                $sourceTotal = HiUserMerge::findOne(['Uid' => $uid]);
+                $sourceTotal->Gold = $sourceTotal->Gold + $final;
+                $sourceTotal->save();
+                $transaction->commit();
+            }catch (Exception $e){
+                $transaction->rollBack();
+                $this->exitJSON(0,'fail!');
+            }
+
+//            $source->Gold = 10;
+//            $userInfo = $model::findOne(1);
+//            $userInfo->Gold = 188;
+//            $res = $userInfo->save();
+//            $connection  = \Yii::$app->hiread;
+//            $sql = "update {$table} set Gold = Gold + {$final} where Uid = {$uid}";
+//            $command = $connection->createCommand($sql);
+//            $res = $command->execute();
+        }
+//        if(empty($res)){
+//            $this->exitJSON(0,'fail!');
+//        }
+        $this->exitJSON(1,'',$res);
     }
 
 }
