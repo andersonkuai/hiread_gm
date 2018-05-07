@@ -31,7 +31,7 @@
                 <div class="box-header">
                     <div class="btn-group btn-group-sm" role="group">
                         <a class="btn btn-primary" href="?r=topic/add-sub-unit-question&courseId=<?php echo $_GET['courseId'];?>&subUnitId=<?php echo $_GET['subUnitId'];?>"><i class="fa fa-plus"></i> 添加</a>
-                        <a class="btn btn-default" href="?r=course/structure&id=<?=$_GET['courseId']?>"><i class="fa fa-arrow-circle-o-left"></i> <?= \Yii::t('app', '返回');?></a>
+                        <a class="btn btn-default" href="?r=course/structure&type=2&id=<?=$_GET['courseId']?>"><i class="fa fa-arrow-circle-o-left"></i> <?= \Yii::t('app', '返回');?></a>
                     </div>
                     <div class="box-tools">
 

@@ -10,6 +10,7 @@ namespace backend\controllers;
 use common\models\HiConfExtensiveTopic;
 use common\models\HiConfExtensiveTopicAnswer;
 use common\models\HiConfExtensiveTopicList;
+use common\models\HiConfSubUnit;
 use common\models\HiConfSubUnitTrain;
 use common\models\HiConfTopic;
 use common\models\HiConfTopicAnswer;
@@ -376,69 +377,84 @@ class TopicController extends BaseController
     public function actionUnitIndex(){
         $courseId = Yii::$app->getRequest()->get('courseId');
         $extensiveId = Yii::$app->getRequest()->get('subUnitId');
-        //获取题目
-        $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
-        //保存题目排序
-        if(Yii::$app->getRequest()->getIsPost()){
-            if(!empty($_POST['topic_id'])){
-                $orderData = array();
-                foreach ($_POST['topic_id'] as $k=>$v){
-                    $source = HiConfTopic::findOne($v);
-                    $source->Order = $_POST['topic_order'][$k];
-                    $source->save();
-                    $orderData[$v] = $_POST['topic_order'][$k];
-                }
-                asort($orderData);
-                //修改题目列表排序规则
-                if(!empty($topicList)){
-                    foreach ($topicList as $k=>$v){
-                        $lastList = array();
-                        $questionIds = explode('|',$v['Questions']);
-                        foreach ($orderData as $key => $val){
-                            if(in_array($key,$questionIds)) $lastList[] = $key;
-                        }
-                        $lastListStr = implode('|',$lastList);
-                        if(!empty($lastList) && $v['Questions'] != $lastListStr){
-                            $source = HiConfSubUnitTrain::findOne($v['ID']);
-                            $source->Questions = $lastListStr;
-                            $source->save();
-                        }
-                    }//end foreach
-                }
-            }//end if
-        }
-        //获取题目
-        $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
+        //获取子单元类型
+        $subUnitType = HiConfSubUnit::findOne(['ID' => $extensiveId]);
         $test = array();
-        if(!empty($topicList)){
-            $questionId = [];
-            foreach ($topicList as $key=>$v){
-                $questionIdArray = explode('|',$v['Questions']);
-                if(!empty($questionIdArray)){
-                    foreach ($questionIdArray as $question_key=>$question_val){
-                        $questionId[] = [
-                            'Min' => $v['Min'],
-                            'Sec' => $v['Sec'],
-                            'questionId' => $question_val,
-                        ];
+        //获取题目
+        if($subUnitType['Type'] != 5){
+            $topicModel = new HiConfTopic();
+            $result = $topicModel->find()->where(['SUnitId' => $extensiveId])->asArray()->all();
+            if(!empty($result)){
+                foreach ($result as $k=>$v){
+                    $v['Min'] = 0;
+                    $v['Sec'] = 0;
+                    $test[$v['ID']] = $v;
+                }
+            }
+        }else{
+            $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
+            //保存题目排序
+            if(Yii::$app->getRequest()->getIsPost()){
+                if(!empty($_POST['topic_id'])){
+                    $orderData = array();
+                    foreach ($_POST['topic_id'] as $k=>$v){
+                        $source = HiConfTopic::findOne($v);
+                        $source->Order = $_POST['topic_order'][$k];
+                        $source->save();
+                        $orderData[$v] = $_POST['topic_order'][$k];
+                    }
+                    asort($orderData);
+                    //修改题目列表排序规则
+                    if(!empty($topicList)){
+                        foreach ($topicList as $k=>$v){
+                            $lastList = array();
+                            $questionIds = explode('|',$v['Questions']);
+                            foreach ($orderData as $key => $val){
+                                if(in_array($key,$questionIds)) $lastList[] = $key;
+                            }
+                            $lastListStr = implode('|',$lastList);
+                            if(!empty($lastList) && $v['Questions'] != $lastListStr){
+                                $source = HiConfSubUnitTrain::findOne($v['ID']);
+                                $source->Questions = $lastListStr;
+                                $source->save();
+                            }
+                        }//end foreach
                     }
                 }//end if
             }
-            if(!empty($questionId)){
-                foreach ($questionId as $key=>$val){
-                    //查询问题答案
-                    $question = HiConfTopic::findOne(['ID' => $val['questionId']]);
-                    if(!empty($question)){
-                        $question = $question->toArray();
-                        //加入问题弹出时间
-                        $question['Min'] = $val['Min'];
-                        $question['Sec'] = $val['Sec'];
-                        $question['answer'] = HiConfTopicAnswer::findAll(['Tid' => $val['questionId']]);
-                        $test[$val['questionId']] = $question;
-                    }
+            //获取题目
+            $topicList = HiConfSubUnitTrain::find()->where(['SUnitId' => $extensiveId])->asArray()->all();
+            $test = array();
+            if(!empty($topicList)){
+                $questionId = [];
+                foreach ($topicList as $key=>$v){
+                    $questionIdArray = explode('|',$v['Questions']);
+                    if(!empty($questionIdArray)){
+                        foreach ($questionIdArray as $question_key=>$question_val){
+                            $questionId[] = [
+                                'Min' => $v['Min'],
+                                'Sec' => $v['Sec'],
+                                'questionId' => $question_val,
+                            ];
+                        }
+                    }//end if
                 }
+                if(!empty($questionId)){
+                    foreach ($questionId as $key=>$val){
+                        //查询问题答案
+                        $question = HiConfTopic::findOne(['ID' => $val['questionId']]);
+                        if(!empty($question)){
+                            $question = $question->toArray();
+                            //加入问题弹出时间
+                            $question['Min'] = $val['Min'];
+                            $question['Sec'] = $val['Sec'];
+                            $question['answer'] = HiConfTopicAnswer::findAll(['Tid' => $val['questionId']]);
+                            $test[$val['questionId']] = $question;
+                        }
+                    }
+                }//end if
             }//end if
-        }//end if
+        }
         $renderData['question'] = $test;
         return $this->display('unit-index', $renderData);
     }

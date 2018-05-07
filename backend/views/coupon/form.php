@@ -1,13 +1,13 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        <?php echo empty($row) ? \Yii::t('app','添加'):\Yii::t('app','编辑')?> <?=\Yii::t('app','代金券')?>
+        <?php echo empty($row) ? \Yii::t('app','添加'):\Yii::t('app','编辑')?> <?=\Yii::t('app','优惠券')?>
         <small></small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?=\Yii::t('app','主页')?></a></li>
-        <li><a href="#"><?=\Yii::t('app','代金券管理')?></a></li>
-        <li class="active"><?php echo empty($row) ? \Yii::t('app','添加'):\Yii::t('app','编辑')?> <?=\Yii::t('app','代金券')?></li>
+        <li><a href="#"><?=\Yii::t('app','优惠券管理')?></a></li>
+        <li class="active"><?php echo empty($row) ? \Yii::t('app','添加'):\Yii::t('app','编辑')?> <?=\Yii::t('app','优惠券')?></li>
     </ol>
 </section>
 
@@ -26,41 +26,75 @@
                 <!-- form start -->
                 <form role="form" id="myForm" action="" method="post">
                     <div class="box-body">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label><?=\Yii::t('app','代金券名称')?></label>
-                                    <input class="form-control" name="Name"  type="text" value="<?php echo empty($row) ? '' : $row['Name'];?>">
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label><?=\Yii::t('app','代金券类型')?></label>
-                                    <select class="form-control" name="Type" id="">
-                                        <?php
-                                        foreach (\common\enums\Coupon::pfvalues('COUPON_TYPE') as $key => $obj){
-                                            $selected = isset($row['Type']) && $row['Type'] == $obj->getValue()
-                                                ? 'selected="selected"':'';
-                                            echo '<option '.$selected.' value="'.$obj->getValue().'">'.\common\enums\Coupon::labels()[$key].'</option>';
-                                        }
-                                        ?>
+                        <table class="table">
+                            <tr>
+                                <td width="20%"><?=\Yii::t('app','优惠券名称')?></td>
+                                <td>
+                                    <input class="form" name="Name"  type="text" value="<?php echo empty($row) ? '' : $row['Name'];?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=\Yii::t('app','面额（单位：元）')?></td>
+                                <td>
+                                    <input class="form" name="Price"  type="text" value="<?php echo empty($row) ? '' : $row['Price'];?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=\Yii::t('app','限额（单位：元）')?></td>
+                                <td>
+                                    <input class="form" name="MinLimit" type="text" value="<?php echo empty($row['MinLimit']) ? 0 : $row['MinLimit'];?>">
+                                    <span style="color: red">* 0为无限额</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=\Yii::t('app','适用范围')?></td>
+                                <td>
+                                    <select name="CourseId" id="">
+                                        <option value="0">课程通用</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label><?=\Yii::t('app','代金券面值（单位：元）')?></label>
-                                    <input class="form-control" name="Price"  type="text" value="<?php echo empty($row) ? '' : $row['Price'];?>">
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label><?=\Yii::t('app','代金券有效期（单位：天）')?></label>
-                                    <input class="form-control" name="Expire" type="text" value="<?php echo empty($row) ? '' : $row['Expire']/(24*3600);?>">
-                                </div>
-                            </div>
-
-                        </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>生效方式</td>
+                                <td>
+                                    <input onclick="switchWay(1)" type="radio" value="1" name="EffectiveWay" <?php if(!empty($row['EffectiveWay']) && $row['EffectiveWay'] == 1){echo 'checked';};?>>设定区间
+                                    <input onclick="switchWay(2)" type="radio" value="2" name="EffectiveWay" <?php if(!empty($row['EffectiveWay']) && $row['EffectiveWay'] == 2){echo 'checked';};?>>领取生效
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>有效时长</td>
+                                <td>
+                                    <div id="set_section">
+                                        <input type="text" name="EffectiveTime1"
+                                               value="<?php
+                                                    if(!empty($row) && $row['EffectiveWay'] == 1) echo date('Y-m-d',$row['EffectiveTime1']);
+                                               ?>"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                        -
+                                        <input type="text" name="EffectiveTime2"
+                                               value="<?php
+                                                    if(!empty($row) && $row['EffectiveWay'] == 1) echo date('Y-m-d',$row['EffectiveTime2']);
+                                               ?>"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                    </div>
+                                    <div id="get_coupon" style="display: none">
+                                        <input type="text" value="<?php if(!empty($row) && $row['EffectiveWay'] == 2){echo $row['EffectiveDay'];}?>" name="EffectiveDay">天
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>单账号限制</td>
+                                <td>
+                                    <input type="text" name="SingleLimit" value="1">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>券数</td>
+                                <td>
+                                    <input type="number" name="Count" value="<?php echo !empty($row['Count'])?$row['Count']:0; ?>"><span style="color: red">* 范围：1-9999</span>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <!-- /.box-body -->
 
@@ -77,12 +111,11 @@
 </section>
 <!-- /.content -->
 <script type="text/javascript">
-    <!--
     $(document).ready(function() {
-
         $('#myForm').ajaxForm({
             dataType:"json",
             success:function(data){
+                console.log(data);
                 alert(data.msg);
                 if(data.code == 1){
                     location.href = location.href ;
@@ -90,5 +123,19 @@
             }
         });
     });
-    -->
+    /**
+     * 切换生效方式
+     */
+    function switchWay(way) {
+        if(way == 1){
+            $('#set_section').show();
+            $('#get_coupon').hide();
+        }else{
+            $('#get_coupon').show();
+            $('#set_section').hide();
+        }
+    }
+    <?php if(!empty($row)){?>
+        switchWay(<?php echo $row['EffectiveWay'];?>);
+    <?php } ?>
 </script>

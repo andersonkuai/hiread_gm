@@ -19,7 +19,7 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <div class="btn-group btn-group-sm" role="group">
-                        <a class="btn btn-default" href="?r=course/structure&id=<?php echo $_GET['courseId'];?>"><i class="fa fa-arrow-circle-o-left"></i> <?=\Yii::t('app','返回')?></a>
+                        <a class="btn btn-default" href="?r=course/structure&type=2&id=<?php echo $_GET['courseId'];?>"><i class="fa fa-arrow-circle-o-left"></i> <?=\Yii::t('app','返回')?></a>
                     </div>
                 </div>
                 <!-- /.box-header -->

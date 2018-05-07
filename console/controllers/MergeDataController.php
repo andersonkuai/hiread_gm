@@ -239,5 +239,21 @@ class MergeDataController extends Controller
             echo 'replace:'.$result1.',update:'.$result2.'--';
         }//end foreach
     }
+    /**
+     * 合并优惠券数据
+     */
+    public function actionCoupon(){
+        $userSuffix = [0,1,2,3,4,5,6,7,8,9];
+        foreach ($userSuffix as $v){
+            $tableName = 'hi_user_coupon_'.$v;
+            $connection = \Yii::$app->hiread;
+            $sql = "replace into hi_user_coupon_merge select * from {$tableName} where isMerge = 0";
+            $result1 = $connection->createCommand($sql)->execute();
+            //变更记录
+            $sql = "update {$tableName} set isMerge = 1 where isMerge = 0;";
+            $result2 = $connection->createCommand($sql)->execute();
+            echo 'replace:'.$result1.',update:'.$result2.'--';
+        }//end foreach
+    }
 
 }

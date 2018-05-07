@@ -249,7 +249,7 @@
                         <tr>
                             <td><?= \Yii::t('app', 'CCSS细项');?>：</td>
                             <td>
-                                <input name="Category" id=""type="text" value="<?= !empty($question['Category'])? $question['Category'] : '' ?>" />
+                                <input name="Category" id=""type="text" value="<?= !empty($question['Category'])? $question['Category'] : 0 ?>" />
                             </td>
                         </tr>
                     </table>

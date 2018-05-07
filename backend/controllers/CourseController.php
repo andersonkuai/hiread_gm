@@ -231,12 +231,18 @@ class CourseController extends BaseController
         //开放日期格式化
         date_default_timezone_set('PRC');
         $courseId = Yii::$app->getRequest()->get('id');
+        $type = !empty($_GET['type']) ? $_GET['type'] : 1;
+        $extensive = [];
+        $unit = [];
         //查看泛读
-        $extensive = HiConfExtensive::findAll(['CourseId' => $courseId]);
-        //查看单元（精读）
-        $unit = HiConfUnit::find()->joinWith(['subUnit'])->select(
-            'hi_conf_unit.ID,hi_conf_unit.CourseId,hi_conf_unit.Name Name,hi_conf_unit.OpenDay')
-            ->where(['hi_conf_unit.CourseId' => $courseId])->asArray()->indexBy('ID')->all();
+        if($type == '1'){
+            $extensive = HiConfExtensive::findAll(['CourseId' => $courseId]);
+        }else{
+            //查看单元（精读）
+            $unit = HiConfUnit::find()->joinWith(['subUnit'])->select(
+                'hi_conf_unit.ID,hi_conf_unit.CourseId,hi_conf_unit.Name Name,hi_conf_unit.OpenDay')
+                ->where(['hi_conf_unit.CourseId' => $courseId])->asArray()->indexBy('ID')->all();
+        }
         $renderData['extensive'] = $extensive;
         $renderData['unit'] = $unit;
         $renderData['courseId'] = $courseId;
