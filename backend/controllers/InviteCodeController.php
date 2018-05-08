@@ -31,10 +31,10 @@ class InviteCodeController extends BaseController
         $searchData = $this->searchForm($query, ['Code','UserName']);
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $users = $query->orderBy("ID asc")->offset($pages->offset)->limit($pages->limit)->all();
+        $count = [];
         if(!empty($users)){
             //获取邀请码注册用户数
             $count_init = HiUserMerge::find()->select(['count'=>'count(Uid)','InviteCode'])->groupBy('InviteCode')->asArray()->all();
-            $count = [];
             if(!empty($count_init)){
                 foreach ($count_init as $val){
                     if(empty($val['InviteCode'])) continue;
