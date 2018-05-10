@@ -209,6 +209,7 @@ class OrderController extends BaseController
                        'CreateTime' => $time,
                        'CourseId' => $_POST['Course'],
                        'Price' => $resData['entity']['price'],
+                        'PayLink' => 'https://hiread.cn/activity/payOrder?user_name='.$_POST['UserName'].'hiread'.$resData['entity']['orderId'],
                     ];
                     $adminOrder->setAttributes($insertData, false);
                     $rtn = $adminOrder->insert();
