@@ -4,14 +4,17 @@ if(YII_ENV == 1){
     //本地
     $static_dir = 'F:/project_svn/pc/www/static/';
     $static_hiread = 'http://kail-static.hiread.cn/';
+    define('HIREADURL','http://kail.hiread.cn/');
 }elseif(YII_ENV == 2){
     //测试服
     $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
+    define('HIREADURL','https://dev.hiread.cn/');
 }elseif(YII_ENV == 3){
     //线上
     $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/static/';
     $static_hiread = 'https://cdn1.hiread.cn/';
+    define('HIREADURL','https://hiread.cn/');
 }
 return [
     //文件域名
