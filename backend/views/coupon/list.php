@@ -92,7 +92,7 @@
                             <tr>
                                 <td><?=$user['Uid']?></td>
                                 <td><?=$user['UserName']?></td>
-                                <td><?php echo $user['ID']?></td>
+                                <td><?php echo $user['Coupon']?></td>
                                 <td><?php echo $user['Name']?></td>
                                 <td><?php echo \common\enums\Coupon::labels()[\common\enums\Coupon::pfwvalues('COUPON_TYPE')[$user['Type']]];?></td>
                                 <td><?php echo $user['Price']?></td>
