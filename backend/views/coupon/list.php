@@ -31,8 +31,8 @@
                                        value="<?=!empty($searchData['UserName'])?$searchData['UserName']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
-                                <input type="text" name="ID" class="form-control" placeholder="优惠券ID"
-                                       value="<?=!empty($searchData['ID'])?$searchData['ID']:''?>">
+                                <input type="text" name="Coupon" class="form-control" placeholder="优惠券ID"
+                                       value="<?=!empty($searchData['Coupon'])?$searchData['Coupon']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
                                 <input type="text" name="Name" class="form-control" placeholder="优惠券名称"

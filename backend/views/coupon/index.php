@@ -135,7 +135,7 @@
                                         <?php }elseif($user['state'] == 3){?>
                                             <a class="" style="color: #00aa00" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=coupon/operation&action=2&id=<?php echo $user['ID']?>');">
                                                 <i class="fa fa-check-square-o"></i>生效
-                                            <a href="?r=coupon/list&ID=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit"></i>列表</a>
+                                            <a href="?r=coupon/list&Coupon=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit"></i>列表</a>
                                         <?php } ?>
                                     </div>
                                 </td>

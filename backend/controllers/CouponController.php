@@ -296,7 +296,7 @@ class CouponController extends BaseController
             ->innerJoin('hi_conf_coupon b','a.Coupon = b.ID')
             ->innerJoin('hi_user_merge c','a.Uid = c.Uid')
             ->leftJoin('hi_order_merge d','d.OrderId = a.OrderId');
-        $searchData = $this->searchForm($query, [ 'a.Uid','a.ID','c.UserName','b.Name','b.Type']);
+        $searchData = $this->searchForm($query, [ 'a.Uid','a.Coupon','c.UserName','b.Name','b.Type']);
         //下单时间
         if(!empty($_GET['Time1'])){
             $searchData['Time1'] = $_GET['Time1'];
