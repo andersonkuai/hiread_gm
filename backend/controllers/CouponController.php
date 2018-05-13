@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 use common\models\HiConfCoupon;
 use common\models\HiUserCoupon0;
+use common\models\HiUserCouponMerge;
 use yii;
 use yii\data\Pagination;
 use yii\widgets\LinkPager;
@@ -28,7 +29,7 @@ class CouponController extends BaseController
      */
     public function actionIndex(){
         $query = HiConfCoupon::find()->andWhere(1);
-        $searchData = $this->searchForm($query, [ 'state','ID']);
+        $searchData = $this->searchForm($query, [ 'state','ID','Type']);
         if(!empty($_GET['Name'])){
             $query->andWhere("Name like '%".$_GET['Name']."%'");
             $searchData['Name'] = $_GET['Name'];
@@ -82,6 +83,7 @@ class CouponController extends BaseController
         if( $id ){
             $admin = HiConfCoupon::findOne( $id );
             if(empty($data['Name'])) $this->exitJSON(0, '优惠券名称不能为空！');
+            if(empty($data['Type'])) $this->exitJSON(0, '请选择类型！');
             if(empty($data['Price'])) $this->exitJSON(0, '面额不能为空！');
             if(empty($data['Count'])) $this->exitJSON(0, '券数不能为空！');
             if($data['EffectiveWay'] == 1){
@@ -103,9 +105,11 @@ class CouponController extends BaseController
             $admin->EffectiveWay = $data['EffectiveWay'];
             $admin->SingleLimit= $data['SingleLimit'];
             $admin->Count= $data['Count'];
+            $admin->Type= $data['Type'];
             $rtn = $admin->save();
         }else{
             if(empty($data['Name'])) $this->exitJSON(0, '优惠券名称不能为空！');
+            if(empty($data['Type'])) $this->exitJSON(0, '请选择类型！');
             if(empty($data['Price'])) $this->exitJSON(0, '面额不能为空！');
             if(empty($data['Count'])) $this->exitJSON(0, '券数不能为空！');
                 if($data['EffectiveWay'] == 1){
@@ -229,7 +233,12 @@ class CouponController extends BaseController
                 $userCoupon = new HiUserCoupon0($tableName);
                 $userCoupon->Uid = $user['Uid'];
                 $userCoupon->Coupon = $id;
-                $userCoupon->Expire = $expire;
+                if($coupon['EffectiveWay'] == 1){
+                    $userCoupon->Expire1 = $coupon['EffectiveTime1'];
+                }elseif ($coupon['EffectiveWay'] == 2){
+                    $userCoupon->Expire1 = $time;
+                }
+                $userCoupon->Expire2 = $expire;
                 $userCoupon->Time = $time;
                 $userCoupon->setAttributes(array(['Uid' => $user['Uid'],'Coupon' => $id,'Expire' => $expire,'Time' => $time]));
                 $res = $userCoupon->save();
@@ -271,6 +280,56 @@ class CouponController extends BaseController
 
         if($coupon['CourseId'] == 0){$coupon['CourseId'] = '通用';}
         $this->exitJSON(1,'',$coupon);
+    }
+    /**
+     * 已领优惠券列表
+     */
+    public function actionList()
+    {
+        $query = HiUserCouponMerge::find()->alias('a')
+            ->select([
+                'b.Name','b.Price','b.MinLimit','b.CourseId','b.Type',
+                'a.*',
+                'c.UserName',
+                'use_time'=>'d.Time'
+            ])
+            ->innerJoin('hi_conf_coupon b','a.Coupon = b.ID')
+            ->innerJoin('hi_user_merge c','a.Uid = c.Uid')
+            ->leftJoin('hi_order_merge d','d.OrderId = a.OrderId');
+        $searchData = $this->searchForm($query, [ 'a.Uid','a.ID','c.UserName','b.Name','b.Type']);
+        //下单时间
+        if(!empty($_GET['Time1'])){
+            $searchData['Time1'] = $_GET['Time1'];
+            $activated_time = strtotime($_GET['Time1']);
+            $query = $query->andWhere("a.Time >= '{$activated_time}'");
+        }
+        if(!empty($_GET['Time2'])){
+            $searchData['Time2'] = $_GET['Time2'];
+            $activated_time = strtotime($_GET['Time2']);
+            $query = $query->andWhere("a.Time <= '{$activated_time}'");
+        }
+        //领取时间
+        if(!empty($_GET['UseTime1'])){
+            $searchData['UseTime1'] = $_GET['UseTime1'];
+            $activated_time = strtotime($_GET['UseTime1']);
+            $query = $query->andWhere("d.Time >= '{$activated_time}'");
+        }
+        if(!empty($_GET['UseTime2'])){
+            $searchData['UseTime2'] = $_GET['UseTime2'];
+            $activated_time = strtotime($_GET['UseTime2']);
+            $query = $query->andWhere("d.Time <= '{$activated_time}'");
+        }
+        $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
+        $users = $query->orderBy("ID desc")->offset($pages->offset)->asArray()->limit($pages->limit)->all();
+        $renderData = [
+            'users' => $users,
+            'searchData' => $searchData,
+            'pageHtml' => LinkPager::widget([
+                'pagination' => $pages,
+                'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
+            ])
+        ];
+        return $this->display('list', $renderData);
     }
 
 }

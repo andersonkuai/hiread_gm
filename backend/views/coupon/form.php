@@ -34,6 +34,14 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td width="20%"><?=\Yii::t('app','类型')?></td>
+                                <td>
+                                    <input class="form" name="Type"  type="radio" value="1" <?php if(!empty($row['Type']) && $row['Type'] == 1) echo 'checked';?>>现金券&nbsp;&nbsp;
+                                    <input class="form" name="Type"  type="radio" value="2" <?php if(!empty($row['Type']) && $row['Type'] == 2) echo 'checked';?>>红包券&nbsp;&nbsp;
+                                    <input class="form" name="Type"  type="radio" value="3" <?php if(!empty($row['Type']) && $row['Type'] == 3) echo 'checked';?>>运费券
+                                </td>
+                            </tr>
+                            <tr>
                                 <td><?=\Yii::t('app','面额（单位：元）')?></td>
                                 <td>
                                     <input class="form" name="Price"  type="text" value="<?php echo empty($row) ? '' : $row['Price'];?>">

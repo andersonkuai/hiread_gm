@@ -12,6 +12,10 @@ use common\helpers\Enum;
 
 class Coupon extends Enum
 {
+    //优惠券类型
+    const COUPON_TYPE_CASH = 1;
+    const COUPON_TYPE_RED = 2;
+    const COUPON_TYPE_FREIGHT = 3;
     //优惠券状态
     const COUPON_STATE_CREATED = 1;
     const COUPON_STATE_EFFECTIVE = 2;
@@ -23,6 +27,10 @@ class Coupon extends Enum
     public static function labels(){
 
         return [
+            'COUPON_TYPE_CASH' => '现金券',
+            'COUPON_TYPE_RED' => '红包券',
+            'COUPON_TYPE_FREIGHT' => '运费券',
+
             'COUPON_EFFECTIVE_WAY_SECTION' => '设定区间',
             'COUPON_EFFECTIVE_WAY_GET' => '领取生效',
 

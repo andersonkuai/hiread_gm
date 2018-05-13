@@ -13,8 +13,11 @@ use yii\helpers\ArrayHelper;
  * @property integer $ID
  * @property integer $Uid
  * @property integer $Coupon
- * @property integer $Expire
+ * @property integer $Expire1
+ * @property integer $Expire2
  * @property integer $Time
+ * @property integer $isMerge
+ * @property string $OrderId
  */
 class HiUserCoupon0 extends \yii\db\ActiveRecord
 {
@@ -46,7 +49,8 @@ class HiUserCoupon0 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Uid', 'Coupon', 'Expire', 'Time'], 'integer'],
+            [['Uid', 'Coupon', 'Expire1', 'Expire2', 'Time', 'isMerge'], 'integer'],
+            [['OrderId'], 'string', 'max' => 50],
         ];
     }
 
@@ -59,8 +63,11 @@ class HiUserCoupon0 extends \yii\db\ActiveRecord
             'ID' => 'ID',
             'Uid' => '用户ID',
             'Coupon' => '优惠券ID',
-            'Expire' => '有效期',
+            'Expire1' => '有效期',
+            'Expire2' => '有效期',
             'Time' => '优惠券获得时间',
+            'isMerge' => '是否合并',
+            'OrderId' => '订单ID',
         ];
     }
     /**

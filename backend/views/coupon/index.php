@@ -31,6 +31,18 @@
                                        value="<?=!empty($searchData['Name'])?$searchData['Name']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
+                                <select class="form-control" name="Type" id="">
+                                    <option value="">优惠券类型</option>
+                                    <?php
+                                    foreach (\common\enums\Coupon::pfvalues('COUPON_TYPE') as $key => $obj){
+                                        $selected = isset($searchData['Type']) && $searchData['Type'] == $obj->getValue()
+                                            ? 'selected="selected"':'';
+                                        echo '<option '.$selected.' value="'.$obj->getValue().'">'.\common\enums\Coupon::labels()[$key].'</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-sm">
                                 <select class="form-control" name="state" id="">
                                     <option value="">优惠券状态</option>
                                     <?php
@@ -54,6 +66,7 @@
 <!--                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>-->
                             <th>优惠券ID</th>
                             <th>优惠券名称</th>
+                            <th>类型</th>
                             <th>面额</th>
                             <th>限额</th>
                             <th>适用范围</th>
@@ -66,11 +79,11 @@
                             <th>优惠券状态</th>
                             <th>操作</th>
                         </tr>
-
                         <?php foreach($users as $user){?>
                             <tr>
                                 <td><?php echo $user['ID']?></td>
                                 <td><?php echo $user['Name']?></td>
+                                <td><?php echo \common\enums\Coupon::labels()[\common\enums\Coupon::pfwvalues('COUPON_TYPE')[$user['Type']]];?></td>
                                 <td><?php echo $user['Price']?></td>
                                 <td><?php echo $user['MinLimit']?></td>
                                 <td><?php if($user['CourseId'] == 0) echo '课程通用';?></td>
@@ -109,7 +122,8 @@
                                                 <i class="fa fa-check-square-o"></i>生效
                                             </a>&nbsp;&nbsp;
                                             <a href="?r=coupon/edit&id=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit"></i>修改</a>&nbsp;&nbsp;
-                                            <a class="" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=coupon/del&id=<?php echo $user['ID']?>');"><i class="fa fa-minus-square"></i> 删除</a>
+                                            <a class="" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=coupon/del&id=<?php echo $user['ID']?>');"><i class="fa fa-minus-square"></i> 删除</a>&nbsp;&nbsp;
+                                            <a href="?r=coupon/list&ID=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit"></i>列表</a>
                                         <?php }elseif($user['state'] == 2){?>
                                             <a class="" href="##" onclick="giveOut('<?=$user['ID']?>')" data-toggle="modal" data-target="#myModal">
                                                 <i class="fa fa-send"></i>发放
@@ -117,6 +131,7 @@
                                             <a class="" style="color: red" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=coupon/operation&action=3&id=<?php echo $user['ID']?>');">
                                                 <i class="fa fa-ban"></i>失效
                                             </a>
+                                            <a href="?r=coupon/list&ID=<?php echo $user['ID']?>" target="_Blank"><i class="fa fa-edit"></i>列表</a>
                                         <?php }elseif($user['state'] == 3){?>
                                             <a class="" style="color: #00aa00" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=coupon/operation&action=2&id=<?php echo $user['ID']?>');">
                                                 <i class="fa fa-check-square-o"></i>生效
