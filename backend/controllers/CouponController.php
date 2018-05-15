@@ -320,7 +320,7 @@ class CouponController extends BaseController
             $query = $query->andWhere("d.Time <= '{$activated_time}'");
         }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
-        $users = $query->orderBy("ID desc")->offset($pages->offset)->asArray()->limit($pages->limit)->all();
+        $users = $query->orderBy("Time desc")->offset($pages->offset)->asArray()->limit($pages->limit)->all();
         $renderData = [
             'users' => $users,
             'searchData' => $searchData,

@@ -40,7 +40,8 @@ class HiUserCouponMerge extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Uid', 'Coupon', 'Expire1', 'Expire2', 'Time', 'isMerge'], 'integer'],
+            [['ID', 'Uid', 'Coupon'], 'required'],
+            [['ID', 'Uid', 'Coupon', 'Expire1', 'Expire2', 'Time', 'isMerge'], 'integer'],
             [['OrderId'], 'string', 'max' => 50],
         ];
     }
