@@ -15,7 +15,9 @@ use common\models\HiConfCoursePrice;
 use common\models\HiOrderDetailMerge;
 use common\models\HiOrderMerge;
 use common\models\HiUserAddressMerge;
+use common\models\HiUserCoupon0;
 use common\models\HiUserMerge;
+use common\models\HiUserOrder0;
 use common\models\HiUserOrderMerge;
 use yii\data\Pagination;
 use yii\widgets\LinkPager;
@@ -125,6 +127,72 @@ class OrderController extends BaseController
             ])
         ];
         return $this->display('list',$renderData);
+    }
+    /**
+     * 实时订单
+     */
+    public function actionRealTime()
+    {
+        $uid = !empty($_GET['Uid']) ? $_GET['Uid'] : 0;
+        $tableName = 'hi_user_order_'.substr($uid,-1,1);
+        //获取订单信息
+        $query = HiUserOrder0::findx($tableName)->andWhere(1);
+        $searchData = $this->searchForm($query, ['Uid','Type', 'PayType','Status','SendStatus']);
+        //下单时间
+        if(!empty($_GET['Time1'])){
+            $searchData['Time1'] = $_GET['Time1'];
+            $activated_time = strtotime($_GET['Time1']);
+            $query = $query->andWhere("Time >= '{$activated_time}'");
+        }
+        if(!empty($_GET['Time2'])){
+            $searchData['Time2'] = $_GET['Time2'];
+            $activated_time = strtotime($_GET['Time2']);
+            $query = $query->andWhere("Time <= '{$activated_time}'");
+        }
+        $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
+        $orders = $query->orderBy('Time desc')->offset($pages->offset)->limit($pages->limit)->asArray()->all();
+        $renderData = [
+            'orders' => $orders,
+            'searchData' => ['Uid' => $uid],
+            'pageHtml' => LinkPager::widget([
+                'pagination' => $pages,
+                'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
+            ])
+        ];
+        return $this->display('real-time',$renderData);
+    }
+
+    /**
+     * 取消订单（实时）
+     */
+    public function actionUpdateOrder()
+    {
+        $id = $_GET['id'];
+        $uid = !empty($_GET['uid']) ? $_GET['uid'] : 0;
+        $tableName = 'hi_user_order_'.substr($uid,-1,1);
+        $couponTab = 'hi_user_coupon_'.substr($uid,-1,1);
+        if(empty($id)) $this->exitJSON(0,'id不能为空');
+        $order = HiUserOrder0::findOnex($tableName,['ID' => $id,'Uid' => $uid]);
+        if(empty($order)) $this->exitJSON(0,'验证失败');
+        if(!empty($order['Coupon'])){
+            $couponArray = explode('|',$order['Coupon']);
+            if(!empty($couponArray)){
+                foreach ($couponArray as $key=>$val){
+                    $coupon = HiUserCoupon0::findOnex($couponTab,['ID' => $val,'Uid' => $uid]);
+                    if(!empty($coupon)){
+                        $coupon->isMerge = 0;
+                        $coupon->OrderId = '';
+                        $coupon->isUsed = 0;
+                        $coupon->save();
+                    }
+                }
+            }
+        }
+        $order->Status = 5;
+        $order->isMerge = 0;
+        $res = $order->save();
+        if($res) $this->exitJSON(1,'success');
+        $this->exitJSON(0,'fail');
     }
 
     /**

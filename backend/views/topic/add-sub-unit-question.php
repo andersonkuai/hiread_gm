@@ -241,8 +241,8 @@
                             <td><?= \Yii::t('app', '是否是练习题目');?>：</td>
                             <td>
                                 <select name="IsTrain" id="">
-                                    <option value="1" <?php if(!empty($question['IsTrain']) && $question['IsTrain'] == 1) echo 'selected';?>>是</option>
-                                    <option value="0" <?php if(!empty($question['IsTrain']) && $question['IsTrain'] == 0) echo 'selected';?>>否</option>
+                                    <option value="0" <?php if(isset($question['IsTrain']) && $question['IsTrain'] == 0) echo 'selected';?>>否</option>
+                                    <option value="1" <?php if(isset($question['IsTrain']) && $question['IsTrain'] == 1) echo 'selected';?>>是</option>
                                 </select>
                             </td>
                         </tr>

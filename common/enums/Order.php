@@ -22,6 +22,7 @@ class Order extends Enum
     const STATUS_FAILED = '2';
     const STATUS_ALL_REFUND = '3';
     const STATUS_PARTIAL_REFUND = '4';
+    const STATUS_CANCEL = '5';
     //发货状态
     const SEND_STATUS_NO = '0';
     const SEND_STATUS_SEND = '1';
@@ -44,6 +45,7 @@ class Order extends Enum
             'STATUS_FAILED' => '支付失败',
             'STATUS_ALL_REFUND' => '全部退款',
             'STATUS_PARTIAL_REFUND' => '部分退款',
+            'STATUS_CANCEL' => '已取消',
 
             'SEND_STATUS_NO' => '未发货',
             'SEND_STATUS_SEND' => '已发货',

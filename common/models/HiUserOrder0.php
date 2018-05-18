@@ -8,19 +8,30 @@ use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "hi_user_coupon_0".
+ * This is the model class for table "hi_user_order_0".
  *
  * @property integer $ID
- * @property integer $Uid
- * @property integer $Coupon
- * @property integer $Expire1
- * @property integer $Expire2
- * @property integer $Time
- * @property integer $isMerge
  * @property string $OrderId
- * @property integer $isUsed
+ * @property integer $Uid
+ * @property integer $Type
+ * @property string $Trade
+ * @property double $Price
+ * @property integer $RecvId
+ * @property string $Message
+ * @property integer $PayType
+ * @property double $RefundPrice
+ * @property integer $Status
+ * @property integer $SendStatus
+ * @property integer $PayTime
+ * @property integer $Time
+ * @property string $PaymentInfo
+ * @property integer $RefundTime
+ * @property string $Mark
+ * @property integer $Channel
+ * @property integer $isMerge
+ * @property string $Coupon
  */
-class HiUserCoupon0 extends \yii\db\ActiveRecord
+class HiUserOrder0 extends \yii\db\ActiveRecord
 {
     public static $table = '';
     public function __construct($table,$config = [])
@@ -50,8 +61,13 @@ class HiUserCoupon0 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Uid', 'Coupon', 'Expire1', 'Expire2', 'Time', 'isMerge', 'isUsed'], 'integer'],
+            [['Uid', 'Type', 'RecvId', 'PayType', 'Status', 'SendStatus', 'PayTime', 'Time', 'RefundTime', 'Channel', 'isMerge'], 'integer'],
+            [['Price', 'RefundPrice'], 'number'],
+            [['Message', 'PaymentInfo', 'Mark'], 'string'],
+            [['Time'], 'required'],
             [['OrderId'], 'string', 'max' => 50],
+            [['Trade'], 'string', 'max' => 255],
+            [['Coupon'], 'string', 'max' => 100],
         ];
     }
 
@@ -62,14 +78,25 @@ class HiUserCoupon0 extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'Uid' => '用户ID',
-            'Coupon' => '优惠券ID',
-            'Expire1' => '有效期',
-            'Expire2' => '有效期',
-            'Time' => '优惠券获得时间',
-            'isMerge' => '是否合并',
             'OrderId' => '订单ID',
-            'isUsed' => '是否已使用',
+            'Uid' => '用户ID',
+            'Type' => '订单类型(1:普通课程2:拼团3:营销)',
+            'Trade' => '第三方交易单号',
+            'Price' => '订单价格',
+            'RecvId' => '收货地址ID',
+            'Message' => '买家留言',
+            'PayType' => '支付类型（0：未知1：微信2：支付宝）',
+            'RefundPrice' => '退款金额',
+            'Status' => '订单状态（0:未支付1：已支付2：支付失败3：全部退款4：部分退款,5:已取消）',
+            'SendStatus' => '发货状态(0:未发货1:已发货2:已签收）',
+            'PayTime' => '订单支付时间',
+            'Time' => '订单生成时间',
+            'PaymentInfo' => '支付相关信息',
+            'RefundTime' => '退款时间',
+            'Mark' => '备注信息',
+            'Channel' => '渠道号',
+            'isMerge' => '是否合并，1：是，0：否',
+            'Coupon' => '使用的优惠券',
         ];
     }
     /**

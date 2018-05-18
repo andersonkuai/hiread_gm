@@ -455,6 +455,7 @@ class TopicController extends BaseController
                 }//end if
             }//end if
         }
+        ksort($test);
         $renderData['question'] = $test;
         return $this->display('unit-index', $renderData);
     }

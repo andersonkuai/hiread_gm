@@ -34,6 +34,7 @@
         </a>
         <ul class="treeview-menu">
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=order/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','订单列表')?></a></li>
+            <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=order/real-time"><i class="fa fa-circle-o"></i><?=\Yii::t('app','实时订单')?></a></li>
         </ul>
     </li>
     <li class="treeview">
