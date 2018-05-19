@@ -512,6 +512,7 @@ class TopicController extends BaseController
     {
         //存储题目数据/答案数据/题目表
         $data = Yii::$app->getRequest()->post();
+        $data['Matrix'] = $data['MatrixA'].'_'.$data['MatrixB'];
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
             $subUnitId = Yii::$app->getRequest()->get('subUnitId');//子单元id
