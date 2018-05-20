@@ -455,6 +455,11 @@ class TopicController extends BaseController
                 }//end if
             }//end if
         }
+        //添加视频课
+        $vidoeCourse = HiConfTopic::findOne(['IsTrain' => 0,'SUnitId' => $extensiveId])->toArray();
+        if(!empty($vidoeCourse)){
+            $test[$vidoeCourse['ID']] = $vidoeCourse;
+        }
         ksort($test);
         $renderData['question'] = $test;
         return $this->display('unit-index', $renderData);
@@ -517,7 +522,7 @@ class TopicController extends BaseController
         try{
             $subUnitId = Yii::$app->getRequest()->get('subUnitId');//子单元id
             $questionId = $data['questionId'];//题目id
-            if(empty($data['Title'])) $this->exitJSON(0, '题目不能为空');
+//            if(empty($data['Title'])) $this->exitJSON(0, '题目不能为空');
             if(!empty($questionId)){
                 //删除原有答案
                 HiConfTopicAnswer::deleteAll(['Tid' => $questionId]);
