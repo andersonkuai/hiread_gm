@@ -456,8 +456,9 @@ class TopicController extends BaseController
             }//end if
         }
         //添加视频课
-        $vidoeCourse = HiConfTopic::findOne(['IsTrain' => 0,'SUnitId' => $extensiveId])->toArray();
+        $vidoeCourse = HiConfTopic::findOne(['IsTrain' => 0,'SUnitId' => $extensiveId]);
         if(!empty($vidoeCourse)){
+            $vidoeCourse = $vidoeCourse->toArray();
             $vidoeCourse['Min'] = 0;
             $vidoeCourse['Sec'] = 0;
             $test[$vidoeCourse['ID']] = $vidoeCourse;

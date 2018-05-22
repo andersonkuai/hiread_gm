@@ -2,7 +2,7 @@
     <?php foreach ($answer as $k_answer=>$v_answer){ ?>
         <ul style="margin-top: 10px;background-color: burlywood;">
             <li>
-                <?= \Yii::t('app', '答案描述');?>：<input name="answerName[]" type="text" value="<?=$v_answer->Name;?>" />
+                <?= \Yii::t('app', '答案描述');?>：<input name="answerName[]" type="text" value="<?=htmlspecialchars($v_answer->Name);?>" />
             </li>
             <li>
                 <?= \Yii::t('app', '图片');?>：
@@ -21,7 +21,7 @@
                 </select>
             </li>
             <li>
-                <?= \Yii::t('app', '配对文字1');?>：<input name="answerPair1Text[]" type="text" value="<?=$v_answer->Pair1Text?>">
+                <?= \Yii::t('app', '配对文字1');?>：<input name="answerPair1Text[]" type="text" value="<?=htmlspecialchars($v_answer->Pair1Text)?>">
             </li>
             <li>
                 <?= \Yii::t('app', '配对图片1');?>：
@@ -43,7 +43,7 @@
             </li>
 
             <li>
-                <?= \Yii::t('app', '配对文字2');?>：<input name="answerPair2Text[]" type="text" value="<?=$v_answer->Pair2Text?>">
+                <?= \Yii::t('app', '配对文字2');?>：<input name="answerPair2Text[]" type="text" value="<?=htmlspecialchars($v_answer->Pair2Text)?>">
             </li>
             <li>
                 <?= \Yii::t('app', '配对图片2');?>：

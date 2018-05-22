@@ -33,7 +33,7 @@
                                     <tr>
                                         <td><?= \Yii::t('app', '课程名称');?>：</td>
                                         <td>
-                                            <input class="form" name="ProdName"  type="text" value="<?php echo empty($row) ? '' : $row['ProdName'];?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input class="form" name="ProdName"  type="text" value="<?php echo empty($row) ? '' : htmlspecialchars($row['ProdName']);?>">&nbsp;&nbsp;&nbsp;&nbsp;
                                             <?= \Yii::t('app', '课程开放时间');?>：
                                             <input class="form" style="width: 10%" name="OpenDay"  type="text" value="<?php echo empty($row['OpenDay']) ? 0 : date('Ymd',$row['OpenDay']);?>">
                                             <span style="color: red">格式：20180101，0:无时间随时开放</span>
@@ -42,7 +42,7 @@
                                     <tr>
                                         <td><?= \Yii::t('app', '书名');?>：</td>
                                         <td>
-                                            <input class="form" name="Name"  type="text" value="<?php echo empty($row) ? '' : $row['Name'];?>">
+                                            <input class="form" name="Name"  type="text" value="<?php echo empty($row) ? '' : htmlspecialchars($row['Name']);?>">
                                         </td>
                                     </tr>
                                     <tr>
@@ -216,7 +216,7 @@
                                                 <td>
                                                     <input type="text" name="intensive_outline_name[]" value="<?php echo $v->Name;?>">&nbsp;
                                                     <?= \Yii::t('app', '大纲描述');?>：
-                                                    <input type="text" style="width: 40%" name="intensive_outline_desc[]" value="<?php echo $v->Desc;?>">
+                                                    <input type="text" style="width: 40%" name="intensive_outline_desc[]" value="<?php echo htmlspecialchars($v->Desc);?>">
                                                 </td>
                                                 <td>
                                                     <a href="##" style="margin: 8px" onclick="addData(this)" class="fa fa-plus"></a>

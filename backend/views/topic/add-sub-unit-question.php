@@ -60,7 +60,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目标题');?>：</td>
                             <td>
-                                <input class="form" name="Title"  type="text" value="<?=!empty($question['Title'])?$question['Title']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="Title"  type="text" value="<?=!empty($question['Title'])?htmlspecialchars($question['Title']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?= \Yii::t('app', '题目类型');?>：
                                 <select name="Type" id="">
                                     <?php foreach (\common\enums\Topic::params('type') as $keyType=>$valType){ ?>
@@ -127,25 +127,25 @@
                         <tr>
                             <td><?= \Yii::t('app', '音标');?>：</td>
                             <td>
-                                <input class="form" name="SoundMark"  type="text" value="<?=!empty($question['SoundMark'])?$question['SoundMark']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="SoundMark"  type="text" value="<?=!empty($question['SoundMark'])?htmlspecialchars($question['SoundMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
                             <td><?= \Yii::t('app', '中文注释');?>：</td>
                             <td>
-                                <input class="form" name="CNMark"  type="text" value="<?=!empty($question['CNMark'])?$question['CNMark']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="CNMark"  type="text" value="<?=!empty($question['CNMark'])?htmlspecialchars($question['CNMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
                             <td><?= \Yii::t('app', '英文注释');?>：</td>
                             <td>
-                                <input class="form" name="ENMark"  type="text" value="<?=!empty($question['ENMark'])?$question['ENMark']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="ENMark"  type="text" value="<?=!empty($question['ENMark'])?htmlspecialchars($question['ENMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
                             <td><?= \Yii::t('app', '例句');?>：</td>
                             <td>
-                                <input class="form" name="Sample"  type="text" value="<?=!empty($question['Sample'])?$question['Sample']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="Sample"  type="text" value="<?=!empty($question['Sample'])?htmlspecialchars($question['Sample']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
@@ -358,6 +358,9 @@
                 break;
             case 'extensive_answer_Pair1Audio'://泛读配对音频
                 href = '<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_answer_Pair1Audio']; ?>' + imgName
+                break;
+            case 'extensive_answer_image'://泛读题目图片
+                href = '<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_extensive_answer_image']; ?>' + imgName
                 break;
             default:
                 href = '';

@@ -60,7 +60,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目标题');?>：</td>
                             <td>
-                                <input class="form" name="Title"  type="text" value="<?=!empty($question['Title'])?$question['Title']:'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form" name="Title"  type="text" value="<?=!empty($question['Title'])?htmlspecialchars($question['Title']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?= \Yii::t('app', '题目类型');?>：
                                 <select name="Type" id="">
                                     <?php foreach (\common\enums\Topic::params('type') as $keyType=>$valType){ ?>
