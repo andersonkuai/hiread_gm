@@ -42,7 +42,7 @@ class CourseController extends BaseController
      */
     public function actionIndex(){
         $query = HiConfCourse::find()->select(['CategoryName' => 'hi_conf_category.name',
-            'hi_conf_course.ProdName', 'BookName' => 'hi_conf_course.Name','CourseId' => 'hi_conf_course.ID',
+            'hi_conf_course.ProdName', 'BookName' => 'hi_conf_course.Name','CourseId' => 'hi_conf_course.ID','hi_conf_course.HLevel',
             'CourseTime','Price','DiscountPrice','Expire','Level','MinAge','MaxAge',
             ])
             ->innerJoin('hi_conf_category','hi_conf_course.Category = hi_conf_category.ID')

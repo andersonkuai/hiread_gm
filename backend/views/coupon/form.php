@@ -48,10 +48,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><?=\Yii::t('app','限额（单位：元）')?></td>
+                                <td><?=\Yii::t('app','使用限制价格')?></td>
                                 <td>
                                     <input class="form" name="MinLimit" type="text" value="<?php echo empty($row['MinLimit']) ? 0 : $row['MinLimit'];?>">
-                                    <span style="color: red">* 0为无限额</span>
+                                    <span style="color: red">* 0为无限制</span>
                                 </td>
                             </tr>
                             <tr>

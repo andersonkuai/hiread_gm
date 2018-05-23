@@ -30,6 +30,7 @@
                         <tr>
                             <th><?= \Yii::t('app', 'ID');?></th>
                             <th><?= \Yii::t('app', '课程名称');?></th>
+                            <th><?= \Yii::t('app', '等级');?></th>
                             <th><?= \Yii::t('app', '课程类别');?></th>
                             <th><?= \Yii::t('app', '课时');?></th>
                             <th><?= \Yii::t('app', '定价');?></th>
@@ -48,6 +49,7 @@
                             <tr>
                                 <td><?php echo $val['CourseId']?></td>
                                 <td><?php echo $val['ProdName']?></td>
+                                <td><?php echo 'L'.$val['HLevel']?></td>
                                 <td><?php echo $val['CategoryName']?></td>
                                 <td><?php echo $val['CourseTime']?></td>
                                 <td><?php echo $val['Price']?></td>
