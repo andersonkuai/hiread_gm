@@ -7,7 +7,7 @@ if(YII_ENV == 1){
     define('HIREADURL','http://kail.hiread.cn/');
 }elseif(YII_ENV == 2){
     //测试服
-    $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread/www/static/';
+    $static_dir = dirname(dirname(dirname(dirname(__FILE__)))).'/hiread_new/www/static/';
     $static_hiread = 'https://static.dev.hiread.cn/';
     define('HIREADURL','https://dev.hiread.cn/');
 }elseif(YII_ENV == 3){
