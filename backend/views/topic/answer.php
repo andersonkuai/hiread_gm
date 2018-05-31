@@ -2,7 +2,7 @@
     <?php foreach ($answer as $k_answer=>$v_answer){ ?>
         <ul style="margin-top: 10px;background-color: burlywood;">
             <li>
-                <?= \Yii::t('app', '答案描述');?>：<input name="answerName[]" type="text" value="<?=htmlspecialchars($v_answer->Name);?>" />
+                <?= \Yii::t('app', '答案描述');?>：<input style="width: 50%" name="answerName[]" type="text" value="<?=htmlspecialchars($v_answer->Name);?>" />
             </li>
             <li>
                 <?= \Yii::t('app', '图片');?>：

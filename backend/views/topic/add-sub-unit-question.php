@@ -47,7 +47,7 @@
                 <form role="form" id="myForm" action="" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="questionId" value="<?php if(!empty($question)){echo $question['ID'];}else{echo '';}?>">
                 <div class="box-body table-responsive no-padding">
-                    <table style="margin-bottom: 20px;background-color: #f5f3e5;" tab="0">
+                    <table style="margin-bottom: 20px;background-color: #f5f3e5;" width="90%" tab="0">
                         <tr>
                             <td>
                                 <?= \Yii::t('app', '跳出题目时间');?>：
@@ -60,7 +60,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目标题');?>：</td>
                             <td>
-                                <input class="form" name="Title"  type="text" value="<?=!empty($question['Title'])?htmlspecialchars($question['Title']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <textarea class="form" rows="2" cols="50" name="Title"><?=!empty($question['Title'])?htmlspecialchars($question['Title']):'';?></textarea>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?= \Yii::t('app', '题目类型');?>：
                                 <select name="Type" id="">
                                     <?php foreach (\common\enums\Topic::params('type') as $keyType=>$valType){ ?>
@@ -72,7 +72,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目图片');?>：</td>
                             <td>
-                                <input class="form" name="Image" type="text" value="<?php echo !empty($question['Image'])? $question['Image'] : '' ?>">
+                                <input style="width: 50%" class="form" name="Image" type="text" value="<?php echo !empty($question['Image'])? $question['Image'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadImg('unit_topic_img',this)" accept="image/*" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -83,7 +83,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目音频');?>：</td>
                             <td>
-                                <input class="form" name="Audio" type="text" value="<?php echo !empty($question['Audio'])? $question['Audio'] : '' ?>">
+                                <input style="width: 50%" class="form" name="Audio" type="text" value="<?php echo !empty($question['Audio'])? $question['Audio'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_topic_audio',this)" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -94,7 +94,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目描述音频');?>：</td>
                             <td>
-                                <input class="form" name="QAudio" type="text" value="<?= !empty($question['QAudio'])? $question['QAudio'] : '' ?>">
+                                <input style="width: 50%" class="form" name="QAudio" type="text" value="<?= !empty($question['QAudio'])? $question['QAudio'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_question_des_audio',this)"  />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -105,7 +105,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目视频');?>：</td>
                             <td>
-                                <input class="form" name="Video" type="text" value="<?php echo !empty($question['Video'])? $question['Video'] : '' ?>">
+                                <input style="width: 50%" class="form" name="Video" type="text" value="<?php echo !empty($question['Video'])? $question['Video'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_topic_video',this)" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -116,7 +116,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '视频封面');?>：</td>
                             <td>
-                                <input class="form" name="Poster" type="text" value="<?php echo !empty($question['Poster'])? $question['Poster'] : '' ?>">
+                                <input style="width: 50%" class="form" name="Poster" type="text" value="<?php echo !empty($question['Poster'])? $question['Poster'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_topic_poster',this)" accept="image/*" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -133,13 +133,13 @@
                         <tr>
                             <td><?= \Yii::t('app', '中文注释');?>：</td>
                             <td>
-                                <input class="form" name="CNMark"  type="text" value="<?=!empty($question['CNMark'])?htmlspecialchars($question['CNMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input style="width: 50%" class="form" name="CNMark"  type="text" value="<?=!empty($question['CNMark'])?htmlspecialchars($question['CNMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
                             <td><?= \Yii::t('app', '英文注释');?>：</td>
                             <td>
-                                <input class="form" name="ENMark"  type="text" value="<?=!empty($question['ENMark'])?htmlspecialchars($question['ENMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input style="width: 50%" class="form" name="ENMark"  type="text" value="<?=!empty($question['ENMark'])?htmlspecialchars($question['ENMark']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
@@ -151,7 +151,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '例句音频');?>：</td>
                             <td>
-                                <input class="form" name="SampleAudio" type="text" value="<?= !empty($question['SampleAudio'])? $question['SampleAudio'] : '' ?>">
+                                <input style="width: 50%" class="form" name="SampleAudio" type="text" value="<?= !empty($question['SampleAudio'])? $question['SampleAudio'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_SampleAudio',this)"  />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -183,7 +183,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目解析音频');?>：</td>
                             <td>
-                                <input class="form" name="AAudio" type="text" value="<?= !empty($question['AAudio'])? $question['AAudio'] : '' ?>">
+                                <input style="width: 50%" class="form" name="AAudio" type="text" value="<?= !empty($question['AAudio'])? $question['AAudio'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_question_des_aaudio',this)" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
@@ -194,7 +194,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '题目解析视频');?>：</td>
                             <td>
-                                <input class="form" name="AVideo" type="text" value="<?= !empty($question['AVideo'])? $question['AVideo'] : '' ?>">
+                                <input style="width: 50%" class="form" name="AVideo" type="text" value="<?= !empty($question['AVideo'])? $question['AVideo'] : '' ?>">
                                 <span  id="questionPicTr">
                                     <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="CoverImg_pic" onchange="uploadFile('unit_question_des_avideo',this)" />
                                     <span class="btn-upload" id="CoverImg_btn"></span>
