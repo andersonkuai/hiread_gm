@@ -10,7 +10,6 @@ use yii\web\Controller;
 
 class IndexController extends Controller
 {
-
     public function actionLogin(){
         $errors = array();
         if (!Yii::$app->user->getIsGuest()) {
@@ -27,7 +26,7 @@ class IndexController extends Controller
             $admin = Admin::findByUsername($username);
 
             if( empty($errors) && !empty($admin) && $admin->validatePassword($password) ) {
-                Yii::$app->user->login($admin, $remember ? 3600 * 24 * 30 : 0);
+                Yii::$app->user->login($admin, $remember ? 3600 * 24 * 30 : 3600);
                 //更新用户登录时间 ip
                 Yii::$app->user->identity->login_time = time();
                 Yii::$app->user->identity->login_ip = Func::getClientIp();
@@ -105,14 +104,6 @@ class IndexController extends Controller
 
     public function actionTest(){
 
-
-
-        $values = \common\enums\WhitePoint::labels();
-
-
-        print_r($values);
-
-        echo \common\enums\WhitePoint::label(1);
 
     }
 }

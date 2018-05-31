@@ -38,7 +38,7 @@ class HiConfUnit extends \yii\db\ActiveRecord
     {
         return [
             [['CourseId', 'Type', 'OpenDay'], 'integer'],
-            [['Name'], 'string', 'max' => 50],
+            [['Name'], 'string', 'max' => 255],
         ];
     }
 
