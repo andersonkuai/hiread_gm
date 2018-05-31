@@ -145,7 +145,7 @@
                         <tr>
                             <td><?= \Yii::t('app', '例句');?>：</td>
                             <td>
-                                <input class="form" name="Sample"  type="text" value="<?=!empty($question['Sample'])?htmlspecialchars($question['Sample']):'';?>">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <textarea name="Sample" id="" cols="50" rows="3"><?= !empty($question['Sample'])? $question['Sample'] : '' ?></textarea>
                             </td>
                         </tr>
                         <tr>

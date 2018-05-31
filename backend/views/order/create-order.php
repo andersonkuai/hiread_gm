@@ -45,7 +45,7 @@
                                     <select name="Course" id="Course" onchange="getCourse()">
                                         <?php if(!empty($course)){ ?>
                                             <?php foreach ($course as $v) {?>
-                                                <option value="<?=$v['ID']?>">Lv:<?=$v['Level'];?> &nbsp;<?=$v['ProdName'];?></option>
+                                                <option value="<?=$v['ID']?>">Lv:<?=$v['HLevel'];?> &nbsp;<?=$v['ProdName'];?></option>
                                             <?php }?>
                                         <?php }?>
                                     </select>
