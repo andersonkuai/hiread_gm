@@ -95,4 +95,8 @@ return [
     //题目解析视频
     'unit_question_des_avideo' => $static_dir.'/course/answer/video/',
     'view_unit_question_des_avideo' => 'course/answer/video/',//查看目录
+
+    //微信文章图片
+    'wx_article' => $static_dir.'/wx/article/',
+    'view_wx_article' => 'wx/article/',//查看目录
 ];
