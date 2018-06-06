@@ -54,6 +54,7 @@
                             <th>ID</th>
                             <th>所属菜单</th>
                             <th>标题</th>
+                            <th>图片</th>
                             <th>简介</th>
                             <th>链接</th>
                             <th>是否显示</th>
@@ -66,6 +67,11 @@
                                 <td><?php echo $user['id']?></td>
                                 <td><?php echo !empty($menu[$user['menu']]['name'])? $menu[$user['menu']]['name'] : '<span style="color:#F00">暂无</span>'?></td>
                                 <td><?php echo $user['title']?></td>
+                                <td>
+                                    <a target="_blank" href="<?php echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_wx_article'].$user['img']; ?>">
+                                        <img width="30%" src="<?php if(!empty($user['img'])) echo \Yii::$app->params['static_hiread'].\Yii::$app->params['view_wx_article'].$user['img']; ?>" alt="">
+                                    </a>
+                                </td>
                                 <td><textarea><?php echo $user['introduction']?></textarea></td>
                                 <td><?=$user['url'];?></td>
                                 <td><?= $user['is_show'] == 1 ? '是': '否';?></td>
