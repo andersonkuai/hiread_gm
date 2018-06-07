@@ -99,4 +99,7 @@ return [
     //微信文章图片
     'wx_article' => $static_dir.'/wx/article/',
     'view_wx_article' => 'wx/article/',//查看目录
+    //微信主题图片
+    'wx_article_theme' => $static_dir.'/wx/article/theme/',
+    'view_wx_article_theme' => 'wx/article/theme/',//查看目录
 ];

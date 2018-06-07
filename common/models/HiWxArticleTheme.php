@@ -5,22 +5,20 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "hi_wx_article_menu".
+ * This is the model class for table "hi_wx_article_theme".
  *
  * @property integer $id
- * @property string $name
- * @property integer $order
- * @property integer $is_show
- * @property integer $theme
+ * @property string $theme
+ * @property string $img
  */
-class HiWxArticleMenu extends \yii\db\ActiveRecord
+class HiWxArticleTheme extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'hi_wx_article_menu';
+        return 'hi_wx_article_theme';
     }
 
     /**
@@ -37,8 +35,7 @@ class HiWxArticleMenu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order', 'is_show', 'theme'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['theme', 'img'], 'string', 'max' => 255],
         ];
     }
 
@@ -49,10 +46,8 @@ class HiWxArticleMenu extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => '菜单名',
-            'order' => '排序',
-            'is_show' => '是否显示 1：是，2：不是',
-            'theme' => '主题id',
+            'theme' => '内容主题',
+            'img' => '背景图片',
         ];
     }
 }

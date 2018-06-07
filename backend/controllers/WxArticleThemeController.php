@@ -8,14 +8,12 @@
 
 namespace backend\controllers;
 
-use common\models\HiWxArticleMenu;
 use common\models\HiWxArticleTheme;
-use common\models\HiWxArticle;
 use yii;
 use yii\data\Pagination;
 use yii\widgets\LinkPager;
 
-class WxArticleMenuController extends BaseController
+class WxArticleThemeController extends BaseController
 {
     public function __construct($id, $module, $config = [])
     {
@@ -27,16 +25,11 @@ class WxArticleMenuController extends BaseController
      * @return string
      */
     public function actionIndex(){
-        $query = HiWxArticleMenu::find()->andWhere(1);
-        $searchData = $this->searchForm($query, ['name','is_show','theme']);
+        $query = HiWxArticleTheme::find()->andWhere(1);
+        $searchData = $this->searchForm($query, ['theme']);
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $users = $query->orderBy("ID asc")->offset($pages->offset)->limit($pages->limit)->all();
-        //获取所有主题
-        $theme_tmp = HiWxArticleTheme::find()->asArray()->all();
-        $theme_id = array_column($theme_tmp, 'id');
-        $theme = array_combine($theme_id, $theme_tmp);
         $renderData = [
-            'theme' => $theme,
             'users' => $users,
             'searchData' => $searchData,
             'pageHtml' => LinkPager::widget([
@@ -55,14 +48,12 @@ class WxArticleMenuController extends BaseController
         if(Yii::$app->getRequest()->getIsPost()){
             $this->couponForm();
         }else{
-            //获取所有主题
-            $theme = HiWxArticleTheme::find()->asArray()->all();
-            $renderData = ['theme' => $theme];
+            $renderData = [];
             return $this->display('form', $renderData);
         }
     }
     /**
-     * 修改菜单
+     * 修改主题
      * @return string
      */
     public function actionEdit(){
@@ -70,10 +61,8 @@ class WxArticleMenuController extends BaseController
             $this->couponForm();
         }else {
             $id = intval(Yii::$app->getRequest()->get('id'));
-            $row = HiWxArticleMenu::findOne(['id' => $id]);
-            //获取所有主题
-            $theme = HiWxArticleTheme::find()->asArray()->all();
-            $renderData = ['row' => $row,'theme' => $theme];
+            $row = HiWxArticleTheme::findOne(['id' => $id]);
+            $renderData = ['row' => $row];
             return $this->display('form', $renderData);
         }
     }
@@ -82,17 +71,13 @@ class WxArticleMenuController extends BaseController
         $data = Yii::$app->getRequest()->post();
 
         if( $id ){
-            $admin = HiWxArticleMenu::findOne( $id );
-            $admin->name = $data['name'];
-            $admin->order = intval($data['order']);
-            $admin->is_show = $data['is_show'];
+            $admin = HiWxArticleTheme::findOne( $id );
             $admin->theme = $data['theme'];
+            $admin->img = $data['img'];
             $rtn = $admin->save();
         }else{
-            if(empty($data['name'])) $this->exitJSON(0, '名称不能为空');
-            if(empty($data['theme'])) $this->exitJSON(0, '请选择主题');
-            $data['order'] = intval($data['order']); 
-            $admin = new HiWxArticleMenu();
+            if(empty($data['theme'])) $this->exitJSON(0, '主题不能为空');
+            $admin = new HiWxArticleTheme();
             $admin->setAttributes($data, false);
             $rtn = $admin->insert();
             $id = $admin->id;
@@ -103,11 +88,11 @@ class WxArticleMenuController extends BaseController
             $this->exitJSON(0, 'Fail!');
         }
     }
-    //删除菜单
-    public function actionDelArticle()
+    //删除主题
+    public function actionDel()
     {
         $id = Yii::$app->getRequest()->get('id');
-        $res = HiWxArticleMenu::deleteAll(['id' => $id]);
+        $res = HiWxArticleTheme::deleteAll(['id' => $id]);
         if($res) $this->exitJSON(1, 'success!');
         $this->exitJSON(0, 'fail');
     }

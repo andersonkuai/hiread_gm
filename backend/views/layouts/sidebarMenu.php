@@ -58,8 +58,18 @@
             <li class="<?php echo $controllerActionId == 'coupon.list'?'active':''?>"><a data-pjax href="/index.php?r=coupon/list"><i class="fa fa-circle-o"></i><?=\Yii::t('app','用户优惠券列表')?></a></li>
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=invite-code/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','邀请码管理')?></a></li>
             <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=order/create-list"><i class="fa fa-circle-o"></i><?=\Yii::t('app','生成订单')?></a></li>
+        </ul>
+    </li>
+    <li class="treeview">
+        <a href="#"><i class="fa fa-wechat"></i> <span><?=\Yii::t('app','微信文章')?></span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=wx-article-theme/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','文章主题')?></a></li>
+            <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=wx-article-menu/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','主题菜单')?></a></li>
             <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=wx-article/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','微信推荐文章')?></a></li>
-            <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=wx-article-menu/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','微信菜单')?></a></li>
         </ul>
     </li>
     <li class="treeview">

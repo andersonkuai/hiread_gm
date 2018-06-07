@@ -45,6 +45,18 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <div class="form-group">
+                                    <select class="form" name="theme">
+                                        <option value="">选择主题</option>
+                                        <?php foreach($theme as $k=>$v){ ?>
+                                            <option value="<?=$v['id']?>" <?php if(!empty($row) && $row['theme'] == $v['id']) echo 'selected';?> ><?=$v['theme']?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
                                     <select class="form" name="is_show">
                                         <option value="1" <?php if(!empty($row) && $row['is_show'] == 1) echo 'selected';?>>显示</option>
                                         <option value="2" <?php if(!empty($row) && $row['is_show'] == 2) echo 'selected';?>>不显示</option>
