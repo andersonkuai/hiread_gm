@@ -73,7 +73,9 @@
                                     </a>
                                 </td>
                                 <td><textarea><?php echo $user['introduction']?></textarea></td>
-                                <td><?=$user['url'];?></td>
+                                <td>
+                                    <textarea><?=$user['url'];?></textarea>
+                                </td>
                                 <td><?= $user['is_show'] == 1 ? '是': '否';?></td>
                                 <td><?= date('Y-m-d H:i:s',$user['time']);?></td>
                                 <td>

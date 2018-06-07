@@ -29,7 +29,7 @@ class WxArticleController extends BaseController
         $query = HiWxArticle::find()->andWhere(1);
         $searchData = $this->searchForm($query, ['title','menu','is_show']);
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
-        $users = $query->orderBy("ID asc")->offset($pages->offset)->limit($pages->limit)->all();
+        $users = $query->orderBy("ID desc")->offset($pages->offset)->limit($pages->limit)->all();
         //获取所有菜单
         $menuTmp = HiWxArticleMenu::find()->asArray()->all();
         $menuKey = array_column($menuTmp,'id');
