@@ -196,6 +196,7 @@ class TopicController extends BaseController
     {
         //存储题目数据/答案数据/泛读题目表
         $data = Yii::$app->getRequest()->post();
+        $data['Matrix'] = $data['MatrixA'].'_'.$data['MatrixB'];
         $transaction = Yii::$app->hiread->beginTransaction();
         try{
             $extensiveId = Yii::$app->getRequest()->get('extensiveId');//泛读id
