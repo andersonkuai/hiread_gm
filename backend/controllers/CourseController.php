@@ -109,6 +109,8 @@ class CourseController extends BaseController
         date_default_timezone_set('PRC');
         if(!empty($data['OpenDay'])){
             $data['OpenDay'] = strtotime($data['OpenDay']);
+        }else{
+            $data['OpenDay'] = 0;
         }
         if(empty($id)){
             //添加课程（事物）

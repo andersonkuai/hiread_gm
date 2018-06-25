@@ -35,8 +35,8 @@
                                         <td>
                                             <input class="form" name="ProdName"  type="text" value="<?php echo empty($row) ? '' : htmlspecialchars($row['ProdName']);?>">&nbsp;&nbsp;&nbsp;&nbsp;
                                             <?= \Yii::t('app', '课程开放时间');?>：
-                                            <input class="form" style="width: 10%" name="OpenDay"  type="text" value="<?php echo empty($row['OpenDay']) ? 0 : date('Ymd',$row['OpenDay']);?>">
-                                            <span style="color: red">格式：20180101，0:无时间随时开放</span>
+                                            <input class="form" style="width: 20%" name="OpenDay"  type="text" value="<?php echo empty($row['OpenDay']) ? 0 : date('Y-m-d H:i:s',$row['OpenDay']);?>" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                            <span style="color: red">0或空:无时间随时开放</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -132,6 +132,14 @@
                                             <input style="width: 10%" class="form" name="WordsCount"  type="text" value="<?php echo empty($row) ? 0 : $row['WordsCount'];?>">&nbsp;&nbsp;
                                             <?= \Yii::t('app', '重点单词');?>：
                                             <input style="width: 10%" class="form" name="ImportWords"  type="text" value="<?php echo empty($row) ? '' : $row['ImportWords'];?>">&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><?= \Yii::t('app', '单元数量');?>：</td>
+                                        <td>
+                                            <input style="width: 10%" class="form" name="UnitCount"  type="text" value="<?php echo empty($row) ? 0 : $row['UnitCount'];?>">&nbsp;&nbsp;
+                                            <?= \Yii::t('app', '子单元数量');?>：
+                                            <input style="width: 10%" class="form" name="SUnitCount"  type="text" value="<?php echo empty($row) ? 0 : $row['SUnitCount'];?>">
                                         </td>
                                     </tr>
                                     <tr>
