@@ -7,7 +7,7 @@
 
 namespace yii\db;
 
-use yii\base\Object;
+use yii\base\ObjectNew;
 
 /**
  * BatchQueryResult represents a batch query from which you can retrieve data in batches.
@@ -28,7 +28,7 @@ use yii\base\Object;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class BatchQueryResult extends Object implements \Iterator
+class BatchQueryResult extends ObjectNew implements \Iterator
 {
     /**
      * @var Connection the DB connection to be used when performing batch query.

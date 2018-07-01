@@ -1,5 +1,5 @@
 <?php
-defined('YII_DEBUG') or define('YII_DEBUG', false);
+defined('YII_DEBUG') or define('YII_DEBUG', true);
 // defined('YII_ENV') or define('YII_ENV', '1');//本地
 defined('YII_ENV') or define('YII_ENV', '2');//测试服
 // defined('YII_ENV') or define('YII_ENV', '3');//正式服
