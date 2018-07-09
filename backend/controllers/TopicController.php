@@ -626,6 +626,7 @@ class TopicController extends BaseController
                 }//end if
                 $transaction->commit();
             }else{
+                $data['SUnitId'] = $subUnitId;
                 $question = new HiConfTopic();
                 $question->setAttributes($data,false);
                 $result = $question->save();
