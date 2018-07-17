@@ -33,7 +33,7 @@ class ImgController extends BaseController
 
         //判断文件是否存在
         if(file_exists($dir.'/download/'.$fileName)) return $fileName;
-        exit;
+        
         $image = imagecreatefromjpeg($dir."/graduate.jpg");
         $imageData = getimagesize($dir.'/graduate.jpg');
         $font1 = $dir.'/fonts/NewBaskervilleStd-BoldIt.otf';//英文字体
