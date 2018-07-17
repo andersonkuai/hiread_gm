@@ -58,6 +58,7 @@
             <li class="<?php echo $controllerActionId == 'coupon.list'?'active':''?>"><a data-pjax href="/index.php?r=coupon/list"><i class="fa fa-circle-o"></i><?=\Yii::t('app','用户优惠券列表')?></a></li>
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=invite-code/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','邀请码管理')?></a></li>
             <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=order/create-list"><i class="fa fa-circle-o"></i><?=\Yii::t('app','生成订单')?></a></li>
+            <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=img/create"><i class="fa fa-circle-o"></i><?=\Yii::t('app','生成图片')?></a></li>
         </ul>
     </li>
     <li class="treeview">
