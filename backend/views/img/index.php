@@ -29,7 +29,7 @@
                                 $param .= '&words='.$_GET['words'];
                                 $param .= '&min='.$_GET['min'];
 
-                                $fileName = $_GET['name'].'_'.$_GET['course'].'_'.$_GET['in_books'].'_'.$_GET['ex_books'].'_'.$_GET['read'].'_'.$_GET['read_aloud'].'_'.$_GET['words'].'_'.$_GET['min'].'.jpeg';
+                                $fileName = $_GET['name'].'_'.$_GET['course'].'_'.$_GET['in_books'].'_'.$_GET['ex_books'].'_'.$_GET['read'].'_'.$_GET['read_aloud'].'_'.$_GET['words'].'_'.$_GET['min'].'_'.$_GET['award'].'_'.$_GET['en_award'].'_'.$_GET['date'].'.jpeg';
 
                                 echo '<img width="400" src="/static/download/'.$fileName.'">';
                             }

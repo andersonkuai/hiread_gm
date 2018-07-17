@@ -28,12 +28,12 @@ class ImgController extends BaseController
         $en_award = $_GET['en_award'];
         $date = $_GET['date'];
 
-        $fileName = $name.'_'.$course.'_'.$inBooks.'_'.$exBooks.'_'.$read.'_'.$readAloud.'_'.$words.'_'.$min.'.jpeg';
+        $fileName = $name.'_'.$course.'_'.$inBooks.'_'.$exBooks.'_'.$read.'_'.$readAloud.'_'.$words.'_'.$min.'_'.$award.'_'.$en_award.'_'.$date.'.jpeg';
         $dir = __DIR__.'/../web/static';
 
         //判断文件是否存在
-        // if(file_exists($dir.'/download/'.$fileName)) return $fileName;
-        
+        if(file_exists($dir.'/download/'.$fileName)) return $fileName;
+        exit;
         $image = imagecreatefromjpeg($dir."/graduate.jpg");
         $imageData = getimagesize($dir.'/graduate.jpg');
         $font1 = $dir.'/fonts/NewBaskervilleStd-BoldIt.otf';//英文字体
