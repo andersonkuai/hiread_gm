@@ -599,31 +599,34 @@ class TopicController extends BaseController
                         }
                     }//end foreach
                 }
-                //保存泛读视频题目列表
-                if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
-                if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
-                $topic = HiConfSubUnitTrain::findOne(['SUnitId' => $subUnitId,'Min' => $min,'Sec' => $sec]);
-                if(empty($topic)){
-                    //插入数据
-                    $insertData = array('SUnitId' => $subUnitId,'Questions' => (string)$questionId,'Min' => $min,'Sec' => $sec);
-                    $extensiveTopicListModel = new HiConfSubUnitTrain();
-                    $extensiveTopicListModel->setAttributes($insertData,false);
-                    $result = $extensiveTopicListModel->save();
-                }else{
-                    //更新数据
-                    if(!empty($topic->Questions)){
-                        $updateData = array('Questions' => $topic->Questions.'|'.$questionId);
+                if($data['IsTrain'] == 1){
+                    //保存泛读视频题目列表
+                    if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
+                    if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
+                    $topic = HiConfSubUnitTrain::findOne(['SUnitId' => $subUnitId,'Min' => $min,'Sec' => $sec]);
+                    if(empty($topic)){
+                        //插入数据
+                        $insertData = array('SUnitId' => $subUnitId,'Questions' => (string)$questionId,'Min' => $min,'Sec' => $sec);
+                        $extensiveTopicListModel = new HiConfSubUnitTrain();
+                        $extensiveTopicListModel->setAttributes($insertData,false);
+                        $result = $extensiveTopicListModel->save();
                     }else{
-                        $updateData = array('Questions' => $questionId);
-                    }
-                    $sourse = HiConfSubUnitTrain::findOne($topic->ID);
-                    $sourse->Questions = $updateData['Questions'];
-                    $rtn = $sourse->save();
-//                    $rtn = $sourse->updateAttributes($updateData);
-                    if (!$rtn){
-                        $this->exitJSON(0, 'fail!',$updateData);
-                    }
+                        //更新数据
+                        if(!empty($topic->Questions)){
+                            $updateData = array('Questions' => $topic->Questions.'|'.$questionId);
+                        }else{
+                            $updateData = array('Questions' => $questionId);
+                        }
+                        $sourse = HiConfSubUnitTrain::findOne($topic->ID);
+                        $sourse->Questions = $updateData['Questions'];
+                        $rtn = $sourse->save();
+    //                    $rtn = $sourse->updateAttributes($updateData);
+                        if (!$rtn){
+                            $this->exitJSON(0, 'fail!',$updateData);
+                        }
+                    }//end if
                 }//end if
+                
                 $transaction->commit();
             }else{
                 $data['SUnitId'] = $subUnitId;
@@ -662,30 +665,32 @@ class TopicController extends BaseController
                     $sourse->Correct = $correctAnswerStr;
                     $sourse->save();
                 }
-                //保存题目列表
-                if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
-                if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
-                $topic = HiConfSubUnitTrain::findOne(['SUnitId' => $subUnitId,'Min' => $min,'Sec' => $sec]);
-                if(empty($topic)){
-                    //插入数据
-                    $insertData = array('SUnitId' => $subUnitId,'Questions' => (string)$topicId,'Min' => $min,'Sec' => $sec);
-                    $extensiveTopicListModel = new HiConfSubUnitTrain();
-                    $extensiveTopicListModel->setAttributes($insertData,false);
-                    $result = $extensiveTopicListModel->save();
-                }else{
-                    //更新数据
-                    if(!empty($topic->Questions)){
-                        $updateData = array('Questions' => $topic->Questions.'|'.$topicId);
+                if($data['IsTrain'] == 1){
+                    //保存题目列表
+                    if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
+                    if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
+                    $topic = HiConfSubUnitTrain::findOne(['SUnitId' => $subUnitId,'Min' => $min,'Sec' => $sec]);
+                    if(empty($topic)){
+                        //插入数据
+                        $insertData = array('SUnitId' => $subUnitId,'Questions' => (string)$topicId,'Min' => $min,'Sec' => $sec);
+                        $extensiveTopicListModel = new HiConfSubUnitTrain();
+                        $extensiveTopicListModel->setAttributes($insertData,false);
+                        $result = $extensiveTopicListModel->save();
                     }else{
-                        $updateData = array('Questions' => $topicId);
-                    }
-                    $sourse = HiConfSubUnitTrain::findOne($topic->ID);
-                    $sourse->Questions = $updateData['Questions'];
-                    $rtn = $sourse->save();
-//                    $rtn = $sourse->updateAttributes($updateData);
-                    if (!$rtn){
-                        $this->exitJSON(0, 'fail!',$updateData);
-                    }
+                        //更新数据
+                        if(!empty($topic->Questions)){
+                            $updateData = array('Questions' => $topic->Questions.'|'.$topicId);
+                        }else{
+                            $updateData = array('Questions' => $topicId);
+                        }
+                        $sourse = HiConfSubUnitTrain::findOne($topic->ID);
+                        $sourse->Questions = $updateData['Questions'];
+                        $rtn = $sourse->save();
+    //                    $rtn = $sourse->updateAttributes($updateData);
+                        if (!$rtn){
+                            $this->exitJSON(0, 'fail!',$updateData);
+                        }
+                    }//end if
                 }//end if
                 $transaction->commit();
             }

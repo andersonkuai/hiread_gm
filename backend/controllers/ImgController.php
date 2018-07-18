@@ -4,6 +4,10 @@ namespace backend\controllers;
 use common\helpers\Func;
 use common\models\GlobalStatistics;
 use common\models\User;
+use \PHPExcel;
+use \PHPExcel_IOFactory;
+use \PHPExcel_Writer_Excel2007;
+use \PHPExcel_Style_Alignment;
 use Yii;
 
 class ImgController extends BaseController
@@ -31,15 +35,24 @@ class ImgController extends BaseController
         $fileName = $name.'_'.$course.'_'.$inBooks.'_'.$exBooks.'_'.$read.'_'.$readAloud.'_'.$words.'_'.$min.'_'.$award.'_'.$en_award.'_'.$date.'.jpeg';
         $dir = __DIR__.'/../web/static';
 
+        $file = $dir.'/download/'.$fileName;
+        if(!empty($_GET['class'])){
+            @mkdir($dir.'/download/'.$_GET['class']);
+            $file = $dir.'/download/'.$_GET['class'].'/'.$fileName;
+        }
         //判断文件是否存在
-        if(file_exists($dir.'/download/'.$fileName)) return $fileName;
+        if(file_exists($file)) return $fileName;
         
-        $image = imagecreatefromjpeg($dir."/graduate.jpg");
-        $imageData = getimagesize($dir.'/graduate.jpg');
+        // $image = imagecreatetruecolor(2208,3094);
+        $image = imagecreatefrompng($dir."/graduate.png");
+        // imagecopy($image,$image2,0,0,0,0,2208,3094);
+
+        $imageData = getimagesize($dir.'/graduate.png');
         $font1 = $dir.'/fonts/NewBaskervilleStd-BoldIt.otf';//英文字体
         $font2 = $dir.'/fonts/JDJLS.TTF';//中文字体
         $font3 = $dir.'/fonts/HYYanKaiW.ttf';//中文字体
         $width = imagesx($image);//图片宽度
+        
         $textcolor1 = imagecolorallocate($image,0,0,0);//字体颜色
         $textcolor2 = imagecolorallocate($image,92,177,172);//字体颜色
         $fontSize1 = 110;//字体大小
@@ -69,7 +82,7 @@ class ImgController extends BaseController
         imagefttext($image, $fontSize2,0,$x, 1450, $textcolor1,$font3, $str2);//3
 
         //英文
-        $str = 'has successfully completed the online HiRead course';
+        $str = 'has successfully completed the online HiRead course (Summer 2018)';
         $textInfo = imagettfbbox($fontSize2,0,$font1,$str);//获取文字信息
         $textWidth = $textInfo['2'] - $textInfo['0'];//获取文字宽度
         $x = ceil(($width - $textWidth) / 2);//计算文字的水平位置
@@ -209,11 +222,65 @@ class ImgController extends BaseController
         // ob_start();
         // header("Content-type: image/jpeg");
         // imagejpeg($image);
-        imagejpeg($image,$dir.'/download/'.$fileName);
+        imagejpeg($image,$file);
         imagedestroy($image);
         // exit;
         // ob_end_clean();
         return $fileName;
+    }
+
+    //脚本
+    public function actionRun(){
+        $dir = __DIR__.'/../web/static';
+        $filePath = $dir.'/6-25.xlsx';
+        $PHPExcel  = new \PHPExcel();
+        $PHPReader = new \PHPExcel_Reader_Excel2007(); // Reader很关键，用来读excel文件
+        if (!$PHPReader->canRead($filePath)) { // 这里是用Reader尝试去读文件，07不行用05，05不行就报错。注意，这里的return是Yii框架的方式。
+            $PHPReader = new \PHPExcel_Reader_Excel5();
+            if (!$PHPReader->canRead($filePath)) {
+            $errorMessage = "Can not read file.";
+            return $this->render('error', ['errorMessage' => $errorMessage]);
+            }
+        }
+        $PHPExcel = $PHPReader->load($filePath);
+        $allSheet = $PHPExcel->getSheetCount(); // sheet数
+        $currentSheet = $PHPExcel->getSheet(0); // 拿到第一个sheet（工作簿？）    
+        $allColumn = $currentSheet->getHighestColumn(); // 最高的列，比如AU. 列从A开始
+        $allRow = $currentSheet->getHighestRow(); // 最大的行，比如12980. 行从0开始
+
+        $data = [];
+        for ($currentRow = 1; $currentRow <= $allRow; $currentRow++) {
+            
+            $lineVal = [];
+            for ($currentColumn="A"; $currentColumn <= $allColumn; $currentColumn++) {
+            $val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue(); // ord把字母转为ascii码，A->65, B->66....这儿的坑在于AU->65, 后面的U没有计算进去，所以用索引方式遍历是有缺陷的。
+                array_push($lineVal, $val);
+            }
+            array_push($data, $lineVal);
+        }
+        unset($data[0]);
+        foreach($data as $v){
+            if($v['9'] != '已完课') continue;
+            $_GET = [
+                'name' => $v[2],
+                'course' => 'Level'.$v[0].' 21天暑假营',
+                'in_books' => $v[3],
+                'ex_books' => $v[4],
+                'read' => $v[5],
+                'read_aloud' => $v[6],
+                'words' => $v[7],
+                'min' => $v[8] * 40,
+                'award' => '英文阅读小达人奖',
+                'en_award' => 'STAR READER Award',
+                'date' => 'on July 15th, 2018',
+                'class' => '6-25',
+            ];
+            echo $this->actionCreateDo();
+            echo '<br>';
+        }
+        // echo '<pre>';
+        // print_r($data);
+        
     }
 
 
