@@ -599,7 +599,7 @@ class TopicController extends BaseController
                         }
                     }//end foreach
                 }
-                if($data['IsTrain'] == 1){
+                if(!empty($data['Title'])){
                     //保存泛读视频题目列表
                     if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
                     if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
@@ -665,7 +665,7 @@ class TopicController extends BaseController
                     $sourse->Correct = $correctAnswerStr;
                     $sourse->save();
                 }
-                if($data['IsTrain'] == 1){
+                if(!empty($data['Title'])){
                     //保存题目列表
                     if(empty($data['Min'])) {$min = 0;}else{$min = $data['Min'];};
                     if(empty($data['Sec'])) {$sec = 0;}else{$sec = $data['Sec'];};
