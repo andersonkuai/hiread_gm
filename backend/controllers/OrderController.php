@@ -19,65 +19,85 @@ use common\models\HiUserCoupon0;
 use common\models\HiUserMerge;
 use common\models\HiUserOrder0;
 use common\models\HiUserOrderMerge;
+use common\models\HiUserOrderDetailMerge;
 use yii\data\Pagination;
 use yii\widgets\LinkPager;
 use Yii;
 
 class OrderController extends BaseController
 {
-//    public function actionIndex(){
-//        $query = HiUserOrderMerge::find()->select(['hi_user_order_merge.id','hi_user_order_merge.OrderId','hi_user_order_merge.Uid','hi_user_order_merge.Trade','hi_user_order_merge.Price','hi_user_order_merge.RecvId',
-//                'hi_user_order_merge.Message','hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_order_merge.CourseId',
-//                'hi_user_order_merge.PayTime','hi_user_order_merge.Time','hi_user_order_merge.PaymentInfo','hi_user_order_merge.DiscountPrice','hi_user_order_merge.Type',
-//                'hi_user_merge.UserName','hi_user_merge.City',
-//                'hi_user_address_merge.Province','hi_user_address_merge.City','hi_user_address_merge.Area','hi_user_address_merge.Address','hi_user_address_merge.Mobile',
-//                'hi_conf_course.ProdName',
-//            ])
-//            ->innerJoin('hi_user_merge','hi_user_order_merge.Uid = hi_user_merge.Uid')
-//            ->leftJoin('hi_user_address_merge','hi_user_order_merge.RecvId = hi_user_address_merge.ID and hi_user_order_merge.Uid = hi_user_address_merge.Uid')
-//            ->leftJoin('hi_conf_course','hi_user_order_merge.CourseId = hi_conf_course.ID')
-//            ->andWhere(1);
-//        $status = \Yii::$app->getRequest()->get("Status");
-//        //默认显示已支付的订单
-//        if (!isset($status)){
-//            $_GET["Status"] = 1;
-//        }
-//        $searchData = $this->searchForm($query, ['OrderId','hi_user_order_merge.Type', 'hi_user_order_merge.Uid', 'hi_user_order_merge.PayType','hi_user_order_merge.Status','hi_user_order_merge.SendStatus','hi_user_address_merge.Mobile','hi_user_merge.UserName','hi_conf_course.ProdName']);
-//        //下单时间
-//        if(!empty($_GET['Time1'])){
-//            $searchData['Time1'] = $_GET['Time1'];
-//            $activated_time = strtotime($_GET['Time1']);
-//            $query = $query->andWhere("hi_user_order_merge.Time >= '{$activated_time}'");
-//        }
-//        if(!empty($_GET['Time2'])){
-//            $searchData['Time2'] = $_GET['Time2'];
-//            $activated_time = strtotime($_GET['Time2']);
-//            $query = $query->andWhere("hi_user_order_merge.Time <= '{$activated_time}'");
-//        }
-//        $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
-//        $orders = $query->orderBy("Time desc")->offset($pages->offset)->limit($pages->limit)->asArray()->all();
-//        $renderData = [
-//            'orders' => $orders,
-//            'searchData' => $searchData,
-//            'pageHtml' => LinkPager::widget([
-//                'pagination' => $pages,
-//                'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
-//            ])
-//        ];
-//        return $this->display('index', $renderData);
-//    }
+    // /**
+    //  * 订单列表
+    //  */
+    // public function actionIndex()
+    // {
+    //     $query = HiOrderMerge::find()->alias('a')->select([
+    //            'b.UserName','b.Mobile','b.InviteCode',
+    //             'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime',
+    //             'InvitedBy'=>'c.UserName',
+    //         ])
+    //         ->leftJoin('hi_user_merge as b','a.Uid = b.Uid')
+    //         ->leftJoin('hi_invite_code as c', 'b.InviteCode = c.Code')
+    //         ->andWhere(1);
+    //     $status = \Yii::$app->getRequest()->get("Status");
+    //     //默认显示已支付的订单
+    //     if (!isset($status)){
+    //         $_GET["Status"] = 1;
+    //     }
+    //     $searchData = $this->searchForm($query, ['OrderId','a.Type', 'a.Uid', 'a.PayType','a.Status','a.SendStatus','b.Mobile','b.UserName']);
+    //     //下单时间
+    //     if(!empty($_GET['Time1'])){
+    //         $searchData['Time1'] = $_GET['Time1'];
+    //         $activated_time = strtotime($_GET['Time1']);
+    //         $query = $query->andWhere("a.Time >= '{$activated_time}'");
+    //     }
+    //     if(!empty($_GET['Time2'])){
+    //         $searchData['Time2'] = $_GET['Time2'];
+    //         $activated_time = strtotime($_GET['Time2']);
+    //         $query = $query->andWhere("a.Time <= '{$activated_time}'");
+    //     }
+    //     $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
+    //     $ordersTmp = $query->orderBy('a.Time desc')->offset($pages->offset)->limit($pages->limit)->asArray()->all();
+    //     $orders = array();
+    //     //获取订单详情
+    //     if(!empty($ordersTmp)){
+    //         foreach ($ordersTmp as $k=>$v){
+    //             $orders[$v['OrderId']] = $v;
+    //         }
+    //         $orderIds = array_column($orders,'OrderId');
+    //         $orderDetail = HiOrderDetailMerge::find()->alias('a')
+    //             ->select([
+    //                 'a.ID','a.Uid','a.OrderId','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
+    //                 'b.ProdName',
+    //             ])
+    //             ->leftJoin('hi_conf_course as b','a.CourseId = b.ID')
+    //             ->orderBy('a.ID asc')->where(array('a.OrderId' => $orderIds))->asArray()->all();
+    //         if(!empty($orderDetail)){
+    //             foreach ($orderDetail as $key => $val){
+    //                 $orders[$val['OrderId']]['detail'][] = $val;
+    //             }
+    //         }//end if
+    //     }
+    //     $renderData = [
+    //         'orders' => $orders,
+    //         'searchData' => $searchData,
+    //         'pageHtml' => LinkPager::widget([
+    //             'pagination' => $pages,
+    //             'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
+    //         ])
+    //     ];
+    //     return $this->display('list',$renderData);
+    // }
     /**
      * 订单列表
      */
     public function actionIndex()
     {
-        $query = HiOrderMerge::find()->alias('a')->select([
+        $query = HiUserOrderMerge::find()->alias('a')->select([
                'b.UserName','b.Mobile','b.InviteCode',
-                'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime',
-                'InvitedBy'=>'c.UserName',
+                'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime','a.ID'
             ])
-            ->leftJoin('hi_user_merge as b','a.Uid = b.Uid')
-            ->leftJoin('hi_invite_code as c', 'b.InviteCode = c.Code')
+            ->innerJoin('hi_user_merge as b','a.Uid = b.Uid')
             ->andWhere(1);
         $status = \Yii::$app->getRequest()->get("Status");
         //默认显示已支付的订单
@@ -102,22 +122,28 @@ class OrderController extends BaseController
         //获取订单详情
         if(!empty($ordersTmp)){
             foreach ($ordersTmp as $k=>$v){
-                $orders[$v['OrderId']] = $v;
+                $orders[$v['ID']] = $v;
             }
-            $orderIds = array_column($orders,'OrderId');
-            $orderDetail = HiOrderDetailMerge::find()->alias('a')
+            $orderIds = array_column($orders,'ID');
+            $orderDetail = HiUserOrderDetailMerge::find()->alias('a')
                 ->select([
-                    'a.ID','a.Uid','a.OrderId','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
-                    'b.ProdName',
+                    'a.ID','a.Uid','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
+                    'b.ProdName','a.is_entity'
                 ])
-                ->leftJoin('hi_conf_course as b','a.CourseId = b.ID')
-                ->orderBy('a.ID asc')->where(array('a.OrderId' => $orderIds))->asArray()->all();
+                ->innerJoin('hi_conf_course as b','a.CourseId = b.ID')
+                ->orderBy('a.ID asc')->where(array('a.Oid' => $orderIds))->asArray()->all();
+            // echo '<pre>';
+            // print_r($orderIds);
+            // exit;
             if(!empty($orderDetail)){
                 foreach ($orderDetail as $key => $val){
-                    $orders[$val['OrderId']]['detail'][] = $val;
+                    $orders[$val['Oid']]['detail'][] = $val;
                 }
             }//end if
         }
+        // echo '<pre>';
+        // print_r($orders);
+        // exit;
         $renderData = [
             'orders' => $orders,
             'searchData' => $searchData,

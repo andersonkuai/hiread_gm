@@ -232,7 +232,7 @@ class ImgController extends BaseController
     //脚本
     public function actionRun(){
         $dir = __DIR__.'/../web/static';
-        $filePath = $dir.'/6-25.xlsx';
+        $filePath = $dir.'/graduate.xlsx';
         $PHPExcel  = new \PHPExcel();
         $PHPReader = new \PHPExcel_Reader_Excel2007(); // Reader很关键，用来读excel文件
         if (!$PHPReader->canRead($filePath)) { // 这里是用Reader尝试去读文件，07不行用05，05不行就报错。注意，这里的return是Yii框架的方式。
@@ -272,7 +272,7 @@ class ImgController extends BaseController
                 'min' => $v[8] * 40,
                 'award' => '英文阅读小达人奖',
                 'en_award' => 'STAR READER Award',
-                'date' => 'on July 15th, 2018',
+                'date' => 'on July 22th, 2018',
                 'class' => '6-25',
             ];
             echo $this->actionCreateDo();

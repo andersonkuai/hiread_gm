@@ -169,6 +169,7 @@
                                 <th>课程id</th>
                                 <th colspan="4">课程名称</th>
                                 <th>数量</th>
+                                <th>是否包含原版书</th>
                                 <th>原价</th>
                                 <th>折扣价</th>
                                 <th>是否试听</th>
@@ -178,6 +179,7 @@
                                         <td><?=$v['CourseId'];?></td>
                                         <td colspan="4"><?=$v['ProdName'];?></td>
                                         <td><?=$v['Count'];?></td>
+                                        <td><?=$v['is_entity'] == 1 ? '包含':'不包含';?></td>
                                         <td><?=$v['Price'];?></td>
                                         <td><?=$v['DiscountPrice'];?></td>
                                         <td><?=$v['IsTry'] == 1 ? '是':'否'?></td>

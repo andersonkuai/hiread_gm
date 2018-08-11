@@ -27,12 +27,10 @@ class HiUserController extends BaseController
      */
     public function actionIndex(){
         $query = HiUserMerge::find()->alias('a')
-            ->select([
-                'a.*','InvitedBy' => 'b.UserName'
-            ])
-            ->leftJoin('hi_invite_code as b','a.InviteCode = b.Code')
+            ->select(['a.Uid','a.UserName','a.Time','a.Channel','a.Mobile','b.EnName','b.school_type','b.birth','b.Gold'])
+            ->leftJoin('hi_user_info_merge as b','a.Uid = b.Uid')
             ->andWhere(1);
-        $searchData = $this->searchForm($query, ['a.UserName', 'a.ReadLevel', 'a.ylmguid','a.Mobile','a.InviteCode']);
+        $searchData = $this->searchForm($query, ['a.UserName', 'a.Mobile']);
         //注册时间
         if(!empty($_GET['Time1'])){
             $searchData['Time1'] = $_GET['Time1'];
@@ -46,9 +44,6 @@ class HiUserController extends BaseController
         }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $users = $query->orderBy("Time desc")->asArray()->offset($pages->offset)->limit($pages->limit)->all();
-//        echo '<pre>';
-//        print_r($users);
-//        exit;
         $renderData = [
             'users' => $users,
             'searchData' => $searchData,
