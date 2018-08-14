@@ -95,7 +95,7 @@ class OrderController extends BaseController
     {
         $query = HiUserOrderMerge::find()->alias('a')->select([
                'b.UserName','b.Mobile','b.InviteCode',
-                'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime','a.ID'
+                'a.OrderId','a.Uid','a.Type','a.Trade','a.Price','a.PayType','a.Status','a.RefundPrice','a.SendStatus','a.PayTime','a.Time','a.RefundTime','a.ID','a.RecvId'
             ])
             ->innerJoin('hi_user_merge as b','a.Uid = b.Uid')
             ->andWhere(1);
@@ -121,31 +121,36 @@ class OrderController extends BaseController
         $orders = array();
         //获取订单详情
         if(!empty($ordersTmp)){
-            foreach ($ordersTmp as $k=>$v){
-                $orders[$v['ID']] = $v;
+            foreach ($ordersTmp as $k=>&$v){
+                // $orders[$v['ID']] = $v;
+                //获取订单详情
+                $v['detail'] = HiUserOrderDetailMerge::find()->alias('a')
+                            ->select([
+                                'a.ID','a.Uid','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
+                                'b.ProdName','a.is_entity'
+                            ])
+                            ->innerJoin('hi_conf_course as b','a.CourseId = b.ID')
+                            ->orderBy('a.ID asc')->where('a.Oid = '. $v['ID'].' and a.Uid = '.$v['Uid'])->asArray()->all();
             }
-            $orderIds = array_column($orders,'ID');
-            $orderDetail = HiUserOrderDetailMerge::find()->alias('a')
-                ->select([
-                    'a.ID','a.Uid','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
-                    'b.ProdName','a.is_entity'
-                ])
-                ->innerJoin('hi_conf_course as b','a.CourseId = b.ID')
-                ->orderBy('a.ID asc')->where(array('a.Oid' => $orderIds))->asArray()->all();
-            // echo '<pre>';
-            // print_r($orderIds);
-            // exit;
-            if(!empty($orderDetail)){
-                foreach ($orderDetail as $key => $val){
-                    $orders[$val['Oid']]['detail'][] = $val;
-                }
-            }//end if
+            // $orderIds = array_column($orders,'ID');
+            // $orderDetail = HiUserOrderDetailMerge::find()->alias('a')
+            //     ->select([
+            //         'a.ID','a.Uid','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
+            //         'b.ProdName','a.is_entity'
+            //     ])
+            //     ->innerJoin('hi_conf_course as b','a.CourseId = b.ID')
+            //     ->orderBy('a.ID asc')->where(array('a.Oid' => $orderIds))->asArray()->all();
+            // // echo '<pre>';
+            // // print_r($orderIds);
+            // // exit;
+            // if(!empty($orderDetail)){
+            //     foreach ($orderDetail as $key => $val){
+            //         $orders[$val['Oid']]['detail'][] = $val;
+            //     }
+            // }//end if
         }
-        // echo '<pre>';
-        // print_r($orders);
-        // exit;
         $renderData = [
-            'orders' => $orders,
+            'orders' => $ordersTmp,
             'searchData' => $searchData,
             'pageHtml' => LinkPager::widget([
                 'pagination' => $pages,
@@ -360,7 +365,7 @@ class OrderController extends BaseController
 //                ])
 //                ->leftJoin('hi_user_merge as b','a.Uid = b.Uid')
 //                ->where(array('a.OrderId' => $orderId))->asArray()->one();
-            $query = HiOrderMerge::find()
+            $query = HiUserOrderMerge::find()
                 ->where(array('OrderId' => $orderId))->asArray()->one();
             $renderData['order'] = $query;
             //查询用户信息
@@ -376,13 +381,13 @@ class OrderController extends BaseController
             }
             //查询订单详情
             if(!empty($query)){
-                $orderDetail = HiOrderDetailMerge::find()->alias('a')
+                $orderDetail = HiUserOrderDetailMerge::find()->alias('a')
                     ->select([
-                        'a.ID','a.Uid','a.OrderId','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
+                        'a.ID','a.Uid','a.Oid','a.Group','a.Price','a.DiscountPrice','a.IsTry','a.Count','a.Time','a.CourseId',
                         'b.ProdName',
                     ])
                     ->leftJoin('hi_conf_course as b','a.CourseId = b.ID')
-                    ->orderBy('a.ID asc')->where(array('a.OrderId' => $query['OrderId']))->asArray()->all();
+                    ->orderBy('a.ID asc')->where(array('a.Oid' => $query['ID'],'a.Uid' => $query['Uid']))->asArray()->all();
                 $renderData['orderDetail'] = $orderDetail;
             }
         }
