@@ -30,7 +30,7 @@ class UserCourseController extends BaseController
             ->innerJoin('hi_user_info_merge d','a.Uid = d.Uid')
             ->innerJoin('hi_conf_course e','a.Course = e.ID')
             ->leftJoin('hi_autumn_live_time c','a.live_time = c.id')
-            ->andWhere(1);
+            ->andWhere('a.status = 1');
         $searchData = $this->searchForm($query, ['a.Uid','b.UserName','e.HLevel','c.id']);
         //下单时间
         if(!empty($_GET['Time1'])){
