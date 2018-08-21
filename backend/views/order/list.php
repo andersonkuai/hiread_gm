@@ -159,7 +159,7 @@
                                 <td><?php if(!empty($val['RefundTime'])) echo date("Y-m-d H:i:s", $val['RefundTime'])?></td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a onclick="markBackGround(this)" href="?r=order/info&OrderId=<?php echo $val['OrderId']?>">详情</a>
+                                        <a onclick="markBackGround(this)" href="?r=order/info&OrderId=<?php echo $val['OrderId']?>&Uid=<?php echo $val['Uid']?>">详情</a>
                                         <!--                                        <a class="btn btn-default" href="javascript:void(0)" onclick="UTILITY.OPERATE.get('?r=user/activate&id=123');"><i class="fa fa-edit"></i> 激活</a>-->
                                     </div>
                                 </td>

@@ -357,6 +357,7 @@ class OrderController extends BaseController
     public function actionInfo()
     {
         $orderId = $_GET['OrderId'];
+        $uid = $_GET['Uid'];
         $renderData = array();
         if(!empty($orderId)){
 //            $query = HiOrderMerge::find()->alias('a')->select([
@@ -366,7 +367,7 @@ class OrderController extends BaseController
 //                ->leftJoin('hi_user_merge as b','a.Uid = b.Uid')
 //                ->where(array('a.OrderId' => $orderId))->asArray()->one();
             $query = HiUserOrderMerge::find()
-                ->where(array('OrderId' => $orderId))->asArray()->one();
+                ->where(array('OrderId' => $orderId,'Uid' => $uid))->asArray()->one();
             $renderData['order'] = $query;
             //查询用户信息
             if(!empty($query['Uid'])){

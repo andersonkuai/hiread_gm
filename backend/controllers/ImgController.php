@@ -272,7 +272,7 @@ class ImgController extends BaseController
                 'min' => $v[8] * 40,
                 'award' => '英文阅读小达人奖',
                 'en_award' => 'STAR READER Award',
-                'date' => 'on August 13th, 2018',
+                'date' => 'on August 19th, 2018',
                 'class' => '6-25',
             ];
             echo $this->actionCreateDo();
