@@ -71,9 +71,8 @@
                             <th><?= \Yii::t('app', '支付链接');?></th>
                             <th><?= \Yii::t('app', '课程名称');?></th>
                             <th><?= \Yii::t('app', '课程ID');?></th>
-                            <th><?= \Yii::t('app', '订单价格');?></th>
-                            <th><?= \Yii::t('app', '折扣价');?></th>
-                            <th><?= \Yii::t('app', '早鸟价');?></th>
+                            <th><?= \Yii::t('app', '课程价格');?></th>
+                            <th><?= \Yii::t('app', '优惠');?></th>
                             <th><?= \Yii::t('app', '支付价格');?></th>
                             <th><?= \Yii::t('app', '下单时间');?></th>
                         </tr>
@@ -86,9 +85,8 @@
                                 <td><?php echo $val['PayLink']?></td>
                                 <td><?php echo $val['ProdName']?></td>
                                 <td><?php echo $val['CourseId']?></td>
-                                <td><?php echo $val['coursePrice']?></td>
-                                <td><?php echo $val['DiscountPrice']?></td>
-                                <td><?php echo $val['earlyBirdPrice']?></td>
+                                <td><?php echo $val['Coupon'] + $val['Price']?></td>
+                                <td><?php echo $val['Coupon']?></td>
                                 <td><?php echo $val['Price']?></td>
                                 <td><?php if(!empty($val['CreateTime'])) echo date("Y-m-d H:i:s", $val['CreateTime'])?></td>
                             </tr>

@@ -248,15 +248,15 @@ class OrderController extends BaseController
         }
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $ordersTmp = $query->orderBy('CreateTime desc')->offset($pages->offset)->limit($pages->limit)->asArray()->all();
-        if(!empty($ordersTmp)){
-            //获取早鸟价
-            foreach ($ordersTmp as $k=>&$v){
-                $time = time();
-                $courseId = $v['CourseId'];
-                $earlyBirdPrice = HiConfCoursePrice::find()->where("`CourseId` = $courseId and STime <= $time and ETime >= $time")->asArray()->one();
-                $v['earlyBirdPrice'] = !empty($earlyBirdPrice) ? $earlyBirdPrice['Price'] : '无';
-            }
-        }
+        // if(!empty($ordersTmp)){
+        //     //获取早鸟价
+        //     foreach ($ordersTmp as $k=>&$v){
+        //         $time = time();
+        //         $courseId = $v['CourseId'];
+        //         $earlyBirdPrice = HiConfCoursePrice::find()->where("`CourseId` = $courseId and STime <= $time and ETime >= $time")->asArray()->one();
+        //         $v['earlyBirdPrice'] = !empty($earlyBirdPrice) ? $earlyBirdPrice['Price'] : '无';
+        //     }
+        // }
         $renderData = [
             'orders' => $ordersTmp,
             'searchData' => $searchData,
@@ -290,6 +290,7 @@ class OrderController extends BaseController
                 'coupon' => $coupon,
                 'userName' => $_POST['UserName'],
                 'EnName' => $enName,
+                'entity' => $_POST['entity'],
             ];
             $res = $curl->curl(HIREADURL."order/createOrderByUserName?sign=",$data,'POST');
             if(!empty($res)){

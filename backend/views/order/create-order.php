@@ -49,6 +49,10 @@
                                             <?php }?>
                                         <?php }?>
                                     </select>
+                                    <select name="entity" id="entity" onchange="changeEntity()">
+                                        <option value="0">没有实体书</option>
+                                        <option value="1">有实体书</option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
@@ -56,12 +60,8 @@
                                 <td id="Price"></td>
                             </tr>
                             <tr>
-                                <td><?=\Yii::t('app','折扣价')?></td>
+                                <td><?=\Yii::t('app','现价')?></td>
                                 <td id="DiscountPrice"></td>
-                            </tr>
-                            <tr>
-                                <td><?=\Yii::t('app','早鸟价')?></td>
-                                <td id="earlyBirdPrice"></td>
                             </tr>
                             <tr>
                                 <td><?=\Yii::t('app','优惠券')?></td>
@@ -84,13 +84,13 @@
         </div>
     </div>
 </section>
+<input type="hidden" name="entity_price" value="0" id="entity_price">
 <!-- /.content -->
 <script type="text/javascript">
     $(document).ready(function() {
         $('#myForm').ajaxForm({
             dataType:"json",
             success:function(data){
-                console.log(data);
                 alert(data.msg);
                 if(data.code == 1){
                     location.href = location.href ;
@@ -98,6 +98,7 @@
             }
         });
     });
+
     function getCourse() {
         var courseId = $('#Course').val();
         //获取课程信息
@@ -106,19 +107,28 @@
             url : '<?= Yii::$app->urlManager->createUrl('order/get-course')?>&id='+courseId,
             dataType:'json',
             success:function(data){
-                console.log(data);
                 if(data.code == 1){
                     $('#Price').html(data.data.Price);
                     $('#DiscountPrice').html(data.data.DiscountPrice);
-                    if(data.data.earlyBirdPrice == 'none'){
-                        var show = '暂无早鸟价';
-                    }else{
-                        var show = data.data.earlyBirdPrice;
-                    }
-                    $('#earlyBirdPrice').html(show);
+                    $('#entity_price').val(data.data.entity_price);
+                    $('#entity').val('0');
                 }
             }
         });
     }
-    getCourse()
+    getCourse();
+    function changeEntity()
+    {
+        var entity = $('#entity').val();
+        var entityPrice = parseFloat($('#entity_price').val());
+        var price = parseFloat($('#Price').html());
+        var discountPrice = parseFloat($('#DiscountPrice').html());
+        if(entity == 1){
+            $('#Price').html(price + entityPrice);
+            $('#DiscountPrice').html(discountPrice + entityPrice);
+        }else{
+            $('#Price').html(price - entityPrice);
+            $('#DiscountPrice').html(discountPrice - entityPrice);
+        }
+    }
 </script>
