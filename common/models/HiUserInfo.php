@@ -28,6 +28,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $SurveyScore
  * @property integer $SurveyTime
  * @property integer $isMerge
+ * @property integer $school_type
+ * @property integer $birth
  */
 class HiUserInfo extends \yii\db\ActiveRecord
 {
@@ -37,7 +39,6 @@ class HiUserInfo extends \yii\db\ActiveRecord
         self::$table = $table;
         parent::__construct($config);
     }
-
     /**
      * @inheritdoc
      */
@@ -60,7 +61,7 @@ class HiUserInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Uid', 'Sex', 'Birthday', 'SchoolType', 'Integral', 'RegTime', 'Gold', 'LastLogin', 'SurveyScore', 'SurveyTime', 'isMerge'], 'integer'],
+            [['Uid', 'Sex', 'Birthday', 'SchoolType', 'Integral', 'RegTime', 'Gold', 'LastLogin', 'SurveyScore', 'SurveyTime', 'isMerge', 'school_type', 'birth'], 'integer'],
             [['UserName', 'NickName'], 'string', 'max' => 100],
             [['Icon'], 'string', 'max' => 200],
             [['EnName'], 'string', 'max' => 20],
@@ -92,6 +93,8 @@ class HiUserInfo extends \yii\db\ActiveRecord
             'SurveyScore' => '问卷调查分数',
             'SurveyTime' => '问卷调查时间',
             'isMerge' => '是否合并，1：是，0：否',
+            'school_type' => '学校类型 1:公立学校  2:私立学校  3:双语学校  4:国际学校',
+            'birth' => '记录年龄',
         ];
     }
     /**

@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 use common\models\HiUserInfo;
 use common\models\HiUserMerge;
+use common\models\HiUserInfoMerge;
 use yii\data\Pagination;
 use yii\db\Exception;
 use yii\widgets\LinkPager;
@@ -28,7 +29,7 @@ class HiUserController extends BaseController
     public function actionIndex(){
         $query = HiUserMerge::find()->alias('a')
             ->select(['a.Uid','a.UserName','a.Time','a.Channel','a.Mobile','b.EnName','b.school_type','b.birth','b.Gold'])
-            ->leftJoin('hi_user_info_merge as b','a.Uid = b.Uid')
+            ->innerJoin('hi_user_info_merge as b','a.Uid = b.Uid')
             ->andWhere(1);
         $searchData = $this->searchForm($query, ['a.UserName', 'a.Mobile']);
         //注册时间
@@ -142,6 +143,54 @@ class HiUserController extends BaseController
             'userOrder' => $userOrder,
         ];
         return $this->display('info',$renderData);
+    }
+    /**
+    *修改用户信息
+    */
+    public function actionEdit()
+    {
+        if(\Yii::$app->getRequest()->getIsPost()){
+            $transaction = \Yii::$app->hiread->beginTransaction();
+            try{
+                $uid = empty($_POST['id']) ? 0 : $_POST['id'];
+                $table = 'hi_user_info_'.substr($uid,-1,1);
+                //修改原始表
+                $source = HiUserInfo::findOnex($table,['Uid' => $uid]);
+                $res = time() - (intval($_POST['age']) - 1)*3600*24*365;
+                if($res <= 0) $res = 0;
+                if(!empty($res)) $source->birth = $res;
+                $source->school_type = $_POST['school_type'];
+                $source->save();
+                //修改合并表
+                $sourceTotal = HiUserInfoMerge::findOne(['Uid' => $uid]);
+                if(!empty($res)) $sourceTotal->birth = $res;
+                $sourceTotal->school_type = $_POST['school_type'];
+                $sourceTotal->save();
+                $transaction->commit();
+            }catch (Exception $e){
+                $transaction->rollBack();
+                $this->exitJSON(0,'fail!');
+            }
+            $this->exitJSON(1,'修改成功',[]);
+        }else {
+            $uid = \Yii::$app->getRequest()->get('id',0);
+            if(empty($uid)) $this->exitJSON(0,'fail!');
+            //查询用户信息
+            $query = HiUserMerge::find()->andWhere('Uid = '.$uid)->asArray()->one();
+            //查询用户及时信息
+            $table = 'hi_user_info_'.substr($uid,-1,1);
+            $connection  = \Yii::$app->hiread;
+            $sql = "select * from {$table} where Uid = {$uid}";
+            $command = $connection->createCommand($sql);
+            $user = $command->queryOne();
+            $user['user_name'] = $query['UserName'];
+            $user['mobile'] = $query['Mobile'];
+            $data = [
+                'row' => $user,
+            ];
+            return $this->display('form',$data);
+        }
+        
     }
     /**
      * 查询金币数量

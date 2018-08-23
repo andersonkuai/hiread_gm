@@ -71,10 +71,11 @@
                             <th>注册渠道</th>
                             <th>联系电话</th>
                             <th>注册时间</th>
-                            <th>年龄</th>
+                            <th>孩子年龄</th>
+                            <th>学校类型</th>
                             <th>金币</th>
-                            <th>订单</th>
-                            <th>学习状态</th>
+                            <th>操作</th>
+                            <!-- <th>用户详情</th> -->
                         </tr>
 
                         <?php foreach($users as $user){?>
@@ -85,21 +86,22 @@
                                 <td><?php echo $user['Channel']?></td>
                                 <td><?php echo $user['Mobile']?></td>
                                 <td><?php echo date('Y-m-d H:i:s',$user['Time'])?></td>
-                                <td><?php echo ceil((time()-$user['birth'])/(24*3600*365))?></td>
+                                <td><?php echo empty($user['birth']) ? '暂无' : ceil((time()-$user['birth'])/(24*3600*365))?></td>
+                                <td>
+                                    <?php echo empty($user['school_type']) ? '暂无' : \Yii::$app->params['school_type'][$user['school_type']];?>
+                                </td>
                                 <td>
                                     <a class="" href="##" onclick="queryGold('<?=$user['Uid']?>')"
                                        data-toggle="modal" data-target="#myModal"><i class="fa fa-hand-o-right"></i><span id="gold_<?=$user['Uid']?>"><?php echo $user['Gold']?></span></a>
                                 </td>
                                 <td>
-                                    <a href="?=hi-user/info&id=<?php echo $user['Uid']?> " >
-
-                                    </a>
+                                    <a href="?r=hi-user/edit&id=<?php echo $user['Uid']?>">编辑</a>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <!-- <a onclick="markBackGround(this)" href="?r=hi-user/info&id=<?php echo $user['Uid']?>" target="_Blank">详情</a> -->
+                                        <a onclick="markBackGround(this)" href="?r=hi-user/info&id=<?php echo $user['Uid']?>" target="_Blank">详情</a>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                         <?php }?>
                     </table>
