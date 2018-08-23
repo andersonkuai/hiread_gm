@@ -159,11 +159,13 @@ class HiUserController extends BaseController
                 $res = time() - (intval($_POST['age']) - 1)*3600*24*365;
                 if($res <= 0) $res = 0;
                 if(!empty($res)) $source->birth = $res;
+                $source->EnName = $_POST['en_name'];
                 $source->school_type = $_POST['school_type'];
                 $source->save();
                 //修改合并表
                 $sourceTotal = HiUserInfoMerge::findOne(['Uid' => $uid]);
                 if(!empty($res)) $sourceTotal->birth = $res;
+                $sourceTotal->EnName = $_POST['en_name'];
                 $sourceTotal->school_type = $_POST['school_type'];
                 $sourceTotal->save();
                 $transaction->commit();

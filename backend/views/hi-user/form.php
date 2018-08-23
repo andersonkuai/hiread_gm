@@ -58,9 +58,7 @@
                                     <div class="col-xs-6">
                                         <div class="form-group">
                                             <label>孩子昵称</label>
-                                            <div class="form-control">
-                                                <?=$row['EnName']?>
-                                            </div>
+                                            <input type="text" class="form-control" name="en_name" value="<?=empty($row['EnName']) ? '' : $row['EnName']?>">
                                         </div>
                                     </div>
                                 </div>
