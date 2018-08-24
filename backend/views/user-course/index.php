@@ -35,7 +35,7 @@
             <div class="box">
                 <div class="box-header">
                     <div class="btn-group btn-group-sm" role="group">
-<!--                        <a class="btn btn-primary" href="?r=user/add"><i class="fa fa-plus"></i> 添加</a>-->
+                        <a class="btn btn-primary" href="?r=user-course/add"><i class="fa fa-plus"></i> 添加</a>
                     </div>
                     <div class="box-tools">
                         <form action="" method="get" class="form-inline">
@@ -49,7 +49,15 @@
                                        value="<?=!empty($searchData['HLevel'])?$searchData['HLevel']:''?>">
                             </div>
                             <div class="form-group form-group-sm">
-                                <select name="id">
+                                <select name="Course" class="form-control">
+                                        <option value=''>课程</option>
+                                    <?php foreach ($courseName as $key => $val): ?>
+                                        <option <?php if($val['ID'] == $searchData['Course']) echo 'selected';?> value="<?=$val['ID']?>"><?=$val['ProdName']?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <select name="id" class="form-control">
                                         <option value=''>直播课时间</option>
                                     <?php foreach ($liveTime as $key => $val): ?>
                                         <option <?php if($val['id'] == $searchData['id']) echo 'selected';?> value="<?=$val['id']?>"><?='L'.$val['level'].' 周'.$val['week'].' '.$val['time']?></option>
