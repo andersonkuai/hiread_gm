@@ -102,4 +102,12 @@ return [
     //微信主题图片
     'wx_article_theme' => $static_dir.'/wx/article/theme/',
     'view_wx_article_theme' => 'wx/article/theme/',//查看目录
+
+    //作文相关
+    //学生上传的图片
+    'students_writing' => $static_dir.'/course/writing/pre/',
+    'view_students_writing' => 'course/writing/pre/',
+    //老师上传的图片
+    'teachers_upload' => $static_dir.'/course/writing/modify/',
+    'view_teachers_upload' => 'course/writing/modify/',
 ];

@@ -11,6 +11,13 @@ namespace backend\controllers;
 use common\models\HiUserInfo;
 use common\models\HiUserMerge;
 use common\models\HiUserInfoMerge;
+use common\models\HiConfWritingScore;
+use common\models\HiUserCourseAnswerMerge;
+use common\models\HiUserCourseAnswer0;
+use common\models\HiConfCourse;
+use common\models\HiConfTopic;
+use common\models\HiUserWritingImg;
+use common\models\HiUserWritingScore;
 use yii\data\Pagination;
 use yii\db\Exception;
 use yii\widgets\LinkPager;
@@ -253,6 +260,266 @@ class HiUserController extends BaseController
 //            $this->exitJSON(0,'fail!');
 //        }
         $this->exitJSON(1,'',$res);
+    }
+    /**
+    *用户作文列表
+    */
+    public function actionWriting()
+    {
+        $query = HiUserCourseAnswerMerge::find()->alias('a')
+                ->innerJoin('hi_user_info_merge as b','a.Uid = b.Uid')
+                ->select(['b.EnName','a.ID','a.Uid','a.Course','a.Tid','a.Score'])
+                ->andWhere(1);
+        $searchData = $this->searchForm($query, ['a.Uid', 'a.Score']);
+        $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
+        $list = $query->orderBy('Time desc')->asArray()->offset($pages->offset)->limit($pages->limit)->all();
+        $renderData = [
+            'list' => $list,
+            'searchData' => $searchData,
+            'pageHtml' => LinkPager::widget([
+                'pagination' => $pages,
+                'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
+            ])
+        ];
+        return $this->display('writing-list', $renderData);
+    }
+    /**
+    *批改作文
+    */
+    public function actionModifyWriting()
+    {
+        if(\Yii::$app->getRequest()->getIsPost()){
+            $data = \Yii::$app->getRequest()->post();
+            $uid = $data['uid'];
+            $id = $data['id'];
+            $tid = $data['tid'];
+            $comment = $data['comment'];
+            $type = $data['type'];
+            $checked = $data['checked'];
+            $modify = $data['modify'];
+            //保存修改数据
+            try {
+                $transaction = \Yii::$app->hiread->beginTransaction();
+                //保存合并数据
+                $admin = HiUserCourseAnswerMerge::findOne(['Uid' => $uid,'ID'=> $id]);
+                if(!$admin) throw new Exception("数据不存在");
+                $admin->Comment = $comment;
+                $admin->Modify = $modify;
+                $rtn = $admin->save();
+                //保存分表数据
+                $table = 'hi_user_course_answer_'.substr($uid,-1,1);
+                $hiUserAn = HiUserCourseAnswer0::findOnex($table,['Uid' => $uid]);
+                if(!$admin) throw new Exception("数据不存在");
+                $hiUserAn->Comment = $comment;
+                $hiUserAn->Modify = $modify;
+                $rtn = $hiUserAn->save();
+                //保存得分
+                HiUserWritingScore::deleteAll(['uid' => $uid,'tid' => $tid]);
+                foreach ($checked as $val) {
+                    $model = new HiUserWritingScore();
+                    $addData = [
+                        'uid' => $uid,
+                        'tid' => $tid,
+                        'score_id' => $val,
+                    ];
+                    $model->setAttributes($addData, false);
+                    $model->insert();
+                }
+                
+
+                $transaction->commit();
+            } catch (Exception $e) {
+                $transaction->rollBack();
+                $this->exitJSON(0, $e->getMessage());
+            }
+            
+
+            $this->exitJSON(0, 'Fail!',$data);
+        }else{
+            $id = \Yii::$app->getRequest()->get('id');
+            $uid = \Yii::$app->getRequest()->get('uid');
+            $writing = HiUserCourseAnswerMerge::find()->where("ID = $id and Uid = $uid")->asArray()->one();
+            //获取题目信息
+            $question = HiConfTopic::findOne($writing['Tid']);
+            //获取课程信息
+            $course = HiConfCourse::findOne($writing['Course']);
+            //获取用户信息
+            $uid = $writing['Uid'];
+            $table = 'hi_user_info_'.substr($uid,-1,1);
+            $userInfo = HiUserInfo::findOnex($table,['Uid' => $uid]);
+            //获取用户上传的图片
+            $imgs = HiUserWritingImg::findAll(['uid' => $uid,'tid' => $writing['Tid']]);
+            //获取得分点
+            $scorePoint = HiConfWritingScore::find()->where(['level' => $course['HLevel']])->asArray()->all();
+            $scoreRule = [];
+            foreach($scorePoint as $val){
+                $scoreRule[$val['type']][$val['item']][$val['point']][] = $val;
+            }
+            //获取用户得分
+            $userScore = HiUserWritingScore::find()->where(['uid' => $uid,'tid' => $writing['Tid']])->asArray()->all();
+            if(!empty($userScore)){
+                $userScore = array_column($userScore,'score_id');
+            }
+            // echo '<pre>';
+            // print_r($scoreRule);
+            // exit;
+            $renderData = [
+                'user_score' => $userScore,
+                'score_rule' => $scoreRule,
+                'img' => $imgs,
+                'question' => $question,
+                'course' => $course,
+                'user_info' => $userInfo,
+                'writing' => $writing,
+            ];
+            // echo '<pre>';
+            // print_r($renderData);
+            // exit;
+            return $this->display('modify-writing',$renderData);
+        }
+    }
+    public function actionComputeTotalScore()
+    {
+        $data = \Yii::$app->getRequest()->post();
+        if(empty($data['checked'])){
+            $this->exitJSON(0, '请先打分');
+        }
+        $total = 0;
+        foreach($data['checked'] as $val){
+            $conf = HiConfWritingScore::find()->where(['id' => $val])->asArray()->one();
+            if(empty($conf)){
+                $this->exitJSON(0, '配置出错');
+            }
+            $total += $conf['score'] * $conf['weight'];
+        }
+        $this->exitJSON(0, '请先',$total);
+    }
+    /**
+    *上传批改的图片
+    */
+    public function actionUploadModifyImg()
+    {
+        $data = [];
+        $baseAddress = \Yii::$app->params['teachers_upload'];
+        $viewAddress = \Yii::$app->params['view_teachers_upload'];
+        foreach ($_FILES as $key => $val) {
+            $imgFile = @file_get_contents($val['tmp_name']);
+            $imgFileSize = @getimagesizefromstring($imgFile);
+            if (!$imgFile || !$imgFileSize) {
+                continue;
+            }
+            $isCreate = \common\helpers\Func::mkdirRecursion($baseAddress);//创建目录
+            $file_name = date('YmdHis').'_'.rand(1,999).rand(1,999).'_'.$val['name'];
+            //保存数据
+            if ($val['error'] == 0){
+                move_uploaded_file($val['tmp_name'],$baseAddress.$file_name);
+            }
+            $data[] = \Yii::$app->params['static_hiread'].$viewAddress.$file_name;
+        }
+        return json_encode(['errno' => 0,'data' => $data]);
+    }
+    /**
+    *作文得分点配置
+    */
+    public function actionConfWriting()
+    {
+        $query = HiConfWritingScore::find()->andWhere(1);
+        $searchData = $this->searchForm($query, ['id', 'level', 'type', 'item', 'point', 'score','weight']);
+        $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
+        $list = $query->orderBy('id desc')->asArray()->offset($pages->offset)->limit($pages->limit)->all();
+        $renderData = [
+            'list' => $list,
+            'searchData' => $searchData,
+            'pageHtml' => LinkPager::widget([
+                'pagination' => $pages,
+                'options' => ['class' => 'pagination pagination-sm no-margin pull-right']
+            ])
+        ];
+        return $this->display('conf-writing', $renderData);
+    }
+    /**
+     * 添加作文得分点配置
+     * @return string
+     */
+    public function actionAddWriting(){
+        if(\Yii::$app->getRequest()->getIsPost()){
+            $this->writingForm();
+        }else{
+            $renderData = [];
+            return $this->display('form-writing', $renderData);
+        }
+    }
+    /**
+     * 修改作文得分点配置
+     * @return string
+     */
+    public function actionEditWriting(){
+        if(\Yii::$app->getRequest()->getIsPost()){
+            $this->writingForm();
+        }else {
+            $id = intval(\Yii::$app->getRequest()->get('id'));
+            $row = HiConfWritingScore::findOne(['ID' => $id]);
+            $renderData = ['row' => $row];
+            return $this->display('form-writing', $renderData);
+        }
+    }
+    private function writingForm(){
+        $id = intval( \Yii::$app->getRequest()->post('id') );
+        $data = \Yii::$app->getRequest()->post();
+
+        if( $id ){
+            $admin = HiConfWritingScore::findOne( $id );
+            if(empty($data['level'])) $this->exitJSON(0, '等级不能为空');
+            if(empty($data['type'])) $this->exitJSON(0, '请选择类型！');
+            if(empty($data['item'])) $this->exitJSON(0, '得分项目不能为空！');
+            if(empty($data['point'])) $this->exitJSON(0, '得分点不能为空！');
+            if(empty($data['name'])) $this->exitJSON(0, '得分项目名称不能为空');
+            if(empty($data['score'])) $this->exitJSON(0, '分值不能为空');
+            if(empty($data['weight'])) $this->exitJSON(0, '权重不能为空');
+
+            $admin->level = $data['level'];
+            $admin->type = $data['type'];
+            $admin->item = $data['item'];
+            $admin->point = $data['point'];
+            $admin->name= $data['name'];
+            $admin->score= $data['score'];
+            $admin->weight= $data['weight'];
+            $rtn = $admin->save();
+        }else{
+            if(empty($data['level'])) $this->exitJSON(0, '等级不能为空');
+            if(empty($data['type'])) $this->exitJSON(0, '请选择类型！');
+            if(empty($data['item'])) $this->exitJSON(0, '得分项目不能为空！');
+            if(empty($data['point'])) $this->exitJSON(0, '得分点不能为空！');
+            if(empty($data['name'])) $this->exitJSON(0, '得分项目名称不能为空');
+            if(empty($data['score'])) $this->exitJSON(0, '分值不能为空');
+            if(empty($data['weight'])) $this->exitJSON(0, '权重不能为空');
+
+            $admin = new HiConfWritingScore();
+            $admin->setAttributes($data, false);
+            $rtn = $admin->insert();
+            $id = $admin->id;
+        }
+        if( $rtn ){
+            $this->exitJSON(1, 'Success!');
+        }else{
+            $this->exitJSON(0, 'Fail!',$data);
+        }
+    }
+    /**
+     * 删除作文得分点配置
+     */
+    public function actionDelWriting()
+    {
+        $id = \Yii::$app->getRequest()->get('id');
+        if(empty($id)){
+            $this->exitJSON(0, 'Fail!');
+        }
+        $result = HiConfWritingScore::findOne($id)->delete();
+        if($result){
+            $this->exitJSON(1, 'success!');
+        }else{
+            $this->exitJSON(0, 'Fail!');
+        }
     }
 
 }

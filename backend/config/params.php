@@ -9,4 +9,8 @@ return [
     	'3' => '双语学校',
     	'4' => '国际学校',
     ],
+    'writing-type' => [
+    	1 => 'informational',
+    	2 => 'argument',
+    ],
 ];

@@ -24,6 +24,7 @@
         </a>
         <ul class="treeview-menu">
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=hi-user/index"><i class="fa fa-circle-o"></i><?= \Yii::t('app', '注册用户信息');?></a></li>
+            <li class="<?php echo $controllerActionId == 'hi-user.writing'?'active':''?>"><a data-pjax href="/index.php?r=hi-user/writing"><i class="fa fa-circle-o"></i><?=\Yii::t('app','作文列表')?></a></li>
         </ul>
     </li>
     <li class="treeview">
@@ -60,6 +61,7 @@
             <li class="<?php echo $controllerActionId == 'user.index'?'active':''?>"><a data-pjax href="/index.php?r=invite-code/index"><i class="fa fa-circle-o"></i><?=\Yii::t('app','邀请码管理')?></a></li>
             <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=order/create-list"><i class="fa fa-circle-o"></i><?=\Yii::t('app','生成订单')?></a></li>
             <li class="<?php echo $controllerActionId == 'order.create-order'?'active':''?>"><a data-pjax href="/index.php?r=img/create"><i class="fa fa-circle-o"></i><?=\Yii::t('app','生成图片')?></a></li>
+            <li class="<?php echo $controllerActionId == 'hi-user.writing'?'active':''?>"><a data-pjax href="/index.php?r=hi-user/conf-writing"><i class="fa fa-circle-o"></i><?=\Yii::t('app','作文得分点配置')?></a></li>
         </ul>
     </li>
     <li class="treeview">
