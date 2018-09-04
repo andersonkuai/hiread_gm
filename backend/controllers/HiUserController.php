@@ -293,7 +293,7 @@ class HiUserController extends BaseController
             $uid = $data['uid'];
             $id = $data['id'];
             $tid = $data['tid'];
-            $comment = $data['comment'];
+            $comment = empty($data['comment']) ? '' : $data['comment'];
             $type = $data['type'];
             $checked = empty($data['checked']) ? [] : $data['checked'];
             $modify = $data['modify'];
@@ -304,7 +304,7 @@ class HiUserController extends BaseController
                 //保存合并数据
                 $admin = HiUserCourseAnswerMerge::findOne(['Uid' => $uid,'ID'=> $id]);
                 if(!$admin) throw new Exception("数据不存在");
-                $admin->Comment = $comment;
+                if(!empty($comment)) $admin->Comment = $comment;
                 $admin->Modify = $modify;
                 $admin->Score = $totalScore;
                 $rtn = $admin->save();
@@ -312,8 +312,8 @@ class HiUserController extends BaseController
                 $table = 'hi_user_course_answer_'.substr($uid,-1,1);
                 $hiUserAn = HiUserCourseAnswer0::findOnex($table,['Uid' => $uid]);
                 if(!$admin) throw new Exception("数据不存在");
-                $hiUserAn->Comment = $comment;
-                $hiUserAn->Modify = $modify;
+                if(!empty($comment)) $hiUserAn->Comment = $comment;
+                if(!empty($modify)) $hiUserAn->Modify = $modify;
                 $hiUserAn->Score = $totalScore;
                 $rtn = $hiUserAn->save();
                 //保存得分

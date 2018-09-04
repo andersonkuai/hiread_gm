@@ -156,26 +156,57 @@
 </section>
 <!-- /.content -->
 <script type="text/javascript">
-    var E = window.wangEditor
-    var editor = new E('#editor')
-    // 或者 var editor = new E( document.getElementById('editor') )
-    // 自定义配置颜色（字体颜色、背景色）
-    editor.customConfig.colors = [
-        '#000000',
-        '#eeece0',
-        '#1c487f',
-        '#4d80bf',
-        '#c24f4a',
-        '#8baa4a',
-        '#7b5ba1',
-        '#46acc8',
-        '#f9963b',
-        '#ff0000',
-        '#ffffff',
-    ]
-    editor.customConfig.uploadImgServer = '/index.php?r=hi-user/upload-modify-img' // 上传图片到服务器
-    // editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
-    editor.create()
+    setTimeout(function(){
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        // 或者 var editor = new E( document.getElementById('editor') )
+        // 自定义配置颜色（字体颜色、背景色）
+        editor.customConfig.colors = [
+            '#000000',
+            '#eeece0',
+            '#1c487f',
+            '#4d80bf',
+            '#c24f4a',
+            '#8baa4a',
+            '#7b5ba1',
+            '#46acc8',
+            '#f9963b',
+            '#ff0000',
+            '#ffffff',
+        ]
+        editor.customConfig.uploadImgServer = '/index.php?r=hi-user/upload-modify-img' // 上传图片到服务器
+        // editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+        editor.create()
+        //提交
+        window.submit = function()
+        {
+            var total_score = $('#total_score').html();
+            var checked = getAlCheck();
+            var comment = $('#comment').val();
+            var scorePoint = $('select[name=type]').val();//得分项类型
+            var correcting = editor.txt.html();
+            var url = '?r=hi-user/modify-writing';
+            var postData = {
+                'type':scorePoint,
+                'checked':checked,
+                'modify':correcting,
+                'comment':comment,
+                'id':<?=$_GET['id']?>,
+                'uid':<?=$_GET['uid']?>,
+                'tid':<?=$writing['Tid']?>,
+                'score':total_score,
+            };
+            $.post( url, postData, function(data){
+                alert(data.msg);
+                if( data.code == 1 ){
+                    window.location.href = window.location.href;
+                }else{
+                    alert(data.msg);
+                }
+            }, 'json');
+        }
+    },100);
+    
     //获取已选中的得分点
     function getAlCheck()
     {
@@ -198,34 +229,6 @@
             checked.push($('input:radio[name="'+pointName[i]+'"]:checked').val());
         }
         return checked;
-    }
-    //提交
-    function submit()
-    {
-        var total_score = $('#total_score').html();
-        var checked = getAlCheck();
-        var comment = $('#comment').val();
-        var scorePoint = $('select[name=type]').val();//得分项类型
-        var correcting = editor.txt.html();
-        var url = '?r=hi-user/modify-writing';
-        var postData = {
-            'type':scorePoint,
-            'checked':checked,
-            'modify':correcting,
-            'comment':comment,
-            'id':<?=$_GET['id']?>,
-            'uid':<?=$_GET['uid']?>,
-            'tid':<?=$writing['Tid']?>,
-            'score':total_score,
-        };
-        $.post( url, postData, function(data){
-            alert(data.msg);
-            if( data.code == 1 ){
-                window.location.href = window.location.href;
-            }else{
-                alert(data.msg);
-            }
-        }, 'json');
     }
     $(document).ready(function() {
         //显示得分项
