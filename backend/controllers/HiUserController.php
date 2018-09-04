@@ -295,8 +295,9 @@ class HiUserController extends BaseController
             $tid = $data['tid'];
             $comment = $data['comment'];
             $type = $data['type'];
-            $checked = $data['checked'];
+            $checked = empty($data['checked']) ? [] : $data['checked'];
             $modify = $data['modify'];
+            $totalScore = $data['score'];
             //保存修改数据
             try {
                 $transaction = \Yii::$app->hiread->beginTransaction();
@@ -305,6 +306,7 @@ class HiUserController extends BaseController
                 if(!$admin) throw new Exception("数据不存在");
                 $admin->Comment = $comment;
                 $admin->Modify = $modify;
+                $admin->Score = $totalScore;
                 $rtn = $admin->save();
                 //保存分表数据
                 $table = 'hi_user_course_answer_'.substr($uid,-1,1);
@@ -312,10 +314,12 @@ class HiUserController extends BaseController
                 if(!$admin) throw new Exception("数据不存在");
                 $hiUserAn->Comment = $comment;
                 $hiUserAn->Modify = $modify;
+                $hiUserAn->Score = $totalScore;
                 $rtn = $hiUserAn->save();
                 //保存得分
                 HiUserWritingScore::deleteAll(['uid' => $uid,'tid' => $tid]);
                 foreach ($checked as $val) {
+                    if(empty($val)) continue;
                     $model = new HiUserWritingScore();
                     $addData = [
                         'uid' => $uid,
@@ -325,16 +329,12 @@ class HiUserController extends BaseController
                     $model->setAttributes($addData, false);
                     $model->insert();
                 }
-                
-
                 $transaction->commit();
             } catch (Exception $e) {
                 $transaction->rollBack();
                 $this->exitJSON(0, $e->getMessage());
             }
-            
-
-            $this->exitJSON(0, 'Fail!',$data);
+            $this->exitJSON(1, 'success!');
         }else{
             $id = \Yii::$app->getRequest()->get('id');
             $uid = \Yii::$app->getRequest()->get('uid');
@@ -360,10 +360,35 @@ class HiUserController extends BaseController
             if(!empty($userScore)){
                 $userScore = array_column($userScore,'score_id');
             }
-            // echo '<pre>';
-            // print_r($scoreRule);
-            // exit;
+
+            $total = 0;
+            $type = '1';
+            foreach($userScore as $val){
+                $conf = HiConfWritingScore::find()->where(['id' => $val])->asArray()->one();
+                $type = $conf['type'];
+                if(empty($conf)){
+                    $this->exitJSON(0, '配置出错');
+                }
+                $total += $conf['score'];
+            };
+            if(!empty($userScore)){
+                $total = round($total/count($userScore),2);
+            }
+            if(1 <= $total && $total <= 1.74){
+                $des = 'Try Harder';
+            }elseif(1.75 <= $total && $total <= 2.49){
+                $des = 'Average';
+            }elseif(2.5 <= $total && $total <= 3.24){
+                $des = 'Good';
+            }elseif(3.25 <= $total && $total <= 4){
+                $des = 'Excellent';
+            }else{
+                $des = '';
+            }
             $renderData = [
+                'type' => $type,
+                'total_des' => $des,
+                'total_score' => $total,
                 'user_score' => $userScore,
                 'score_rule' => $scoreRule,
                 'img' => $imgs,
@@ -372,9 +397,6 @@ class HiUserController extends BaseController
                 'user_info' => $userInfo,
                 'writing' => $writing,
             ];
-            // echo '<pre>';
-            // print_r($renderData);
-            // exit;
             return $this->display('modify-writing',$renderData);
         }
     }
@@ -385,14 +407,29 @@ class HiUserController extends BaseController
             $this->exitJSON(0, '请先打分');
         }
         $total = 0;
+        $count = 0;
         foreach($data['checked'] as $val){
+            if(empty($val)) continue;
             $conf = HiConfWritingScore::find()->where(['id' => $val])->asArray()->one();
             if(empty($conf)){
                 $this->exitJSON(0, '配置出错');
             }
-            $total += $conf['score'] * $conf['weight'];
+            $total += $conf['score'];
+            $count = $count + 1;
+        };
+        $total = round($total/$count,2);
+        if(1 <= $total && $total <= 1.74){
+            $des = 'Try Harder';
+        }elseif(1.75 <= $total && $total <= 2.49){
+            $des = 'Average';
+        }elseif(2.5 <= $total && $total <= 3.24){
+            $des = 'Good';
+        }elseif(3.25 <= $total && $total <= 4){
+            $des = 'Excellent';
+        }else{
+            $des = '';
         }
-        $this->exitJSON(0, '请先',$total);
+        $this->exitJSON(1,'',['total_score' => $total,'total_des' => $des]);
     }
     /**
     *上传批改的图片

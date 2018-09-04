@@ -71,4 +71,18 @@ return [
     '课程管理' => 'course management',
     '课程列表' => 'course list',
 
+    '作文列表' => 'writing list',
+    '用户作文列表' => "users' writing list",
+    '用户' => "users",
+    '课程' => "course",
+    '题目' => "topic",
+    '得分' => "score",
+    '操作' => "operation",
+    '批改' => "modify",
+    '批改作文' => "modify writing",
+    '等级' => "level",
+    '返回' => "back",
+    '提交' => "commit",
+    '查询' => "query",
+    '用户管理' => "users' management",
 ];

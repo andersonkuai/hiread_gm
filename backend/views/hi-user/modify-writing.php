@@ -19,8 +19,8 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="?r=admin/index"><i class="fa fa-dashboard"></i> <?=\Yii::t('app','主页')?></a></li>
-        <li><a href="#"><?=\Yii::t('app','功能管理')?></a></li>
-        <li class="active"><?php echo empty($row) ? \Yii::t('app','添加'):\Yii::t('app','编辑')?> <?=\Yii::t('app','作文得分点配置表')?></li>
+        <li><a href="#"><?=\Yii::t('app','用户管理')?></a></li>
+        <li class="active"><?=\Yii::t('app','批改作文')?></li>
     </ol>
 </section>
 
@@ -79,7 +79,7 @@
                                 <td>
                                     <select onchange="showPoint()" name="type">
                                         <?php foreach (\Yii::$app->params['writing-type'] as $key => $val) { ?>
-                                            <option value="<?=$key?>"><?=$val?></option>
+                                            <option <?php if($type == $key) echo 'selected';?> value="<?=$key?>"><?=$val?></option>
                                         <?php }?>
                                     </select>
                                 </td>
@@ -94,11 +94,11 @@
                                                 <?php foreach ($v as $key => $val): ?>
                                                     <div>
                                                         <b>point<?=$key?></b>
-                                                        <ul>
+                                                        <ol>
                                                             <?php foreach ($val as $value): ?>
                                                                 <li><input onclick="computeTotal()" class="score informational" <?php if(in_array($value['id'],$user_score)) echo 'checked'?> type="radio" name="informational_point_<?=$k?>_<?=$key?>"  value="<?=$value['id']?>"><?=$value['name']?><?=$value['score']?></li>
                                                             <?php endforeach ?>
-                                                        </ul>
+                                                        </ol>
                                                     </div>
                                                 <?php endforeach ?>
                                             </div>
@@ -112,17 +112,23 @@
                                                 <?php foreach ($v as $key => $val): ?>
                                                     <div>
                                                         <b>point<?=$key?></b>
-                                                        <ul>
+                                                        <ol>
                                                             <?php foreach ($val as $value): ?>
-                                                                <li><input class="score argument" <?php if(in_array($value['id'],$user_score)) echo 'checked'?> type="radio" name="argument_point_<?=$k?>_<?=$key?>" value="<?=$value['id']?>"><?=$value['name']?><?=$value['score']?></li>
+                                                                <li><input onclick="computeTotal()" class="score argument" <?php if(in_array($value['id'],$user_score)) echo 'checked'?> type="radio" name="argument_point_<?=$k?>_<?=$key?>" value="<?=$value['id']?>"><?=$value['name']?><?=$value['score']?></li>
                                                             <?php endforeach ?>
-                                                        </ul>
+                                                        </ol>
                                                     </div>
                                                 <?php endforeach ?>
                                             </div>
                                             <hr>
                                         <?php endforeach ?>
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="10%"></td>
+                                <td>
+                                    <span style="font-weight:bold;">Total Score:<span id="total_score"><?php echo !empty($total_score) ? $total_score : 0;?></span><span style="margin-left: 20px" id="total_des"><?php echo !empty($total_des) ? $total_des : '';?></span></span>
                                 </td>
                             </tr>
                             <tr>
@@ -134,8 +140,6 @@
                         </table>
                     </div>
                     <!-- /.box-body -->
-                    <button id="btn1">获取html</button>
-                    <button id="btn2">获取text</button>
                     <div class="box-footer">
                         <input type="hidden" name="id" value="<?php if(!empty($row)) echo $row['id']?>"/>
                         <input name="<?= Yii::$app->request->csrfParam;?>" type="hidden" value="<?= Yii::$app->request->getCsrfToken();?>">
@@ -170,15 +174,6 @@
     editor.customConfig.uploadImgServer = '/index.php?r=hi-user/upload-modify-img' // 上传图片到服务器
     // editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
     editor.create()
-    document.getElementById('btn1').addEventListener('click', function () {
-        // 读取 html
-        alert(editor.txt.html())
-    }, false)
-
-    document.getElementById('btn2').addEventListener('click', function () {
-        // 读取 text
-        alert(editor.txt.text())
-    }, false)
     //获取已选中的得分点
     function getAlCheck()
     {
@@ -205,6 +200,7 @@
     //提交
     function submit()
     {
+        var total_score = $('#total_score').html();
         var checked = getAlCheck();
         var comment = $('#comment').val();
         var scorePoint = $('select[name=type]').val();//得分项类型
@@ -218,12 +214,14 @@
             'id':<?=$_GET['id']?>,
             'uid':<?=$_GET['uid']?>,
             'tid':<?=$writing['Tid']?>,
+            'score':total_score,
         };
         $.post( url, postData, function(data){
+            alert(data.msg);
             if( data.code == 1 ){
                 window.location.href = window.location.href;
             }else{
-                // console.log(data);
+                alert(data.msg);
             }
         }, 'json');
     }
@@ -245,6 +243,7 @@
             $('#argument').show();
             $('#informational').hide();
         }
+        computeTotal();
     }
     function computeTotal(){
         var checked = getAlCheck();
@@ -253,10 +252,13 @@
             'checked':checked,
         }
         $.post( url, data, function(data){
+            console.log(data);
             if( data.code == 1 ){
-                window.location.href = window.location.href;
+                $('#total_score').html(data.data.total_score);
+                $('#total_des').html(data.data.total_des);
             }else{
-                console.log(data);
+                $('#total_score').html(0);
+                $('#total_des').html('');
             }
         }, 'json');
     }
