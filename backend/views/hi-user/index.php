@@ -35,7 +35,7 @@
             <div class="box">
                 <div class="box-header">
                     <div class="btn-group btn-group-sm" role="group">
-<!--                        <a class="btn btn-primary" href="?r=user/add"><i class="fa fa-plus"></i> 添加</a>-->
+                        <a class="btn btn-primary" href="?r=hi-user/regist"><i class="fa fa-plus"></i>注册</a>
                     </div>
                     <div class="box-tools">
                         <form action="" method="get" class="form-inline">

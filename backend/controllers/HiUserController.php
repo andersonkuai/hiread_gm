@@ -21,6 +21,7 @@ use common\models\HiUserWritingScore;
 use yii\data\Pagination;
 use yii\db\Exception;
 use yii\widgets\LinkPager;
+use common\helpers\Curl;
 
 class HiUserController extends BaseController
 {
@@ -61,6 +62,78 @@ class HiUserController extends BaseController
             ])
         ];
         return $this->display('index', $renderData);
+    }
+    /**
+     * 注册用户
+     */
+    public function actionRegist(){
+        if(\Yii::$app->getRequest()->getIsPost()){
+            if(empty($_POST['user_name']) || empty($_POST['en_name'])){
+                $this->exitJSON(0,'数据不能为空');
+            }
+            //根据手机号，课程id生成订单
+            $privateKey = 'read_hi_kuai';
+            $enName = $_POST['en_name'];
+            $userName = $_POST['user_name'];
+            $time = time();
+            $sign = md5(md5($time.$privateKey.$userName.$enName));
+            $curl = new Curl();
+            $data = [
+                'sign' => $sign,
+                'time' => $time,
+                'userName' => $userName,
+                'EnName' => $enName,
+            ];
+            $res = $curl->curl(HIREADURL."user/createUser?sign=",$data,'POST');
+            if(!empty($res)){
+                $resData = json_decode($res,true);
+                if($resData['status'] != 'success'){
+                    $this->exitJSON(0,$resData['msg']);
+                }else{
+                    $uid = $resData['entity']['Uid'];
+                    $transaction = \Yii::$app->hiread->beginTransaction();
+                    try {
+                        //查询用户信息
+                        $userTb = 'hi_user_'.substr(md5($userName),0,1);
+                        $connection  = \Yii::$app->hiread;
+                        $sql     = "select * from $userTb where Uid = ".$uid;
+                        $command = $connection->createCommand($sql);
+                        $res = $command->queryAll();
+                        if(empty($res[0])){
+                            if(!$rtn) throw new \Exception("注册失败");
+                        }
+                        $addUserData = $res[0];
+                        $userModel = new HiUserMerge();
+                        $userModel->setAttributes($addUserData, false);
+                        $rtn = $userModel->insert();
+                        if(!$rtn) throw new \Exception("注册失败");
+                        
+                        $userTb = 'hi_user_info_'.substr($uid,-1,1);
+                        $connection  = \Yii::$app->hiread;
+                        $sql     = "select * from $userTb where Uid = ".$uid;
+                        $command = $connection->createCommand($sql);
+                        $res = $command->queryAll();
+                        if(empty($res[0])){
+                            if(!$rtn) throw new \Exception("注册失败");
+                        }
+                        $addUserData = $res[0];
+                        $userModel = new HiUserInfoMerge();
+                        $userModel->setAttributes($addUserData, false);
+                        $rtn = $userModel->insert();
+                        if(!$rtn) throw new \Exception("注册失败");
+                        $transaction->commit(); 
+                        $this->exitJSON(1,'注册成功，uid：'.$uid);
+                    } catch (\Exception $e) {
+                        $this->exitJSON(0,$e->getMessage());
+                    }
+                }
+            }else{
+                $this->exitJSON(0,'注册失败');
+            }
+        }else {
+            $data = [];
+            return $this->display('form-regist',$data);
+        }
     }
     /**
      * 用户详情

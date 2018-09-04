@@ -98,7 +98,7 @@
                                                         <b>point<?=$key?></b>
                                                         <ol>
                                                             <?php foreach ($val as $value): ?>
-                                                                <li><input onclick="computeTotal()" class="score informational" <?php if(in_array($value['id'],$user_score)) echo 'checked'?> type="radio" name="informational_point_<?=$k?>_<?=$key?>"  value="<?=$value['id']?>"><?=$value['name']?><?=$value['score']?></li>
+                                                                <li><input onclick="computeTotal()" class="score informational" <?php if(in_array($value['id'],$user_score)) echo 'checked'?> type="radio" name="informational_point_<?=$k?>_<?=$key?>"  value="<?=$value['id']?>"><?=$value['name']?></li>
                                                             <?php endforeach ?>
                                                         </ol>
                                                     </div>
