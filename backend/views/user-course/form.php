@@ -40,7 +40,7 @@
                                             <label>课程</label>
                                             <select name="course" class="form-control">
                                                 <?php foreach($course as $key=>$val){?>
-                                                    <option value="<?=$val['ID']?>"><?=$val['ProdName']?></option>
+                                                    <option value="<?=$val['ID']?>">ID：<?=$val['ID']?> Level：<?=$val['HLevel']?>&nbsp;&nbsp;&nbsp; <?=$val['ProdName']?></option>
                                                 <?php }?>
                                             </select>
                                         </div>
