@@ -44,6 +44,12 @@
                                 <input type="text" name="Uid" class="form-control" placeholder="用户id"
                                        value="<?=!empty($searchData['Uid'])?$searchData['Uid']:''?>">
                             </div>
+                            <select class="form-group" name="state">
+                                <option value=""><?= \Yii::t('app', '状态');?></option>
+                                <?php foreach (\Yii::$app->params['writing-state'] as $key => $val): ?>
+                                    <option <?php if($searchData['state'] == $key) echo 'selected';?> value="<?=$key?>"><?=$val?></option>
+                                <?php endforeach ?>
+                            </select>
                             <div class="form-group form-group-sm">
                                 <input type="text" name="Score" class="form-control" placeholder="得分"
                                        value="<?=isset($searchData['Score'])?$searchData['Score']:''?>">
@@ -62,6 +68,7 @@
                             <th>用户</th>
                             <th>课程</th>
                             <th>题目</th>
+                            <th>状态</th>
                             <th>得分</th>
                             <th>操作</th>
                         </tr>
@@ -69,8 +76,9 @@
                             <tr>
                                 <td><?php echo $user['Uid']?></td>
                                 <td><?php echo $user['EnName']?></td>
-                                <td><?php echo $user['Course']?></td>
-                                <td><?php echo $user['Tid']?></td>
+                                <td><?php echo $user['ProdName']?></td>
+                                <td><?php echo $user['PreviewIntro']?></td>
+                                <td><?php echo \Yii::$app->params['writing-state'][$user['state']]?></td>
                                 <td><?php echo $user['Score']?></td>
                                 <td>
                                     <a class="btn btn-sm" href="?r=hi-user/modify-writing&id=<?php echo $user['ID']?>&uid=<?=$user['Uid']?>">批改</a>

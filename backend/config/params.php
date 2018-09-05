@@ -13,4 +13,9 @@ return [
     	1 => 'informational',
     	2 => 'argument',
     ],
+    'writing-state' => [
+        '3' => '未批改',
+        '1' => '未查看',
+        '2' => '已查看',
+    ],
 ];

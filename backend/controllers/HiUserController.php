@@ -341,9 +341,11 @@ class HiUserController extends BaseController
     {
         $query = HiUserCourseAnswerMerge::find()->alias('a')
                 ->innerJoin('hi_user_info_merge as b','a.Uid = b.Uid')
-                ->select(['b.EnName','a.ID','a.Uid','a.Course','a.Tid','a.Score'])
+                ->innerJoin('hi_conf_course as c','a.Course = c.ID')
+                ->innerJoin('hi_conf_topic as d','a.Tid = d.ID')
+                ->select(['b.EnName','a.ID','a.Uid','a.Course','a.Tid','a.Score','a.state','c.ProdName','d.PreviewIntro'])
                 ->andWhere(1);
-        $searchData = $this->searchForm($query, ['a.Uid', 'a.Score']);
+        $searchData = $this->searchForm($query, ['a.Uid', 'a.Score','a.state']);
         $pages = new Pagination(['totalCount' =>$query->count(), 'pageSize' => 20]);
         $list = $query->orderBy('Time desc')->asArray()->offset($pages->offset)->limit($pages->limit)->all();
         $renderData = [
@@ -380,6 +382,7 @@ class HiUserController extends BaseController
                 if(!empty($comment)) $admin->Comment = $comment;
                 $admin->Modify = $modify;
                 $admin->Score = $totalScore;
+                if($admin->state == 3) $admin->state = 1;
                 $rtn = $admin->save();
                 //保存分表数据
                 $table = 'hi_user_course_answer_'.substr($uid,-1,1);
@@ -388,6 +391,7 @@ class HiUserController extends BaseController
                 if(!empty($comment)) $hiUserAn->Comment = $comment;
                 if(!empty($modify)) $hiUserAn->Modify = $modify;
                 $hiUserAn->Score = $totalScore;
+                if($hiUserAn->state == 3) $hiUserAn->state = 1;
                 $rtn = $hiUserAn->save();
                 //保存得分
                 HiUserWritingScore::deleteAll(['uid' => $uid,'tid' => $tid]);
