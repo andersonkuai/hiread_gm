@@ -65,12 +65,12 @@
                         <tr>
 <!--                            <th style="text-align: center"><input type="checkbox" onclick="UTILITY.CHECK.all(this);"/></th>-->
                             <th>Uid</th>
-                            <th>用户</th>
-                            <th>课程</th>
-                            <th>题目</th>
-                            <th>状态</th>
-                            <th>得分</th>
-                            <th>操作</th>
+                            <th><?= \Yii::t('app','用户')?></th>
+                            <th><?= \Yii::t('app','课程')?></th>
+                            <th><?= \Yii::t('app','题目')?></th>
+                            <th><?= \Yii::t('app','状态')?></th>
+                            <th><?= \Yii::t('app','得分')?></th>
+                            <th><?= \Yii::t('app','操作')?></th>
                         </tr>
                         <?php foreach($list as $user){?>
                             <tr>
