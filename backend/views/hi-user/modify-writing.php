@@ -90,7 +90,7 @@
                                 <td width="10%">Score:</td>
                                 <td>
                                     <div style="display:none;" id="informational">
-                                        <?php foreach ($score_rule[1] as $k => $v): ?>
+                                        <?php if(!empty($score_rule[1])) foreach ($score_rule[1] as $k => $v): ?>
                                             <div>
                                                 <b><?=$k?></b>
                                                 <?php foreach ($v as $key => $val): ?>
@@ -108,7 +108,7 @@
                                         <?php endforeach ?>
                                     </div>
                                     <div style="display:none;" id="argument">
-                                        <?php foreach ($score_rule[2] as $k => $v): ?>
+                                        <?php if(!empty($score_rule[2])) foreach ($score_rule[2] as $k => $v): ?>
                                             <div>
                                                 <b><?=$k?></b>
                                                 <?php foreach ($v as $key => $val): ?>

@@ -371,7 +371,7 @@ class HiUserController extends BaseController
             $comment = empty($data['comment']) ? '' : $data['comment'];
             $type = $data['type'];
             $checked = empty($data['checked']) ? [] : $data['checked'];
-            $modify = $data['modify'];
+            $modify = base64_encode($data['modify']);
             $totalScore = $data['score'];
             //保存修改数据
             try {
@@ -389,7 +389,7 @@ class HiUserController extends BaseController
                 $hiUserAn = HiUserCourseAnswer0::findOnex($table,['Uid' => $uid]);
                 if(!$admin) throw new Exception("数据不存在");
                 if(!empty($comment)) $hiUserAn->Comment = $comment;
-                if(!empty($modify)) $hiUserAn->Modify = $modify;
+                $hiUserAn->Modify = $modify;
                 $hiUserAn->Score = $totalScore;
                 if($hiUserAn->state == 3) $hiUserAn->state = 1;
                 $rtn = $hiUserAn->save();
@@ -416,6 +416,7 @@ class HiUserController extends BaseController
             $id = \Yii::$app->getRequest()->get('id');
             $uid = \Yii::$app->getRequest()->get('uid');
             $writing = HiUserCourseAnswerMerge::find()->where("ID = $id and Uid = $uid")->asArray()->one();
+            $writing['Modify'] = base64_decode($writing['Modify']);
             //获取题目信息
             $question = HiConfTopic::findOne($writing['Tid']);
             //获取课程信息
