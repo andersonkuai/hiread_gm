@@ -69,11 +69,7 @@
                             <tr>
                                 <td width="10%">Correcting</td>
                                 <td>
-                                    <div id="editor">
-                                        <p>
-                                            <?=empty($writing['Modify']) ? $writing['Answer'] : $writing['Modify'];?>
-                                        </p>
-                                    </div>
+                                    <div id="editor"><?=empty($writing['Modify']) ? $writing['Answer'] : $writing['Modify'];?></div>
                                 </td>
                             </tr>
                             <tr>

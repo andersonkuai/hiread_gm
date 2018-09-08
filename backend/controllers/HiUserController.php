@@ -365,6 +365,7 @@ class HiUserController extends BaseController
     {
         if(\Yii::$app->getRequest()->getIsPost()){
             $data = \Yii::$app->getRequest()->post();
+            $dataGet = \Yii::$app->getRequest()->post();
             $uid = $data['uid'];
             $id = $data['id'];
             $tid = $data['tid'];
