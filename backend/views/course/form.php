@@ -60,7 +60,7 @@
                                     <tr>
                                         <td><?= \Yii::t('app', '简介图片');?>：</td>
                                         <td>
-                                            <input class="form" name="DetailImg" type="text" value="<?php echo empty($row) ? '' : $row['DetailImg'];?>">
+                                            <input class="form" name="DetailImg" type="text" value="<?php echo empty($row['DetailImg']) ? '' : $row['DetailImg'];?>">
                                             （<?= \Yii::t('app', '尺寸');?>：000*000）
                                             <span  id="questionPicTr">
                                                 <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="DetailImg_pic" onchange="uploadImg('DetailImg')" accept="image/*" />
