@@ -57,18 +57,7 @@
                                             <a class="btn btn-sm btn-primary" href="##" onclick="viewImg('CoverImg')"><?= \Yii::t('app', '查看');?></a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><?= \Yii::t('app', '简介图片');?>：</td>
-                                        <td>
-                                            <input class="form" name="DetailImg" type="text" value="<?php echo empty($row['DetailImg']) ? '' : $row['DetailImg'];?>">
-                                            （<?= \Yii::t('app', '尺寸');?>：000*000）
-                                            <span  id="questionPicTr">
-                                                <input style="display: inline-block" class="fileupload" type="file" name="questionPic" id="DetailImg_pic" onchange="uploadImg('DetailImg')" accept="image/*" />
-                                                <span class="btn-upload" id="DetailImg_btn"></span>
-                                            </span>&nbsp;&nbsp;
-                                            <a class="btn btn-sm btn-primary" href="##" onclick="viewImg('DetailImg')"><?= \Yii::t('app', '查看');?></a>
-                                        </td>
-                                    </tr>
+                                    
                                     <tr>
                                         <td><?= \Yii::t('app', '作者头像');?>：</td>
                                         <td>
